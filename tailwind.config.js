@@ -10,6 +10,12 @@ module.exports = {
     './src/**/*.{ts,tsx,vue}',
 	],
   theme: {
+    colors:{
+      'primary': '#0B324F',
+      'secondary': '#F18200',
+      'white': '#FFFFFF',
+      'black': '#000000'
+    },
     container: {
       center: true,
       padding: "2rem",
