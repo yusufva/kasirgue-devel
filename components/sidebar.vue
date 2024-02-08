@@ -6,10 +6,6 @@
         <SheetTrigger>
           <ChevronDoubleRightIcon class="text-primary w-6" />
         </SheetTrigger>
-        <div v-for="item in links" :key="item.index">
-          <component :is="item.icon"></component>
-          <HomeIcon />
-        </div>
       </div>
       <SheetContent side="left" class="flex p-4 w-1/4 bg-white border-none">
         <SheetHeader>
@@ -17,16 +13,23 @@
             <img :src="logo" class="w-1/2" />
           </SheetTitle>
           <SheetDescription class="flex flex-col items-center">
-            <div v-for="item in links" :key="item.index" class="w-2/3 h-max">
-              <NuxtLink :to="item.route">
-                <SheetClose>
-                  <Card class="border-none shadow-none">
-                    <CardContent>
-                      <CardDescription class="flex font-semibold text-primary">
-                        <component :is="item.icon"></component>{{ item.title }}
-                      </CardDescription>
-                    </CardContent>
-                  </Card>
+            <div
+              v-for="item in links"
+              :key="item.index"
+              class="flex justify-start w-2/3 h-max p-2 rounded-md text-primary hover:text-white hover:bg-primary"
+            >
+              <NuxtLink
+                :to="item.route"
+                class="flex w-full"
+                exactActiveClass="flex w-full p-2 rounded-md text-white bg-primary"
+              >
+                <SheetClose class="w-full">
+                  <Slots>
+                    <div class="flex gap-2 items-center">
+                      <component :is="item.icon" class="w-6"></component
+                      >{{ item.title }}
+                    </div>
+                  </Slots>
                 </SheetClose>
               </NuxtLink>
             </div>
@@ -34,6 +37,16 @@
         </SheetHeader>
       </SheetContent>
     </Sheet>
+    <div class="flex flex-col gap-4 pl-4 mt-10">
+      <div v-for="item in links" :key="item.index">
+        <NuxtLink :to="item.route">
+          <component
+            :is="item.icon"
+            class="w-10 p-2 text-primary rounded-md hover:bg-primary hover:text-white"
+          ></component>
+        </NuxtLink>
+      </div>
+    </div>
   </div>
 </template>
 <script>
