@@ -7,7 +7,7 @@
           <ChevronDoubleRightIcon class="text-primary w-6" />
         </SheetTrigger>
       </div>
-      <SheetContent side="left" class="flex p-4 w-1/4 bg-white border-none">
+      <SheetContent side="left" class="flex p-4 w-1/6 bg-white border-none">
         <SheetHeader>
           <SheetTitle class="flex justify-center my-4">
             <img :src="logo" class="w-1/2" />
@@ -16,7 +16,7 @@
             <div
               v-for="item in links"
               :key="item.index"
-              class="flex justify-start w-2/3 h-max p-2 rounded-md text-primary hover:text-white hover:bg-primary"
+              class="flex justify-start w-3/4 h-max p-2 rounded-md text-primary hover:text-white hover:bg-primary"
             >
               <NuxtLink
                 :to="item.route"
