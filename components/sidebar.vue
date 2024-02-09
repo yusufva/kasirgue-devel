@@ -65,6 +65,7 @@ import {
   ChevronDoubleRightIcon,
   HomeIcon,
   ArchiveBoxIcon,
+  RectangleStackIcon,
   BanknotesIcon,
 } from "@heroicons/vue/24/solid";
 
@@ -83,6 +84,7 @@ export default {
     ChevronDoubleRightIcon,
     HomeIcon,
     ArchiveBoxIcon,
+    RectangleStackIcon,
     BanknotesIcon,
   },
   data() {
@@ -90,7 +92,8 @@ export default {
       logo: Logo,
       links: [
         { title: "Beranda", icon: "HomeIcon", route: "/" },
-        { title: "Stok", icon: "ArchiveBoxIcon", route: "/stok" },
+        { title: "Barang", icon: "ArchiveBoxIcon", route: "/barang" },
+        { title: "Stok", icon: "RectangleStackIcon", route: "/stok" },
         { title: "Transaksi", icon: "BanknotesIcon", route: "/transaksi" },
       ],
     };
