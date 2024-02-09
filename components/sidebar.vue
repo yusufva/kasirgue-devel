@@ -12,16 +12,16 @@
           <SheetTitle class="flex justify-center my-4">
             <img :src="logo" class="w-1/2" />
           </SheetTitle>
-          <SheetDescription class="flex flex-col items-center">
+          <SheetDescription class="flex flex-col w-full items-center">
             <div
               v-for="item in links"
               :key="item.index"
-              class="flex justify-start w-3/4 h-max p-2 rounded-md text-primary hover:text-white hover:bg-primary"
+              class="flex w-full justify-center"
             >
               <NuxtLink
                 :to="item.route"
-                class="flex w-full"
-                exactActiveClass="flex w-full p-2 rounded-md text-white bg-primary"
+                class="flex justify-start w-3/4 h-max p-2 mb-2 rounded-md text-primary hover:text-white hover:bg-primary"
+                exactActiveClass="flex w-3/4 rounded-md text-white bg-primary"
               >
                 <SheetClose class="w-full">
                   <Slots>
@@ -39,11 +39,12 @@
     </Sheet>
     <div class="flex flex-col gap-4 pl-4 mt-10">
       <div v-for="item in links" :key="item.index">
-        <NuxtLink :to="item.route">
-          <component
-            :is="item.icon"
-            class="w-10 p-2 text-primary rounded-md hover:bg-primary hover:text-white"
-          ></component>
+        <NuxtLink
+          :to="item.route"
+          class="flex w-max p-2 text-primary rounded-md hover:bg-primary hover:text-white"
+          exactActiveClass="bg-primary text-white"
+        >
+          <component :is="item.icon" class="w-6"></component>
         </NuxtLink>
       </div>
     </div>

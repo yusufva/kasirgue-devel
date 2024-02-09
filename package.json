@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@heroicons/vue": "^2.1.1",
+    "@pinia/nuxt": "^0.5.1",
     "@radix-icons/vue": "^1.0.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
