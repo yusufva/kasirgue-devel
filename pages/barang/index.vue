@@ -2,7 +2,7 @@
   <div>
     <Table>
       <TableCaption>A list of your recent invoices.</TableCaption>
-      <TableHeader class="text-primary">
+      <TableHeader class="text-primary font-poppins">
         <TableRow>
           <TableHead class="w-[100px]"> Invoice </TableHead>
           <TableHead>Status</TableHead>
