@@ -24,12 +24,12 @@
                 exactActiveClass="flex w-3/4 rounded-md text-white bg-primary"
               >
                 <SheetClose class="w-full">
-                  <Slots>
+                  <slot>
                     <div class="flex gap-2 items-center">
                       <component :is="item.icon" class="w-6"></component
                       >{{ item.title }}
                     </div>
-                  </Slots>
+                  </slot>
                 </SheetClose>
               </NuxtLink>
             </div>

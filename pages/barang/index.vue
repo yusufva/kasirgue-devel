@@ -2,7 +2,7 @@
   <div>
     <Table>
       <TableCaption>A list of your recent invoices.</TableCaption>
-      <TableHeader>
+      <TableHeader class="text-primary">
         <TableRow>
           <TableHead class="w-[100px]"> Invoice </TableHead>
           <TableHead>Status</TableHead>
@@ -11,14 +11,18 @@
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow v-for="invoice in invoices" :key="invoice.invoice" class="border-b border-black/10">
+        <TableRow
+          v-for="item in barang"
+          :key="item.index"
+          class="border-b border-black/10"
+        >
           <TableCell class="font-medium">
-            {{ invoice.invoice }}
+            {{ item.item }}
           </TableCell>
-          <TableCell>{{ invoice.paymentStatus }}</TableCell>
-          <TableCell>{{ invoice.paymentMethod }}</TableCell>
+          <TableCell>{{ item.paymentStatus }}</TableCell>
+          <TableCell>{{ item.paymentMethod }}</TableCell>
           <TableCell class="text-right">
-            {{ invoice.totalAmount }}
+            {{ item.totalAmount }}
           </TableCell>
         </TableRow>
       </TableBody>
@@ -36,6 +40,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useEnvStore } from "@/stores/envStore";
+import axios from "axios";
 export default {
   components: {
     Table,
@@ -48,51 +54,24 @@ export default {
   },
   data() {
     return {
-      invoices: [
-        {
-          invoice: "INV001",
-          paymentStatus: "Paid",
-          totalAmount: "$250.00",
-          paymentMethod: "Credit Card",
-        },
-        {
-          invoice: "INV002",
-          paymentStatus: "Pending",
-          totalAmount: "$150.00",
-          paymentMethod: "PayPal",
-        },
-        {
-          invoice: "INV003",
-          paymentStatus: "Unpaid",
-          totalAmount: "$350.00",
-          paymentMethod: "Bank Transfer",
-        },
-        {
-          invoice: "INV004",
-          paymentStatus: "Paid",
-          totalAmount: "$450.00",
-          paymentMethod: "Credit Card",
-        },
-        {
-          invoice: "INV005",
-          paymentStatus: "Paid",
-          totalAmount: "$550.00",
-          paymentMethod: "PayPal",
-        },
-        {
-          invoice: "INV006",
-          paymentStatus: "Pending",
-          totalAmount: "$200.00",
-          paymentMethod: "Bank Transfer",
-        },
-        {
-          invoice: "INV007",
-          paymentStatus: "Unpaid",
-          totalAmount: "$300.00",
-          paymentMethod: "Credit Card",
-        },
-      ],
+      barang: [],
     };
+  },
+  methods: {
+    async getBarangList() {
+      try {
+        const barang = await axios.get(
+          useEnvStore().apiUrl + "/api/product-master"
+        );
+        this.barang = barang.data;
+        console.log(barang);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+  },
+  mounted() {
+    this.getBarangList();
   },
 };
 </script>

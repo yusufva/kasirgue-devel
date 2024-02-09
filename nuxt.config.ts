@@ -6,5 +6,10 @@ export default defineNuxtConfig({
     prefix: "",
     componentDir: "./components/ui",
   },
+  runtimeConfig: {
+    public: {
+      api: process.env.NUXT_PUBLIC_API_BASE,
+    },
+  },
   devtools: { enabled: true },
 });
