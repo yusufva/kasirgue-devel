@@ -3,7 +3,7 @@
     <Sidebar />
     <div class="flex flex-col w-full">
       <Header />
-      <div class="w-full h-full p-10 rounded-lg bg-black/5">
+      <div class="w-full min-h-full p-10 rounded-lg bg-black/5">
         <slot />
       </div>
     </div>

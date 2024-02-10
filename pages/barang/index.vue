@@ -1,13 +1,18 @@
 <template>
   <div>
+    <div class="flex justify-end">
+      <NuxtLink to="/barang/tambahbarang">
+        <PlusCircleIcon class="w-8 text-primary" />
+      </NuxtLink>
+    </div>
     <Table>
       <TableCaption>A list of your recent invoices.</TableCaption>
       <TableHeader class="text-primary font-poppins">
         <TableRow>
-          <TableHead class="w-[100px]"> Invoice </TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Method</TableHead>
-          <TableHead class="text-right"> Amount </TableHead>
+          <TableHead> Barang </TableHead>
+          <TableHead>Harga Beli</TableHead>
+          <TableHead>Harga Jual</TableHead>
+          <TableHead class="text-right"> Stok </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -17,12 +22,12 @@
           class="border-b border-black/10"
         >
           <TableCell class="font-medium">
-            {{ item.item }}
+            {{ item.name }}
           </TableCell>
-          <TableCell>{{ item.paymentStatus }}</TableCell>
-          <TableCell>{{ item.paymentMethod }}</TableCell>
+          <TableCell>{{ item.buying_price }}</TableCell>
+          <TableCell>{{ item.selling_price }}</TableCell>
           <TableCell class="text-right">
-            {{ item.totalAmount }}
+            {{ item.stock.quantity }}
           </TableCell>
         </TableRow>
       </TableBody>
@@ -40,6 +45,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { PlusCircleIcon } from "@heroicons/vue/24/solid";
 import { useEnvStore } from "@/stores/envStore";
 import axios from "axios";
 export default {
@@ -51,6 +57,7 @@ export default {
     TableHead,
     TableHeader,
     TableRow,
+    PlusCircleIcon,
   },
   data() {
     return {
@@ -63,7 +70,7 @@ export default {
         const barang = await axios.get(
           useEnvStore().apiUrl + "/api/product-master"
         );
-        this.barang = barang.data;
+        this.barang = barang.data.data;
         console.log(barang);
       } catch (err) {
         console.log(err);
