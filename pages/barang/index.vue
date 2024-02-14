@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex justify-end">
-      <NuxtLink to="/barang/tambahbarang">
+      <NuxtLink to="/barang/tambah-barang">
         <PlusCircleIcon class="w-8 text-primary" />
       </NuxtLink>
     </div>

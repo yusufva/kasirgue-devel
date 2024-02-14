@@ -1,9 +1,9 @@
 <template>
-  <div class="flex gap-4 pr-4 pb-4 w-full h-screen">
+  <div class="flex gap-4 pr-4 pb-4 w-full min-h-screen bg-black/5">
     <Sidebar />
     <div class="flex flex-col w-full">
       <Header />
-      <div class="w-full min-h-full p-10 rounded-lg bg-black/5">
+      <div class="w-full max-h-full rounded-md bg-white p-10">
         <slot />
       </div>
     </div>
