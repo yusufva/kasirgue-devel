@@ -1,5 +1,5 @@
 <template>
-  <div class="flex gap-4 pr-4 pb-4 w-screen h-screen">
+  <div class="flex gap-4 pr-4 pb-4 w-full h-screen">
     <Sidebar />
     <div class="flex flex-col w-full">
       <Header />
