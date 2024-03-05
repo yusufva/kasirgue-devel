@@ -35,11 +35,10 @@
           />
         </div>
         <div class="flex flex-col w-1/4 gap-2">
-          <Label class="text-primary">Stok</Label>
+          <Label class="text-primary">Satuan</Label>
           <Input
             class="border-black/30 focus-visible:ring-primary"
-            type="number"
-            v-model="stok"
+            v-model="satuan"
           />
         </div>
       </div>
@@ -50,7 +49,9 @@
         >
           Kembali
         </Button>
-        <Button class="w-max bg-primary text-white" @click="tambahBarang()"> Tambah </Button>
+        <Button class="w-max bg-primary text-white" @click="tambahBarang()">
+          Tambah
+        </Button>
       </div>
     </div>
   </div>
@@ -73,24 +74,27 @@ export default {
       nama_produk: null,
       harga_beli: null,
       harga_jual: null,
-      stok: null,
+      satuan: null
     };
   },
   methods: {
     async tambahBarang() {
-      try{
-        const barang = await axios.post(useEnvStore().apiUrl+"/api/product-master",{
-          "name": this.nama_produk,
-          "buying_price": this.harga_beli,
-          "selling_price": this.harga_jual,
-          "stock":{
-            "quantity": this.stok
+      try {
+        const barang = await axios.post(
+          useEnvStore().apiUrl + "/api/product-master",
+          {
+            name: this.nama_produk,
+            buying_price: this.harga_beli,
+            selling_price: this.harga_jual,
+            stock:{
+              quantity: 0,
+              satuan: this.satuan
+            }
           }
-        })
-        this.$router.push("/barang")
-      }
-      catch (err){
-        console.log(err)
+        );
+        this.$router.push("/barang");
+      } catch (err) {
+        console.log(err);
       }
     },
   },
