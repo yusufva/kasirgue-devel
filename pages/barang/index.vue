@@ -11,8 +11,8 @@
           <TableHead> Barang </TableHead>
           <TableHead>Harga Beli</TableHead>
           <TableHead>Harga Jual</TableHead>
-          <TableHead>Satuan</TableHead>
           <TableHead>Stok</TableHead>
+          <TableHead>Satuan</TableHead>
           <TableHead class="text-right"></TableHead>
         </TableRow>
       </TableHeader>
@@ -27,8 +27,8 @@
           </TableCell>
           <TableCell>{{ item.buying_price }}</TableCell>
           <TableCell>{{ item.selling_price }}</TableCell>
-          <TableCell>{{ item.stock.satuan }}</TableCell>
           <TableCell>{{ item.stock.quantity }}</TableCell>
+          <TableCell>{{ item.stock.satuan }}</TableCell>
           <TableCell class="text-right">
             <NuxtLink :to="/barang/+item.id">
               <Button class="bg-primary rounded-full p-3">
