@@ -6,13 +6,14 @@
       </NuxtLink>
     </div>
     <Table>
-      <TableCaption>A list of your recent invoices.</TableCaption>
       <TableHeader class="text-primary font-poppins">
         <TableRow>
           <TableHead> Barang </TableHead>
           <TableHead>Harga Beli</TableHead>
           <TableHead>Harga Jual</TableHead>
-          <TableHead class="text-right"> Stok </TableHead>
+          <TableHead>Satuan</TableHead>
+          <TableHead>Stok</TableHead>
+          <TableHead class="text-right"></TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -21,13 +22,19 @@
           :key="item.index"
           class="border-b border-black/10"
         >
-          <TableCell class="font-medium">
+          <TableCell class="font-medium capitalize">
             {{ item.name }}
           </TableCell>
           <TableCell>{{ item.buying_price }}</TableCell>
           <TableCell>{{ item.selling_price }}</TableCell>
+          <TableCell>{{ item.stock.satuan }}</TableCell>
+          <TableCell>{{ item.stock.quantity }}</TableCell>
           <TableCell class="text-right">
-            {{ item.stock.quantity }}
+            <NuxtLink :to="/barang/+item.id">
+              <Button class="bg-primary rounded-full p-3">
+                <ArrowTopRightOnSquareIcon class="w-4 text-white" />
+              </Button>
+            </NuxtLink>
           </TableCell>
         </TableRow>
       </TableBody>
@@ -45,7 +52,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { PlusCircleIcon } from "@heroicons/vue/24/solid";
+import { Button } from "@/components/ui/button";
+import {
+  PlusCircleIcon,
+  ArrowTopRightOnSquareIcon,
+} from "@heroicons/vue/24/solid";
 import { useEnvStore } from "@/stores/envStore";
 import axios from "axios";
 export default {
@@ -57,7 +68,9 @@ export default {
     TableHead,
     TableHeader,
     TableRow,
+    Button,
     PlusCircleIcon,
+    ArrowTopRightOnSquareIcon,
   },
   data() {
     return {

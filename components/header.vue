@@ -1,7 +1,9 @@
 <template>
     <div>
-        <div class="w-full h-20">
-            Header
+        <div class="flex w-full h-20 items-center">
+            <div class="text-2xl">
+            PT. ACME Indonesia
+            </div>
         </div>
     </div>
 </template>
