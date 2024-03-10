@@ -1,5 +1,6 @@
 <template lang="">
   <div>
+    <!-- sheet sidebar -->
     <Sheet>
       <div class="flex p-4 gap-2 items-baseline">
         <img :src="logo" class="w-[100px]" />
@@ -37,15 +38,17 @@
         </SheetHeader>
       </SheetContent>
     </Sheet>
+    <!-- button sidebar -->
     <div class="flex flex-col gap-4 pl-4 mt-10">
       <div v-for="item in links" :key="item.index">
-        <NuxtLink
-          :to="item.route"
-          class="flex w-max p-2 text-primary rounded-md hover:bg-primary hover:text-white"
-          exactActiveClass="bg-primary text-white"
-        >
-          <component :is="item.icon" class="w-6"></component>
-        </NuxtLink>
+            <NuxtLink
+              :to="item.route"
+              class="flex w-max p-2 text-primary rounded-md hover:bg-primary hover:text-white"
+              exactActiveClass="bg-primary text-white"
+              :title="item.title"
+            >
+              <component :is="item.icon" class="w-6"></component>
+            </NuxtLink>
       </div>
     </div>
   </div>

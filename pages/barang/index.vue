@@ -16,7 +16,20 @@
           <TableHead class="text-right"></TableHead>
         </TableRow>
       </TableHeader>
-      <TableBody>
+      <TableBody v-if="loading">
+        <TableCell></TableCell>
+        <TableCell></TableCell>
+        <TableCell>
+          <svg
+            class="mx-auto mt-10 animate-[pulse_0.75s_infinite] h-10 w-10 rounded-full bg-primary"
+            viewBox="0 0 24 24"
+          ></svg>
+        </TableCell>
+        <TableCell></TableCell>
+        <TableCell></TableCell>
+        <TableCell></TableCell>
+      </TableBody>
+      <TableBody v-else>
         <TableRow
           v-for="item in barang"
           :key="item.index"
@@ -30,7 +43,7 @@
           <TableCell>{{ item.stock.quantity }}</TableCell>
           <TableCell>{{ item.stock.satuan }}</TableCell>
           <TableCell class="text-right">
-            <NuxtLink :to="/barang/+item.id">
+            <NuxtLink :to="/barang/ + item.id">
               <Button class="bg-primary rounded-full p-3">
                 <ArrowTopRightOnSquareIcon class="w-4 text-white" />
               </Button>
@@ -74,6 +87,7 @@ export default {
   },
   data() {
     return {
+      loading: true,
       barang: [],
     };
   },
@@ -84,7 +98,7 @@ export default {
           useEnvStore().apiUrl + "/api/product-master"
         );
         this.barang = barang.data.data;
-        console.log(barang);
+        this.loading = false;
       } catch (err) {
         console.log(err);
       }
