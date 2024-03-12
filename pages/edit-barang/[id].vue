@@ -1,26 +1,34 @@
 <template>
   <div>
-    <div class="flex flex-col w-full h-max gap-4">
+    <div v-if="loading" class="flex flex-col w-full h-max gap-4">
+      <svg
+        class="mx-auto animate-[pulse_0.75s_infinite] h-10 w-10 rounded-full bg-primary"
+        viewBox="0 0 24 24"
+      ></svg>
+    </div>
+    <div v-else class="flex flex-col w-full h-max gap-4">
+      <!-- header -->
       <div class="flex gap-1 text-xs">
         <NuxtLink to="/barang" class="text-black/60 hover:text-primary"
           >Barang
         </NuxtLink>
-        <div class="text-primary">/ Tambah Barang</div>
+        <div class="text-primary capitalize">/ {{ dataBarang.name }}</div>
       </div>
-      <div class="text-primary font-semibold text-2xl">Tambah Barang</div>
+      <div class="text-primary font-semibold text-2xl">Edit Barang</div>
       <div class="h-[2px] w-full bg-primary/20 rounded-xl"></div>
-      <!-- input section -->
+      <!-- content -->
       <div class="flex flex-row w-full gap-4">
         <div class="flex flex-col w-1/4 gap-2">
           <Label class="text-primary">Nama Produk</Label>
           <Input
             class="border-black/30 focus-visible:ring-primary capitalize"
-            v-model="nama_produk"
+            v-model="nama"
           />
         </div>
         <div class="flex flex-col w-1/4 gap-2">
           <Label class="text-primary">Harga Beli</Label>
           <Input
+            disabled
             class="border-black/30 focus-visible:ring-primary"
             type="number"
             v-model="harga_beli"
@@ -37,6 +45,7 @@
         <div class="flex flex-col w-1/4 gap-2">
           <Label class="text-primary">Satuan</Label>
           <Input
+            disabled
             class="border-black/30 focus-visible:ring-primary"
             v-model="satuan"
           />
@@ -49,8 +58,8 @@
         >
           Kembali
         </Button>
-        <Button class="w-max bg-primary text-white" @click="tambahBarang()">
-          Tambah
+        <Button class="w-max bg-primary text-white" @click="editBarang()">
+          Simpan
         </Button>
       </div>
     </div>
@@ -61,42 +70,57 @@
 import axios from "axios";
 import { useEnvStore } from "@/stores/envStore";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 export default {
   components: {
     Input,
-    Label,
-    Button,
   },
   data() {
     return {
-      nama_produk: null,
+      dataBarang: [],
+      loading: true,
+      nama: null,
       harga_beli: null,
       harga_jual: null,
-      satuan: null
+      satuan: null,
     };
   },
   methods: {
-    async tambahBarang() {
+    async getDataBarang() {
       try {
-        const barang = await axios.post(
-          useEnvStore().apiUrl + "/api/product-master",
-          {
-            name: this.nama_produk,
-            buying_price: this.harga_beli,
-            selling_price: this.harga_jual,
-            stock:{
-              quantity: 0,
-              satuan: this.satuan
-            }
-          }
+        const barang = await axios.get(
+          useEnvStore().apiUrl + "/api/product-master/" + this.$route.params.id
         );
-        this.$router.push("/barang");
+        console.log(barang);
+        this.dataBarang = barang.data.data;
+        this.nama = this.dataBarang.name;
+        this.harga_beli = this.dataBarang.buying_price;
+        this.harga_jual = this.dataBarang.selling_price;
+        this.satuan = this.dataBarang.stock.satuan;
+        this.loading = false;
       } catch (err) {
         console.log(err);
       }
     },
+    async editBarang() {
+      try {
+        const edit = await axios.put(
+          useEnvStore().apiUrl + "/api/product-master/" + this.$route.params.id,
+          {
+            id: this.$route.params.id,
+            name: this.nama,
+            buying_price: this.harga_beli,
+            selling_price: this.harga_jual,
+            stock: this.dataBarang.stock.quantity,
+          }
+        );
+        this.$router.push("/barang")
+      } catch (err) {
+        console.log(err);
+      }
+    },
+  },
+  mounted() {
+    this.getDataBarang();
   },
 };
 </script>

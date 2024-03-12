@@ -6,8 +6,8 @@
         viewBox="0 0 24 24"
       ></svg>
     </div>
-    <!-- header -->
     <div v-else class="flex flex-col w-full h-max gap-4">
+      <!-- header -->
       <div class="flex gap-1 text-xs">
         <NuxtLink to="/barang" class="text-black/60 hover:text-primary"
           >Barang
@@ -20,25 +20,34 @@
       <div class="flex flex-col">
         <Table>
           <TableBody>
-            <TableRow>
-              <TableCell>Nama</TableCell>
+            <TableRow class="border-b border-black/10">
+              <TableCell class="w-1/3">Nama</TableCell>
               <TableCell class="capitalize">: {{ dataBarang.name }}</TableCell>
             </TableRow>
-            <TableRow>
-              <TableCell>Harga Beli</TableCell>
+            <TableRow class="border-b border-black/10">
+              <TableCell class="w-1/3">Harga Beli</TableCell>
               <TableCell>: {{ dataBarang.buying_price }}</TableCell>
             </TableRow>
-            <TableRow>
-              <TableCell>Harga Jual</TableCell>
+            <TableRow class="border-b border-black/10">
+              <TableCell class="w-1/3">Harga Jual</TableCell>
               <TableCell>: {{ dataBarang.selling_price }}</TableCell>
             </TableRow>
-            <TableRow>
-              <TableCell>Stock</TableCell>
+            <TableRow class="border-b border-black/10">
+              <TableCell class="w-1/3">Stock</TableCell>
               <TableCell>: {{ dataBarang.stock.quantity }}</TableCell>
+            </TableRow>
+            <TableRow class="border-b border-black/10">
+              <TableCell class="w-1/3">Satuan</TableCell>
+              <TableCell>: {{ dataBarang.stock.satuan }}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
-        <Button class="w-1/12 mx-auto bg-secondary text-white">Edit</Button>
+      </div>
+      <div class="flex w-1/10 mx-auto gap-6">
+        <NuxtLink :to="/edit-barang/ + dataBarang.id" class="w-1/2">
+          <Button class="bg-secondary text-white">Edit</Button>
+        </NuxtLink>
+        <Button class="w-1/2 bg-red text-white" @click="hapusBarang()">Hapus</Button>
       </div>
     </div>
   </div>
@@ -72,6 +81,17 @@ export default {
         console.log(barang);
         this.dataBarang = barang.data.data;
         this.loading = false;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    async hapusBarang() {
+      try {
+        const hapus = await axios.delete(
+          useEnvStore().apiUrl + "/api/product-master/" + this.$route.params.id
+        );
+        console.log(hapus);
+        this.$router.push("/barang");
       } catch (err) {
         console.log(err);
       }
