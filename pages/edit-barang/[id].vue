@@ -107,7 +107,7 @@ export default {
           useEnvStore().apiUrl + "/api/product-master/" + this.$route.params.id,
           {
             id: this.$route.params.id,
-            name: this.nama,
+            name: this.nama.toLowerCase(),
             buying_price: this.harga_beli,
             selling_price: this.harga_jual,
             stock: this.dataBarang.stock.quantity,

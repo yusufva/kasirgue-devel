@@ -83,7 +83,7 @@ export default {
         const barang = await axios.post(
           useEnvStore().apiUrl + "/api/product-master",
           {
-            name: this.nama_produk,
+            name: this.nama_produk.toLowerCase(),
             buying_price: this.harga_beli,
             selling_price: this.harga_jual,
             stock:{
