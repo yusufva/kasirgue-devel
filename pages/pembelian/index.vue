@@ -42,13 +42,13 @@
           :key="item.index"
           class="border-b border-black/10"
         >
-          <TableCell>{{ item.date }}</TableCell>
+          <TableCell>{{ useFormat.dateFormat(item.date) }}</TableCell>
           <TableCell class="font-medium capitalize">
             {{ item.items[0].name }}
           </TableCell>
-          <TableCell>{{ item.items[0].buying_price }}</TableCell>
+          <TableCell>{{ useFormat.currencyFormat(item.items[0].buying_price) }}</TableCell>
           <TableCell>{{ item.items[0].quantity }}</TableCell>
-          <TableCell>{{ item.items[0].total_price }}</TableCell>
+          <TableCell>{{ useFormat.currencyFormat(item.items[0].total_price) }}</TableCell>
         </TableRow>
       </TableBody>
     </Table>
@@ -68,8 +68,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "@heroicons/vue/24/outline";
 import { useEnvStore } from "@/stores/envStore";
+import { useUseFormat } from "@/stores/useFormat";
 import axios from "axios";
 export default {
+  setup(){
+    const useFormat = useUseFormat()
+    return {useFormat}
+  },
   components: {
     Table,
     TableBody,
@@ -90,11 +95,9 @@ export default {
   methods: {
     async getBeliList() {
       try {
-        const beli = await axios.get(
-          useEnvStore().apiUrl + "/api/tx-buy"
-        );
+        const beli = await axios.get(useEnvStore().apiUrl + "/api/tx-buy");
         this.beliList = beli.data.data;
-        console.log(this.beliList)
+        console.log(this.beliList);
         this.loading = false;
       } catch (err) {
         console.log(err);
