@@ -8,21 +8,18 @@
       <TableHeader class="text-primary font-poppins">
         <TableRow>
           <TableHead>Barang </TableHead>
+          <TableHead></TableHead>
           <TableHead>Jumlah Stok</TableHead>
-          <TableHead class="text-right"></TableHead>
         </TableRow>
       </TableHeader>
       <TableBody v-if="loading">
         <TableCell></TableCell>
-        <TableCell></TableCell>
-        <TableCell>
+        <TableCell class="flex w-full">
           <svg
             class="mx-auto mt-10 animate-[pulse_0.75s_infinite] h-10 w-10 rounded-full bg-primary"
             viewBox="0 0 24 24"
           ></svg>
         </TableCell>
-        <TableCell></TableCell>
-        <TableCell></TableCell>
         <TableCell></TableCell>
       </TableBody>
       <TableBody v-else>
@@ -34,6 +31,7 @@
           <TableCell class="font-medium capitalize">
             {{ item.product.name }}
           </TableCell>
+          <TableCell></TableCell>
           <TableCell>{{ item.quantity }} {{ item.satuan }}</TableCell>
         </TableRow>
       </TableBody>

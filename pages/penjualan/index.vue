@@ -1,5 +1,5 @@
 <template>
-  <div>halaman transaksi</div>
+  <div>Penjualan</div>
 </template>
 
 <script>

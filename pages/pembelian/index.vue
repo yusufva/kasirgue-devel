@@ -1,22 +1,25 @@
 <template>
   <div>
     <!-- header -->
-    <div class="text-primary font-semibold text-2xl">Daftar Barang</div>
+    <div class="text-primary font-semibold text-2xl">Daftar Pembelian</div>
     <div class="h-[2px] w-full bg-primary/20 rounded-xl my-4"></div>
     <!-- content -->
     <div class="flex justify-end">
       <NuxtLink to="/barang/tambah-barang">
-        <PlusCircleIcon class="w-8 text-primary" />
+        <Button class="flex align-center bg-primary">
+          <PlusIcon class="w-6 text-white" />
+          <div class="text-white">Tambah Pembelian</div>
+        </Button>
       </NuxtLink>
     </div>
     <Table>
       <TableHeader class="text-primary font-poppins">
         <TableRow>
-          <TableHead> Barang </TableHead>
-          <TableHead>Harga Beli</TableHead>
-          <TableHead>Harga Jual</TableHead>
-          <TableHead>Stok</TableHead>
-          <TableHead>Satuan</TableHead>
+          <TableHead>Tanggal</TableHead>
+          <TableHead>Barang</TableHead>
+          <TableHead>Harga</TableHead>
+          <TableHead>Jumlah</TableHead>
+          <TableHead>Total Harga</TableHead>
           <TableHead class="text-right"></TableHead>
         </TableRow>
       </TableHeader>
@@ -35,24 +38,17 @@
       </TableBody>
       <TableBody v-else>
         <TableRow
-          v-for="item in barang"
+          v-for="item in beliList"
           :key="item.index"
           class="border-b border-black/10"
         >
+          <TableCell>{{ item.date }}</TableCell>
           <TableCell class="font-medium capitalize">
-            {{ item.name }}
+            {{ item.items[0].name }}
           </TableCell>
-          <TableCell>{{ item.buying_price }}</TableCell>
-          <TableCell>{{ item.selling_price }}</TableCell>
-          <TableCell>{{ item.stock.quantity }}</TableCell>
-          <TableCell>{{ item.stock.satuan }}</TableCell>
-          <TableCell class="text-right">
-            <NuxtLink :to="/barang/ + item.id">
-              <Button class="bg-primary rounded-full p-3">
-                <ArrowTopRightOnSquareIcon class="w-4 text-white" />
-              </Button>
-            </NuxtLink>
-          </TableCell>
+          <TableCell>{{ item.items[0].buying_price }}</TableCell>
+          <TableCell>{{ item.items[0].quantity }}</TableCell>
+          <TableCell>{{ item.items[0].total_price }}</TableCell>
         </TableRow>
       </TableBody>
     </Table>
@@ -70,10 +66,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import {
-  PlusCircleIcon,
-  ArrowTopRightOnSquareIcon,
-} from "@heroicons/vue/24/solid";
+import { PlusIcon } from "@heroicons/vue/24/outline";
 import { useEnvStore } from "@/stores/envStore";
 import axios from "axios";
 export default {
@@ -86,22 +79,22 @@ export default {
     TableHeader,
     TableRow,
     Button,
-    PlusCircleIcon,
-    ArrowTopRightOnSquareIcon,
+    PlusIcon,
   },
   data() {
     return {
       loading: true,
-      barang: [],
+      beliList: [],
     };
   },
   methods: {
-    async getBarangList() {
+    async getBeliList() {
       try {
-        const barang = await axios.get(
-          useEnvStore().apiUrl + "/api/product-master"
+        const beli = await axios.get(
+          useEnvStore().apiUrl + "/api/tx-buy"
         );
-        this.barang = barang.data.data;
+        this.beliList = beli.data.data;
+        console.log(this.beliList)
         this.loading = false;
       } catch (err) {
         console.log(err);
@@ -109,7 +102,7 @@ export default {
     },
   },
   mounted() {
-    this.getBarangList();
+    this.getBeliList();
   },
 };
 </script>

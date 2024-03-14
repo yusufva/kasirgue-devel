@@ -70,7 +70,8 @@ import {
   HomeIcon,
   ArchiveBoxIcon,
   RectangleStackIcon,
-  BanknotesIcon,
+  SquaresPlusIcon,
+  ShoppingCartIcon
 } from "@heroicons/vue/24/solid";
 
 export default {
@@ -89,7 +90,8 @@ export default {
     HomeIcon,
     ArchiveBoxIcon,
     RectangleStackIcon,
-    BanknotesIcon,
+    SquaresPlusIcon,
+    ShoppingCartIcon
   },
   data() {
     return {
@@ -98,7 +100,8 @@ export default {
         { title: "Beranda", icon: "HomeIcon", route: "/" },
         { title: "Barang", icon: "ArchiveBoxIcon", route: "/barang" },
         { title: "Stok", icon: "RectangleStackIcon", route: "/stok" },
-        { title: "Transaksi", icon: "BanknotesIcon", route: "/transaksi" },
+        { title: "Pembelian", icon: "SquaresPlusIcon", route: "/pembelian" },
+        { title: "Penjualan", icon: "ShoppingCartIcon", route: "/penjualan" },
       ],
     };
   },
