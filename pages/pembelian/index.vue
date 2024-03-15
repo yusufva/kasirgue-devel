@@ -15,10 +15,8 @@
     <Table>
       <TableHeader class="text-primary font-poppins">
         <TableRow>
+          <TableHead>ID Transaksi</TableHead>
           <TableHead>Tanggal</TableHead>
-          <TableHead>Barang</TableHead>
-          <TableHead>Harga</TableHead>
-          <TableHead>Jumlah</TableHead>
           <TableHead>Total Harga</TableHead>
           <TableHead class="text-right"></TableHead>
         </TableRow>
@@ -42,13 +40,14 @@
           :key="item.index"
           class="border-b border-black/10"
         >
+          <TableCell>{{ item.id }}</TableCell>
           <TableCell>{{ useFormat.dateFormat(item.date) }}</TableCell>
-          <TableCell class="font-medium capitalize">
-            {{ item.items[0].name }}
+          <TableCell>{{ useFormat.currencyFormat(item.final_price) }}</TableCell>
+          <TableCell>
+            <NuxtLink class="flex items-center text-primary text-xs gap-1" :to="/pembelian/+item.id">
+              <ArrowTopRightOnSquareIcon class="w-5"/>Detail
+            </NuxtLink>
           </TableCell>
-          <TableCell>{{ useFormat.currencyFormat(item.items[0].buying_price) }}</TableCell>
-          <TableCell>{{ item.items[0].quantity }}</TableCell>
-          <TableCell>{{ useFormat.currencyFormat(item.items[0].total_price) }}</TableCell>
         </TableRow>
       </TableBody>
     </Table>
@@ -67,6 +66,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "@heroicons/vue/24/outline";
+import { ArrowTopRightOnSquareIcon } from "@heroicons/vue/24/solid";
 import { useEnvStore } from "@/stores/envStore";
 import { useUseFormat } from "@/stores/useFormat";
 import axios from "axios";
@@ -85,6 +85,7 @@ export default {
     TableRow,
     Button,
     PlusIcon,
+    ArrowTopRightOnSquareIcon
   },
   data() {
     return {
