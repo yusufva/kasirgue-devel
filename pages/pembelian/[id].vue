@@ -17,7 +17,45 @@
       <div class="text-primary font-semibold text-2xl">Detail Pembelian</div>
       <div class="h-[2px] w-full bg-primary/20 rounded-xl"></div>
       <!-- content -->
-      <div class="flex flex-row w-full gap-4"></div>
+      <div class="flex flex-col w-full gap-4">
+        <!-- title -->
+        <Table class="w-1/2">
+          <TableBody>
+            <TableRow class="border-none">
+              <TableCell class="pb-0">ID</TableCell>
+              <TableCell class="pb-0">: {{ dataBarang.id }}</TableCell>
+            </TableRow>
+            <TableRow class="border-none">
+              <TableCell>Tanggal</TableCell>
+              <TableCell>: {{ dataBarang.date }}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+        <!-- items -->
+        <Table>
+          <TableHeader class="border-b border-black text-primary">
+            <TableHead>Barang</TableHead>
+            <TableHead>Jumlah</TableHead>
+            <TableHead>Harga</TableHead>
+            <TableHead>Total Harga</TableHead>
+          </TableHeader>
+          <TableBody class="border-b border-black/10">
+            <TableRow v-for="item in detailBarang" :key="item.index">
+              <TableCell>{{ item.name }}</TableCell>
+              <TableCell>{{ item.quantity }}</TableCell>
+              <TableCell>{{ item.buying_price }}</TableCell>
+              <TableCell>{{ item.total_price }}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+        <Table class="w-full text-right">
+          <TableBody>
+            <TableRow>
+              <TableCell class="font-semibold">Total Pembelian: {{ dataBarang.final_price }}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </div>
     </div>
   </div>
 </template>
@@ -25,10 +63,27 @@
 <script>
 import axios from "axios";
 import { useEnvStore } from "@/stores/envStore";
+import {
+  Table,
+  TableHead,
+  TableHeader,
+  TableBody,
+  TableCell,
+  TableRow,
+} from "@/components/ui/table";
 export default {
+  components: {
+    Table,
+    TableHead,
+    TableHeader,
+    TableBody,
+    TableCell,
+    TableRow,
+  },
   data() {
     return {
       dataBarang: [],
+      detailBarang: [],
       loading: true,
     };
   },
@@ -39,7 +94,8 @@ export default {
           useEnvStore().apiUrl + "/api/tx-buy/" + this.$route.params.id
         );
         this.dataBarang = barang.data.data;
-        console.log(this.dataBarang)
+        this.detailBarang = barang.data.data.items;
+        console.log(this.dataBarang);
         this.loading = false;
       } catch (err) {
         console.log(err);

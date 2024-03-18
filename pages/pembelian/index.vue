@@ -5,7 +5,7 @@
     <div class="h-[2px] w-full bg-primary/20 rounded-xl my-4"></div>
     <!-- content -->
     <div class="flex justify-end">
-      <NuxtLink to="/barang/tambah-barang">
+      <NuxtLink to="/pembelian/tambah">
         <Button class="flex align-center bg-primary">
           <PlusIcon class="w-6 text-white" />
           <div class="text-white">Tambah Pembelian</div>
