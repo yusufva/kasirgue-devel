@@ -9,7 +9,7 @@
       </div>
       <div class="text-primary font-semibold text-2xl">Tambah Pembelian</div>
       <div class="h-[2px] w-full bg-primary/20 rounded-xl"></div>
-      <!-- input section -->
+      <!-- content section -->
       <div class="flex flex-row w-full gap-4">
         <!-- select dropdown -->
         <div class="flex flex-col w-1/4 gap-2">
@@ -17,7 +17,7 @@
 
           <ComboboxRoot v-model="selected" class="relative">
             <ComboboxAnchor
-              class="w-full inline-flex items-baseline justify-between rounded rounded-md px-[15px] text-sm leading-none h-[36px] gap-[5px] bg-white border border-1 border-black/30 focus-visible:ring-primary"
+              class="w-full inline-flex items-baseline justify-between rounded-md px-[15px] text-sm leading-none h-[35px] gap-[5px] bg-white border border-1 border-black/30 focus-visible:ring-primary"
             >
               <ComboboxInput
                 class="!bg-transparent outline-none h-full selection:bg-grass5 placeholder-mauve8 capitalize"
@@ -53,7 +53,6 @@
               </ComboboxViewport>
             </ComboboxContent>
           </ComboboxRoot>
-          {{ selected }}
         </div>
         <div class="flex flex-col w-1/4 gap-2">
           <Label class="text-primary">Harga Beli</Label>
@@ -64,30 +63,52 @@
           />
         </div>
         <div class="flex flex-col w-1/4 gap-2">
-          <Label class="text-primary">Harga Jual</Label>
+          <Label class="text-primary">Jumlah</Label>
           <Input
             class="border-black/30 focus-visible:ring-primary"
             type="number"
-            v-model="harga_jual"
+            v-model="jumlah"
           />
         </div>
-        <div class="flex flex-col w-1/4 gap-2">
-          <Label class="text-primary">Satuan</Label>
-          <Input
-            class="border-black/30 focus-visible:ring-primary"
-            v-model="satuan"
-          />
+        <div class="flex flex-col justify-end w-1/4 gap-2">
+          <Button
+            class="w-max bg-primary text-white"
+            @click="addToTransStore()"
+          >
+            Tambah
+          </Button>
         </div>
       </div>
+      <!-- table content -->
+      <Table v-if="showTable">
+        <TableHeader class="border-b border-primary">
+          <TableHead>Barang</TableHead>
+          <TableHead>Harga Beli</TableHead>
+          <TableHead>Jumlah</TableHead>
+          <TableHead>Total</TableHead>
+        </TableHeader>
+        <TableBody>
+          <TableRow
+            v-for="item in transStore"
+            :key="item.id"
+            class="borer-b border-black/10 capitalize"
+          >
+            <TableCell>{{ item.name }}</TableCell>
+            <TableCell>{{ item.buying_price }}</TableCell>
+            <TableCell>{{ item.quantity }}</TableCell>
+            <TableCell>{{ item.total_price }}</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
       <div class="flex w-full justify-end gap-4">
         <Button
           class="w-max bg-red text-white"
-          @click="this.$router.push('/barang')"
+          @click="this.$router.push('/pembelian')"
         >
           Kembali
         </Button>
-        <Button class="w-max bg-primary text-white" @click="tambahBarang()">
-          Tambah
+        <Button class="w-max bg-primary text-white" @click="tambahPembelian()">
+          Simpan
         </Button>
       </div>
     </div>
@@ -96,10 +117,19 @@
 
 <script>
 import axios from "axios";
+import moment from "moment";
 import { useEnvStore } from "@/stores/envStore";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableHead,
+  TableHeader,
+  TableBody,
+  TableCell,
+  TableRow,
+} from "@/components/ui/table";
 import {
   ComboboxAnchor,
   ComboboxContent,
@@ -131,18 +161,41 @@ export default {
     ComboboxSeparator,
     ComboboxTrigger,
     ComboboxViewport,
+    Table,
+    TableHead,
+    TableHeader,
+    TableBody,
+    TableCell,
+    TableRow,
   },
   data() {
     return {
       listBarang: [],
       selected: "",
+      transStore: [],
+      showTable: false,
       nama_produk: null,
       harga_beli: null,
-      harga_jual: null,
-      satuan: null,
+      jumlah: null,
     };
   },
   methods: {
+    addToTransStore() {
+      const filteredBarang = this.listBarang.filter(
+        (item) => item.name === this.selected
+      );
+      console.log(filteredBarang);
+      let tempStore = {
+        name: this.selected,
+        product_id: filteredBarang[0].id,
+        buying_price: this.harga_beli,
+        quantity: this.jumlah,
+        total_price: this.harga_beli * this.jumlah,
+      };
+      this.transStore.push(tempStore);
+      this.showTable = true;
+      console.log(this.transStore)
+    },
     async getBarangList() {
       try {
         const barang = await axios.get(
@@ -154,21 +207,19 @@ export default {
         console.log(err);
       }
     },
-    async tambahBarang() {
+    async tambahPembelian() {
+      const finalPrice = this.transStore.reduce((accumulator, currentValue)=>{
+        return accumulator + currentValue.total_price
+      }, 0)
       try {
-        const barang = await axios.post(
-          useEnvStore().apiUrl + "/api/product-master",
-          {
-            name: this.nama_produk.toLowerCase(),
-            buying_price: this.harga_beli,
-            selling_price: this.harga_jual,
-            stock: {
-              quantity: 0,
-              satuan: this.satuan,
-            },
+        const beli = await axios.post(
+          useEnvStore().apiUrl + "/api/tx-buy",{
+            date: moment(),
+            items: this.transStore,
+            final_price: finalPrice
           }
         );
-        this.$router.push("/barang");
+        this.$router.push("/pembelian");
       } catch (err) {
         console.log(err);
       }

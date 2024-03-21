@@ -27,7 +27,7 @@
             </TableRow>
             <TableRow class="border-none">
               <TableCell>Tanggal</TableCell>
-              <TableCell>: {{ dataBarang.date }}</TableCell>
+              <TableCell>: {{ useFormat.dateFormat(dataBarang.date) }}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -39,19 +39,21 @@
             <TableHead>Harga</TableHead>
             <TableHead>Total Harga</TableHead>
           </TableHeader>
-          <TableBody class="border-b border-black/10">
+          <TableBody class="border-b border-black/10 capitalize">
             <TableRow v-for="item in detailBarang" :key="item.index">
               <TableCell>{{ item.name }}</TableCell>
               <TableCell>{{ item.quantity }}</TableCell>
-              <TableCell>{{ item.buying_price }}</TableCell>
-              <TableCell>{{ item.total_price }}</TableCell>
+              <TableCell>{{ useFormat.currencyFormat(item.buying_price) }}</TableCell>
+              <TableCell>{{ useFormat.currencyFormat(item.total_price) }}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
         <Table class="w-full text-right">
           <TableBody>
             <TableRow>
-              <TableCell class="font-semibold">Total Pembelian: {{ dataBarang.final_price }}</TableCell>
+              <TableCell class="font-semibold"
+                >Total Pembelian: {{ useFormat.currencyFormat(dataBarang.final_price) }}</TableCell
+              >
             </TableRow>
           </TableBody>
         </Table>
@@ -62,6 +64,7 @@
 
 <script>
 import axios from "axios";
+import { useUseFormat } from "@/stores/useFormat";
 import { useEnvStore } from "@/stores/envStore";
 import {
   Table,
@@ -72,6 +75,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 export default {
+  setup() {
+    const useFormat = useUseFormat();
+    return { useFormat };
+  },
   components: {
     Table,
     TableHead,
