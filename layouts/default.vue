@@ -5,18 +5,30 @@
       <Header />
       <div class="w-full max-h-full rounded-md bg-white p-10">
         <slot />
+        <!-- tambah penjualan -->
+        <div class="flex absolute bottom-4 right-4">
+          <NuxtLink to="/penjualan/tambah">
+            <Button class="bg-primary text-white gap-1">
+              <PlusIcon class="w-6" />Tambah Transaksi
+            </Button>
+          </NuxtLink>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { PlusIcon } from "@heroicons/vue/24/outline";
+import { Button } from "@/components/ui/button";
 import Header from "@/components/header.vue";
 import Sidebar from "@/components/sidebar.vue";
 export default {
   components: {
     Sidebar,
     Header,
+    Button,
+    PlusIcon,
   },
 };
 </script>
