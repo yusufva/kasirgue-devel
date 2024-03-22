@@ -76,6 +76,9 @@ import {
 } from "@/components/ui/table";
 export default {
   setup() {
+    useSeoMeta({
+      title: "Detail Penjualan | Kasirgue",
+    });
     const useFormat = useUseFormat();
     return { useFormat };
   },

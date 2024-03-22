@@ -64,6 +64,9 @@ import { useUseFormat } from "@/stores/useFormat";
 import axios from "axios";
 export default {
   setup(){
+    useSeoMeta({
+      title: "Penjualan | Kasirgue",
+    });
     const useFormat = useUseFormat()
     return {useFormat}
   },

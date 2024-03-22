@@ -145,6 +145,11 @@ import {
   ComboboxViewport,
 } from "radix-vue";
 export default {
+  setup() {
+    useSeoMeta({
+      title: "Tambah Pembelian | Kasirgue",
+    });
+  },
   components: {
     Input,
     Label,

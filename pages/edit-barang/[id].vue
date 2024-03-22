@@ -71,6 +71,11 @@ import axios from "axios";
 import { useEnvStore } from "@/stores/envStore";
 import { Input } from "@/components/ui/input";
 export default {
+  setup(){
+    useSeoMeta({
+      title: "Edit Barang | Kasirgue",
+    });
+  },
   components: {
     Input,
   },

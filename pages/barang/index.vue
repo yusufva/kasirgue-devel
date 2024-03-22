@@ -77,6 +77,11 @@ import {
 import { useEnvStore } from "@/stores/envStore";
 import axios from "axios";
 export default {
+  setup(){
+    useSeoMeta({
+      title: "Barang | Kasirgue",
+    });
+  },
   components: {
     Table,
     TableBody,

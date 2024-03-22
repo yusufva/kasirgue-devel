@@ -57,6 +57,11 @@ import {
 import { useEnvStore } from "@/stores/envStore";
 import axios from "axios";
 export default {
+  setup(){
+    useSeoMeta({
+      title: "Stok | Kasirgue",
+    });
+  },
   components: {
     Table,
     TableBody,

@@ -42,10 +42,15 @@
         >
           <TableCell>{{ item.id }}</TableCell>
           <TableCell>{{ useFormat.dateFormat(item.date) }}</TableCell>
-          <TableCell>{{ useFormat.currencyFormat(item.final_price) }}</TableCell>
+          <TableCell>{{
+            useFormat.currencyFormat(item.final_price)
+          }}</TableCell>
           <TableCell>
-            <NuxtLink class="flex items-center text-primary text-xs gap-1" :to="/pembelian/+item.id">
-              <ArrowTopRightOnSquareIcon class="w-5"/>Detail
+            <NuxtLink
+              class="flex items-center text-primary text-xs gap-1"
+              :to="/pembelian/ + item.id"
+            >
+              <ArrowTopRightOnSquareIcon class="w-5" />Detail
             </NuxtLink>
           </TableCell>
         </TableRow>
@@ -71,9 +76,12 @@ import { useEnvStore } from "@/stores/envStore";
 import { useUseFormat } from "@/stores/useFormat";
 import axios from "axios";
 export default {
-  setup(){
-    const useFormat = useUseFormat()
-    return {useFormat}
+  setup() {
+    useSeoMeta({
+      title: "Pembelian | Kasirgue",
+    });
+    const useFormat = useUseFormat();
+    return { useFormat };
   },
   components: {
     Table,
@@ -85,7 +93,7 @@ export default {
     TableRow,
     Button,
     PlusIcon,
-    ArrowTopRightOnSquareIcon
+    ArrowTopRightOnSquareIcon,
   },
   data() {
     return {

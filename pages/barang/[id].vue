@@ -59,6 +59,11 @@ import { useEnvStore } from "@/stores/envStore";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 export default {
+  setup(){
+    useSeoMeta({
+      title: "Detail Barang | Kasirgue",
+    });
+  },
   components: {
     Table,
     TableBody,
