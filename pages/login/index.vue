@@ -41,7 +41,9 @@
 
 <script>
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 import { useEnvStore } from "@/stores/envStore";
+import { useAuthStore } from "@/stores/authStore";
 import { UserCircleIcon, LockClosedIcon } from "@heroicons/vue/24/solid";
 import Logo from "@/assets/images/logo.png";
 import {
@@ -82,11 +84,37 @@ export default {
   methods: {
     async toLogin() {
       try {
-        const login = await axios.post(useEnvStore().loginUrl+"/api/users/login", {
-          email: this.user,
-          password: this.pass,
+        const onLogin = await axios.post(
+          useEnvStore().loginUrl + "/api/users/login",
+          {
+            email: this.user,
+            password: this.pass,
+          }
+        );
+        console.log(onLogin.data);
+        this.decodejwt(onLogin.data.data.access_token);
+        useAuthStore().getToken(onLogin.data.data.access_token);
+        this.$router.push("/");
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    aquireToken() {
+      axios
+        .get(useEnvStore().apiUrl + "token")
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
         });
-        console.log(login);
+    },
+    decodejwt(acctoken) {
+      const token = acctoken;
+      try {
+        const decoded = jwtDecode(token);
+        console.log(decoded);
+        useAuthStore().login(decoded);
       } catch (err) {
         console.log(err);
       }
