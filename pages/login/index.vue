@@ -58,9 +58,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 export default {
   setup() {
-    definePageMeta({
-      layout: "auth",
-    });
+    useSeoMeta({
+      title: "Login | Kasirgue",
+    }),
+      definePageMeta({
+        layout: "auth",
+      });
   },
   components: {
     Card,

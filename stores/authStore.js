@@ -33,7 +33,7 @@ export const useAuthStore = defineStore("auth", {
       return this.role;
     },
   },
-//   persist: {
-//     storage: sessionStorage,
-//   },
+  persist: {
+    storage: persistedState.sessionStorage,
+  },
 });
