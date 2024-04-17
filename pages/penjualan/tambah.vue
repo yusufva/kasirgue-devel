@@ -224,6 +224,28 @@ export default {
   mounted() {
     this.getBarangList();
   },
+  beforeRouteLeave(to, from, next) {
+    const { $swal } = useNuxtApp();
+
+    $swal
+      .fire({
+        title: "Peringatan!",
+        text: "Apakah anda yakin meninggalkan halaman ini? Perubahan tidak akan tersimpan.",
+        icon: "warning",
+        showDenyButton: true,
+        confirmButtonText: "Yakin",
+        denyButtonText: "Tidak",
+        confirmButtonColor: "#0B324F",
+        denyButtonColor: "#E84545",
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          next();
+        } else if (result.isDenied) {
+          next(false);
+        }
+      });
+  },
 };
 </script>
 
