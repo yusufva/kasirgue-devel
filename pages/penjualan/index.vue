@@ -1,48 +1,57 @@
 <template>
   <div>
     <!-- header -->
-    <div class="text-primary font-semibold text-2xl">Daftar Transaksi Penjualan</div>
+    <div class="text-primary font-semibold text-2xl">
+      Daftar Transaksi Penjualan
+    </div>
     <div class="h-[2px] w-full bg-primary/20 rounded-xl my-4"></div>
     <!-- content -->
-    <Table>
-      <TableHeader class="text-primary font-poppins">
-        <TableRow>
-          <TableHead>ID Transaksi</TableHead>
-          <TableHead>Tanggal</TableHead>
-          <TableHead>Total Harga</TableHead>
-          <TableHead class="text-right"></TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody v-if="loading">
-        <TableCell></TableCell>
-        <TableCell></TableCell>
-        <TableCell>
-          <svg
-            class="mx-auto mt-10 animate-[pulse_0.75s_infinite] h-10 w-10 rounded-full bg-primary"
-            viewBox="0 0 24 24"
-          ></svg>
-        </TableCell>
-        <TableCell></TableCell>
-        <TableCell></TableCell>
-        <TableCell></TableCell>
-      </TableBody>
-      <TableBody v-else>
-        <TableRow
-          v-for="item in jualList"
-          :key="item.index"
-          class="border-b border-black/10"
-        >
-          <TableCell>{{ item.id }}</TableCell>
-          <TableCell>{{ useFormat.dateFormat(item.date) }}</TableCell>
-          <TableCell>{{ useFormat.currencyFormat(item.final_price) }}</TableCell>
+    <ScrollArea class="h-80 w-full border-b-2 border-b-primary/20">
+      <Table>
+        <TableHeader class="text-primary font-poppins">
+          <TableRow>
+            <TableHead>ID Transaksi</TableHead>
+            <TableHead>Tanggal</TableHead>
+            <TableHead>Total Harga</TableHead>
+            <TableHead class="text-right"></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody v-if="loading">
+          <TableCell></TableCell>
+          <TableCell></TableCell>
           <TableCell>
-            <NuxtLink class="flex items-center text-primary text-xs gap-1" :to="/penjualan/+item.id">
-              <ArrowTopRightOnSquareIcon class="w-5"/>Detail
-            </NuxtLink>
+            <svg
+              class="mx-auto mt-10 animate-[pulse_0.75s_infinite] h-10 w-10 rounded-full bg-primary"
+              viewBox="0 0 24 24"
+            ></svg>
           </TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
+        </TableBody>
+        <TableBody v-else>
+          <TableRow
+            v-for="item in jualList"
+            :key="item.index"
+            class="border-b border-black/10"
+          >
+            <TableCell>{{ item.id }}</TableCell>
+            <TableCell>{{ useFormat.dateFormat(item.date) }}</TableCell>
+            <TableCell>{{
+              useFormat.currencyFormat(item.final_price)
+            }}</TableCell>
+            <TableCell>
+              <NuxtLink
+                class="flex items-center text-primary text-xs gap-1"
+                :to="/penjualan/ + item.id"
+              >
+                <ArrowTopRightOnSquareIcon class="w-5" />Detail
+              </NuxtLink>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </ScrollArea>
   </div>
 </template>
 
@@ -56,6 +65,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "@heroicons/vue/24/outline";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/vue/24/solid";
@@ -63,12 +73,12 @@ import { useEnvStore } from "@/stores/envStore";
 import { useUseFormat } from "@/stores/useFormat";
 import axios from "axios";
 export default {
-  setup(){
+  setup() {
     useSeoMeta({
       title: "Penjualan | Kasirgue",
     });
-    const useFormat = useUseFormat()
-    return {useFormat}
+    const useFormat = useUseFormat();
+    return { useFormat };
   },
   components: {
     Table,
@@ -79,8 +89,9 @@ export default {
     TableHeader,
     TableRow,
     Button,
+    ScrollArea,
     PlusIcon,
-    ArrowTopRightOnSquareIcon
+    ArrowTopRightOnSquareIcon,
   },
   data() {
     return {
