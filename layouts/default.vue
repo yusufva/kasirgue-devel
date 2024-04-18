@@ -3,10 +3,10 @@
     <Sidebar />
     <div class="flex flex-col w-full">
       <Header />
-      <div class="w-full max-h-full rounded-md bg-white p-10">
+      <div class="w-full h-max rounded-md bg-white p-10">
         <slot />
         <!-- tambah penjualan -->
-        <div class="flex absolute bottom-4 right-4">
+        <div class="flex fixed bottom-4 right-4">
           <NuxtLink to="/penjualan/tambah">
             <Button class="bg-primary text-white gap-1">
               <PlusIcon class="w-6" />Tambah Transaksi

@@ -4,9 +4,9 @@
     <div class="text-primary font-semibold text-2xl">Daftar Stok</div>
     <div class="h-[2px] w-full bg-primary/20 rounded-xl"></div>
     <!-- content -->
-    <ScrollArea class="h-80 w-full border-b-2 border-b-primary/20">
+    <ScrollArea class="h-80 lg:h-[600px] w-full border-b-2 border-b-primary/20">
       <Table>
-        <TableHeader class="text-primary font-poppins">
+        <TableHeader class="text-primary bg-white font-poppins">
           <TableRow>
             <TableHead>Barang </TableHead>
             <TableHead></TableHead>

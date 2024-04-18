@@ -6,7 +6,7 @@
     </div>
     <div class="h-[2px] w-full bg-primary/20 rounded-xl my-4"></div>
     <!-- content -->
-    <ScrollArea class="h-80 w-full border-b-2 border-b-primary/20">
+    <ScrollArea class="h-80 lg:h-[600px] w-full border-b-2 border-b-primary/20">
       <Table>
         <TableHeader class="text-primary bg-white font-poppins">
           <TableRow>

@@ -9,7 +9,7 @@
         <PlusCircleIcon class="w-8 text-primary" />
       </NuxtLink>
     </div>
-    <ScrollArea class="h-80 w-full border-b-2 border-b-primary/20">
+    <ScrollArea class="h-80 lg:h-[600px] w-full border-b-2 border-b-primary/20">
       <Table>
         <TableHeader class="text-primary bg-white font-poppins">
           <TableRow>
