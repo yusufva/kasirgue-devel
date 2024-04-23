@@ -170,6 +170,7 @@ export default {
       listBarang: [],
       selected: "",
       transStore: [],
+      isFilled: false,
       showTable: false,
       harga_beli: null,
       jumlah: null,
@@ -192,7 +193,7 @@ export default {
       this.showTable = true;
       this.jumlah = null;
       this.selected = "";
-      console.log(this.transStore);
+      this.isFilled = true;
     },
     async getBarangList() {
       try {
@@ -217,6 +218,7 @@ export default {
           items: this.transStore,
           final_price: finalPrice,
         });
+        this.isFilled = false;
         this.$router.push("/");
       } catch (err) {
         console.log(err);
@@ -227,26 +229,30 @@ export default {
     this.getBarangList();
   },
   beforeRouteLeave(to, from, next) {
-    const { $swal } = useNuxtApp();
+    if (this.isFilled === true) {
+      const { $swal } = useNuxtApp();
 
-    $swal
-      .fire({
-        title: "Peringatan!",
-        text: "Apakah anda yakin meninggalkan halaman ini? Perubahan tidak akan tersimpan.",
-        icon: "warning",
-        showDenyButton: true,
-        confirmButtonText: "Yakin",
-        denyButtonText: "Tidak",
-        confirmButtonColor: "#0B324F",
-        denyButtonColor: "#E84545",
-      })
-      .then((result) => {
-        if (result.isConfirmed) {
-          next();
-        } else if (result.isDenied) {
-          next(false);
-        }
-      });
+      $swal
+        .fire({
+          title: "Peringatan!",
+          text: "Apakah anda yakin meninggalkan halaman ini? Perubahan tidak akan tersimpan.",
+          icon: "warning",
+          showDenyButton: true,
+          confirmButtonText: "Yakin",
+          denyButtonText: "Tidak",
+          confirmButtonColor: "#0B324F",
+          denyButtonColor: "#E84545",
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            next();
+          } else if (result.isDenied) {
+            next(false);
+          }
+        });
+    } else {
+      next();
+    }
   },
 };
 </script>
