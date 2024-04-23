@@ -206,12 +206,14 @@ export default {
       }
     },
     async tambahPembelian() {
+      const idNota = moment().format("YYYY" + "MM" + "DD" + "HH" + "mm" + "ss");
       const finalPrice = this.transStore.reduce((accumulator, currentValue) => {
         return accumulator + currentValue.total_price;
       }, 0);
       try {
         const beli = await axios.post(useEnvStore().apiUrl + "/api/tx-sell", {
           date: moment(),
+          nota_id: idNota,
           items: this.transStore,
           final_price: finalPrice,
         });

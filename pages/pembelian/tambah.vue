@@ -11,6 +11,15 @@
       <div class="h-[2px] w-full bg-primary/20 rounded-xl"></div>
       <!-- content section -->
       <div class="flex flex-row w-full gap-4">
+        <div class="flex flex-col w-1/4 gap-2">
+          <Label class="text-primary">Nomor Nota</Label>
+          <Input
+            class="border-black/30 focus-visible:ring-primary"
+            v-model="idNota"
+          />
+        </div>
+      </div>
+      <div class="flex flex-row w-full gap-4">
         <!-- select dropdown -->
         <div class="flex flex-col w-1/4 gap-2">
           <Label class="text-primary">Nama Produk</Label>
@@ -179,6 +188,7 @@ export default {
       selected: "",
       transStore: [],
       showTable: false,
+      idNota: null,
       nama_produk: null,
       harga_beli: null,
       jumlah: null,
@@ -199,7 +209,7 @@ export default {
       };
       this.transStore.push(tempStore);
       this.showTable = true;
-      console.log(this.transStore)
+      console.log(this.transStore);
     },
     async getBarangList() {
       try {
@@ -213,17 +223,16 @@ export default {
       }
     },
     async tambahPembelian() {
-      const finalPrice = this.transStore.reduce((accumulator, currentValue)=>{
-        return accumulator + currentValue.total_price
-      }, 0)
+      const finalPrice = this.transStore.reduce((accumulator, currentValue) => {
+        return accumulator + currentValue.total_price;
+      }, 0);
       try {
-        const beli = await axios.post(
-          useEnvStore().apiUrl + "/api/tx-buy",{
-            date: moment(),
-            items: this.transStore,
-            final_price: finalPrice
-          }
-        );
+        const beli = await axios.post(useEnvStore().apiUrl + "/api/tx-buy", {
+          date: moment(),
+          nota_id: this.idNota,
+          items: this.transStore,
+          final_price: finalPrice,
+        });
         this.$router.push("/pembelian");
       } catch (err) {
         console.log(err);
