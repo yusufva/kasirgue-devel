@@ -10,7 +10,7 @@
       <Table>
         <TableHeader class="text-primary bg-white font-poppins">
           <TableRow>
-            <TableHead>ID Transaksi</TableHead>
+            <TableHead>Nomor Nota</TableHead>
             <TableHead>Tanggal</TableHead>
             <TableHead>Total Harga</TableHead>
             <TableHead class="text-right"></TableHead>
@@ -35,7 +35,7 @@
             :key="item.index"
             class="border-b border-black/10"
           >
-            <TableCell>{{ item.id }}</TableCell>
+            <TableCell>{{ item.nota_id }}</TableCell>
             <TableCell>{{ useFormat.dateFormat(item.date) }}</TableCell>
             <TableCell>{{
               useFormat.currencyFormat(item.final_price)
