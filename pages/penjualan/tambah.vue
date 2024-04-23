@@ -102,7 +102,27 @@
         <Button class="w-max bg-primary text-white" @click="tambahPembelian()">
           Simpan
         </Button>
+        <Button class="w-max bg-primary text-white" @click="printFunction()">
+          Print
+        </Button>
       </div>
+    </div>
+  </div>
+  <!-- receipt print section -->
+  <div class="hidden" id="print-nota">
+    <div class="font-monospace">
+      <div class="d-flex flex-column align-items-center">
+        <div class="text-3xl font-bold underline">PT. Acme Indonesia</div>
+        <div class="text-3xl font-bold underline">Jalan Sana-Sini No.12</div>
+      </div>
+      <table class="table table-borderless">
+        <tbody>
+          <tr>
+            <td>No. Nota</td>
+            <td>: {{ returnBeli.nota_id }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
@@ -110,6 +130,7 @@
 <script>
 import axios from "axios";
 import moment from "moment";
+import { usePaperizer } from "paperizer";
 import { useEnvStore } from "@/stores/envStore";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -174,6 +195,7 @@ export default {
       showTable: false,
       harga_beli: null,
       jumlah: null,
+      returnBeli: [],
     };
   },
   methods: {
@@ -212,17 +234,57 @@ export default {
         return accumulator + currentValue.total_price;
       }, 0);
       try {
-        const beli = await axios.post(useEnvStore().apiUrl + "/api/tx-sell", {
-          date: moment(),
-          nota_id: idNota,
-          items: this.transStore,
-          final_price: finalPrice,
-        });
+        const beli = await axios
+          .post(useEnvStore().apiUrl + "/api/tx-sell", {
+            date: moment(),
+            nota_id: idNota,
+            items: this.transStore,
+            final_price: finalPrice,
+          })
+          .then((res) => {
+            this.printFunction();
+            this.returnBeli = res.data.data;
+          });
+        console.log(beli);
         this.isFilled = false;
-        this.$router.push("/");
+        this.transStore = [];
+        this.showTable = false;
+        // this.$router.push("/");
       } catch (err) {
         console.log(err);
       }
+    },
+    printCallback() {
+      const { $swal } = useNuxtApp();
+      $swal
+        .fire({
+          text: "Apakah anda ingin mencetak nota lagi?",
+          showDenyButton: true,
+          confirmButtonText: "Cetak",
+          denyButtonText: "Tidak",
+          confirmButtonColor: "#0B324F",
+          denyButtonColor: "#E84545",
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.printFunction();
+          } else if (result.isDenied) {
+            return;
+          }
+        });
+    },
+    printFunction() {
+      const { paperize } = usePaperizer(
+        "print-nota",
+        {
+          features: ["titlebar=no"],
+          styles: [
+            "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css",
+          ],
+        },
+        this.printCallback()
+      );
+      paperize();
     },
   },
   mounted() {
