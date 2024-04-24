@@ -110,19 +110,49 @@
   </div>
   <!-- receipt print section -->
   <div class="hidden" id="print-nota">
-    <div class="font-monospace">
-      <div class="d-flex flex-column align-items-center">
+    <div class="font-monospace w-50 mx-auto">
+      <div
+        class="d-flex flex-column align-items-center mb-3 pb-4"
+        style="border-bottom: 2px dashed"
+      >
         <div class="text-3xl font-bold underline">PT. Acme Indonesia</div>
         <div class="text-3xl font-bold underline">Jalan Sana-Sini No.12</div>
       </div>
-      <table class="table table-borderless">
-        <tbody>
-          <tr>
-            <td>No. Nota</td>
-            <td>: {{ returnBeli.nota_id }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="mb-3" style="border-bottom: 2px dashed">
+        <table class="table table-borderless table-sm">
+          <tbody style="font-size: small">
+            <tr>
+              <td>No. Nota</td>
+              <td>: {{ returnBeli.nota_id }}</td>
+            </tr>
+            <tr>
+              <td>Waktu</td>
+              <td>: {{ useFormat.dateFormat(returnBeli.date) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mb-3" style="border-bottom: 2px dashed">
+        <table class="table table-borderless table-sm">
+          <tbody>
+            <tr v-for="items in returnBeli.items" :key="items.index">
+              <td>{{ items.quantity }}x</td>
+              <td class="text-capitalize">{{ items.name }}</td>
+              <td class="text-end">{{ items.total_price }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mb-6">
+        <div class="d-flex justify-content-between">
+          <p>TOTAL</p>
+          <p>{{ returnBeli.final_price }}</p>
+        </div>
+      </div>
+      <div class="d-flex flex-column align-items-center" style="font-size: small;">
+        <div>Powered by</div>
+        <div>kasirgue.com</div>
+      </div>
     </div>
   </div>
 </template>
@@ -132,6 +162,7 @@ import axios from "axios";
 import moment from "moment";
 import { usePaperizer } from "paperizer";
 import { useEnvStore } from "@/stores/envStore";
+import { useUseFormat } from "@/stores/useFormat";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -162,6 +193,8 @@ export default {
     useSeoMeta({
       title: "Tambah Penjualan | Kasirgue",
     });
+    const useFormat = useUseFormat();
+    return { useFormat };
   },
   components: {
     Input,
@@ -242,10 +275,10 @@ export default {
             final_price: finalPrice,
           })
           .then((res) => {
-            this.printFunction();
             this.returnBeli = res.data.data;
           });
         console.log(beli);
+        this.printFunction();
         this.isFilled = false;
         this.transStore = [];
         this.showTable = false;
