@@ -12,7 +12,7 @@
         <NuxtLink to="/pembelian" class="text-black/60 hover:text-primary"
           >Penjualan
         </NuxtLink>
-        <div class="text-primary capitalize">/ {{ dataBarang.id }}</div>
+        <div class="text-primary capitalize">/ {{ dataBarang.nota_id }}</div>
       </div>
       <div class="text-primary font-semibold text-2xl">Detail Penjualan</div>
       <div class="h-[2px] w-full bg-primary/20 rounded-xl"></div>
@@ -22,8 +22,8 @@
         <Table class="w-1/2">
           <TableBody>
             <TableRow class="border-none">
-              <TableCell class="pb-0">ID</TableCell>
-              <TableCell class="pb-0">: {{ dataBarang.id }}</TableCell>
+              <TableCell class="pb-0">Nomor Nota</TableCell>
+              <TableCell class="pb-0">: {{ dataBarang.nota_id }}</TableCell>
             </TableRow>
             <TableRow class="border-none">
               <TableCell>Tanggal</TableCell>
