@@ -109,32 +109,38 @@
     </div>
   </div>
   <!-- receipt print section -->
+  <!-- normal version -->
   <div class="hidden" id="print-nota">
-    <div class="font-monospace w-50 mx-auto">
+    <div
+      style="font-size: 13px"
+      class="font-monospace mx-auto p-0"
+    >
+    <!-- comment this to pelit version -->
       <div
         class="d-flex flex-column align-items-center mb-3 pb-4"
-        style="border-bottom: 2px dashed"
+        style="border-bottom: 1px dashed"
       >
-        <div class="text-3xl font-bold underline">PT. Acme Indonesia</div>
-        <div class="text-3xl font-bold underline">Jalan Sana-Sini No.12</div>
+        <div>PT. Acme Indonesia</div>
+        <div>Jalan Sana-Sini No.13</div>
       </div>
-      <div class="mb-3" style="border-bottom: 2px dashed">
+      <!--  -->
+      <div class="mb-3" style="border-bottom: 1px dashed">
         <table class="table table-borderless table-sm">
-          <tbody style="font-size: small">
+          <tbody style="font-size: 13px">
             <tr>
               <td>No. Nota</td>
               <td>: {{ returnBeli.nota_id }}</td>
             </tr>
             <tr>
               <td>Waktu</td>
-              <td>: {{ useFormat.dateFormat(returnBeli.date) }}</td>
+              <td>: {{ useFormat.receiptDateFormat(returnBeli.date) }}</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div class="mb-3" style="border-bottom: 2px dashed">
+      <div class="mb-3" style="border-bottom: 1px dashed">
         <table class="table table-borderless table-sm">
-          <tbody>
+          <tbody style="font-size: 13px">
             <tr v-for="items in returnBeli.items" :key="items.index">
               <td>{{ items.quantity }}x</td>
               <td class="text-capitalize">{{ items.name }}</td>
@@ -149,10 +155,21 @@
           <p>{{ returnBeli.final_price }}</p>
         </div>
       </div>
-      <div class="d-flex flex-column align-items-center" style="font-size: small;">
+      <div
+        class="d-flex flex-column align-items-center mb-4"
+        style="font-size: 13px"
+      >
         <div>Powered by</div>
         <div>kasirgue.com</div>
       </div>
+      <!-- uncomment below for pelit version -->
+      <!-- <div
+        class="d-flex flex-column align-items-center mb-3 pb-4"
+        style="border-bottom: 1px dashed"
+      >
+        <div>PT. Acme Indonesia</div>
+        <div>Jalan Sana-Sini No.14</div>
+      </div> -->
     </div>
   </div>
 </template>

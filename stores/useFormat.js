@@ -7,6 +7,10 @@ export const useUseFormat = defineStore("format", {
       moment.locale("id");
       return moment(date).format("D MMMM YYYY [Jam] HH:mm:s");
     },
+    receiptDateFormat(date) {
+      moment.locale("id");
+      return moment(date).format("D/MM/YY HH:mm:ss");
+    },
     currencyFormat(value) {
       return new Intl.NumberFormat("id-ID", {
         style: "currency",
