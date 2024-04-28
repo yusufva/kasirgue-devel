@@ -89,6 +89,7 @@
             <TableCell>{{ item.selling_price }}</TableCell>
             <TableCell>{{ item.quantity }}</TableCell>
             <TableCell>{{ item.total_price }}</TableCell>
+            <TableCell><TrashIcon class="text-red w-6" @click="hapusItem(item.index)"></TrashIcon></TableCell>
           </TableRow>
         </TableBody>
       </Table>
@@ -102,20 +103,14 @@
         <Button class="w-max bg-primary text-white" @click="tambahPembelian()">
           Simpan
         </Button>
-        <Button class="w-max bg-primary text-white" @click="printFunction()">
-          Print
-        </Button>
       </div>
     </div>
   </div>
   <!-- receipt print section -->
   <!-- normal version -->
   <div class="hidden" id="print-nota">
-    <div
-      style="font-size: 13px"
-      class="font-monospace mx-auto p-0"
-    >
-    <!-- comment this to pelit version -->
+    <div style="font-size: 13px" class="font-monospace mx-auto p-0">
+      <!-- comment this to pelit version -->
       <div
         class="d-flex flex-column align-items-center mb-3 pb-4"
         style="border-bottom: 1px dashed"
@@ -183,6 +178,7 @@ import { useUseFormat } from "@/stores/useFormat";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { TrashIcon } from "@heroicons/vue/24/solid";
 import {
   Table,
   TableHead,
@@ -235,6 +231,7 @@ export default {
     TableBody,
     TableCell,
     TableRow,
+    TrashIcon
   },
   data() {
     return {
@@ -262,10 +259,28 @@ export default {
         total_price: filteredBarang[0].selling_price * this.jumlah,
       };
       this.transStore.push(tempStore);
+      const createIndex = this.transStore.map((obj, index) => ({
+        ...obj,
+        index: index + 1,
+      }));
+      this.transStore = createIndex;
       this.showTable = true;
       this.jumlah = null;
       this.selected = "";
       this.isFilled = true;
+    },
+    hapusItem(index) {
+      const indexToRemove = index;
+      const removedIndex = this.transStore.filter(
+        (obj) => obj.index !== indexToRemove
+      );
+      this.transStore = removedIndex;
+
+      const total_bayar = this.transStore.reduce(
+        (total, obj) => total + obj.total_harga,
+        0
+      );
+      this.totalBayar = total_bayar;
     },
     async getBarangList() {
       try {
@@ -283,12 +298,13 @@ export default {
       const finalPrice = this.transStore.reduce((accumulator, currentValue) => {
         return accumulator + currentValue.total_price;
       }, 0);
+      const itemToPost = this.transStore.map(({ index, ...rest }) => rest);
       try {
         const beli = await axios
           .post(useEnvStore().apiUrl + "/api/tx-sell", {
             date: moment(),
             nota_id: idNota,
-            items: this.transStore,
+            items: itemToPost,
             final_price: finalPrice,
           })
           .then((res) => {

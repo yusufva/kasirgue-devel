@@ -9,7 +9,7 @@
     <div v-else class="flex flex-col w-full h-max gap-4">
       <!-- header -->
       <div class="flex gap-1 text-xs">
-        <NuxtLink to="/pembelian" class="text-black/60 hover:text-primary"
+        <NuxtLink to="/penjualan" class="text-black/60 hover:text-primary"
           >Penjualan
         </NuxtLink>
         <div class="text-primary capitalize">/ {{ dataBarang.nota_id }}</div>

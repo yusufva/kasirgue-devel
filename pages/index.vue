@@ -8,11 +8,11 @@
     <!-- content -->
     <div class="flex w-full h-full">
       <!-- stock warn table -->
-      <div class="flex flex-col w-1/3 h-max bg-secondary p-4">
+      <div class="flex flex-col w-1/3 h-max bg-primary p-4">
         <div class="mx-auto text-white font-semibold">Stok Hampir Habis</div>
         <ScrollArea class="h-80 w-full border-b-2 border-b-white/20">
           <Table>
-            <TableHeader class="text-white bg-secondary">
+            <TableHeader class="text-white bg-primary">
               <TableRow>
                 <TableHead>Barang</TableHead>
                 <TableHead>Stok</TableHead>
