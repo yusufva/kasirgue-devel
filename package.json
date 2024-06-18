@@ -34,6 +34,7 @@
     "radix-vue": "^1.5.3",
     "sweetalert2": "^11.10.7",
     "tailwind-merge": "^2.2.1",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "vue3-easy-data-table": "^1.5.47"
   }
 }

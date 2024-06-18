@@ -9,55 +9,20 @@
         <PlusCircleIcon class="w-8 text-primary" />
       </NuxtLink>
     </div>
-    <ScrollArea class="h-80 lg:h-[600px] w-full border-b-2 border-b-primary/20">
-      <Table>
-        <TableHeader class="text-primary bg-white font-poppins">
-          <TableRow>
-            <TableHead> Barang </TableHead>
-            <TableHead>Harga Beli</TableHead>
-            <TableHead>Harga Jual</TableHead>
-            <TableHead>Stok</TableHead>
-            <TableHead>Satuan</TableHead>
-            <TableHead class="text-right"></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody v-if="loading">
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-          <TableCell>
-            <svg
-              class="mx-auto mt-10 animate-[pulse_0.75s_infinite] h-10 w-10 rounded-full bg-primary"
-              viewBox="0 0 24 24"
-            ></svg>
-          </TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-        </TableBody>
-        <TableBody v-else>
-          <TableRow
-            v-for="item in barang"
-            :key="item.index"
-            class="border-b border-black/10"
-          >
-            <TableCell class="font-medium capitalize">
-              {{ item.name }}
-            </TableCell>
-            <TableCell>{{ item.buying_price }}</TableCell>
-            <TableCell>{{ item.selling_price }}</TableCell>
-            <TableCell>{{ item.stock.quantity }}</TableCell>
-            <TableCell>{{ item.stock.satuan }}</TableCell>
-            <TableCell class="text-right">
-              <NuxtLink :to="/barang/ + item.id">
-                <Button class="bg-primary rounded-full p-3">
-                  <ArrowTopRightOnSquareIcon class="w-4 text-white" />
-                </Button>
-              </NuxtLink>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </ScrollArea>
+    <EasyDataTable
+      class="capitalize"
+      :headers="headers"
+      :items="barang"
+      :loading="loading"
+      :theme-color="color">
+      <template #item-actions="item" v-slot:item.actions="{ item }">
+        <NuxtLink :to="/barang/ + item.id">
+          <div class="bg-primary text-white rounded-full p-2 m-1 w-8">
+            <ArrowTopRightOnSquareIcon />
+          </div>
+        </NuxtLink>
+      </template>
+    </EasyDataTable>
   </div>
 </template>
 
@@ -101,6 +66,15 @@ export default {
   data() {
     return {
       loading: true,
+      color:"#0b324f",
+      headers: [
+        { text: "Barang", value: "name" },
+        { text: "Harga Beli", value: "buying_price" },
+        { text: "Harga Jual", value: "selling_price" },
+        { text: "Stok", value: "stock.quantity" },
+        { text: "Satuan", value: "stock.satuan" },
+        { text: "", value: "actions" },
+      ],
       barang: [],
     };
   },
