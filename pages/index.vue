@@ -6,7 +6,7 @@
     </div>
     <div class="h-[2px] w-full bg-primary/20 rounded-xl my-4"></div>
     <!-- content -->
-    <div class="flex w-full h-full">
+    <div class="flex w-full h-full gap-4">
       <!-- stock warn table -->
       <div class="flex flex-col w-1/3 h-max bg-primary p-4">
         <div class="mx-auto text-white font-semibold">Stok Hampir Habis</div>
@@ -22,8 +22,7 @@
               <TableRow
                 v-for="item in stok"
                 :key="item.index"
-                class="border-b text-white border-black/10"
-              >
+                class="border-b text-white border-black/10">
                 <TableCell class="font-normal capitalize">
                   {{ item.product.name }}
                 </TableCell>
@@ -33,11 +32,15 @@
           </Table>
         </ScrollArea>
       </div>
+      <div class="w-2/3">
+        <Bar :data="chartData" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { Bar } from "vue-chartjs";
 import { useAuthStore } from "@/stores/authStore";
 import { useEnvStore } from "@/stores/envStore";
 import {
@@ -53,6 +56,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import axios from "axios";
 export default {
   components: {
+    Bar,
     Table,
     TableBody,
     TableCaption,
@@ -66,6 +70,16 @@ export default {
     return {
       userName: useAuthStore().name,
       stok: [],
+      chartData: {
+        labels: ["January", "February", "March"],
+        datasets: [
+          {
+            label: "Data One",
+            backgroundColor: "#f87979",
+            data: [40, 20, 12],
+          },
+        ],
+      },
     };
   },
   methods: {

@@ -12,61 +12,39 @@
       <!-- content section -->
       <div class="flex flex-row w-full gap-4">
         <!-- select dropdown -->
-        <div class="flex flex-col w-1/4 gap-2">
+        <div class="flex flex-col w-1/4 gap-2 justify-end">
           <Label class="text-primary">Nama Produk</Label>
-
-          <ComboboxRoot v-model="selected" class="relative">
-            <ComboboxAnchor
-              class="w-full inline-flex items-baseline justify-between rounded-md px-[15px] text-sm leading-none h-[35px] gap-[5px] bg-white border border-1 border-black/30 focus-visible:ring-primary"
-            >
-              <ComboboxInput
-                class="!bg-transparent outline-none h-full selection:bg-grass5 placeholder-mauve8 capitalize"
-                placeholder="Ketik nama barang..."
-              />
-              <ComboboxTrigger> </ComboboxTrigger>
-            </ComboboxAnchor>
-
-            <ComboboxContent
-              class="absolute z-10 w-full mt-2 min-w-[160px] bg-white overflow-hidden rounded border border-1 border-primary"
-            >
-              <ComboboxViewport class="p-[5px]">
-                <ComboboxEmpty
-                  class="text-mauve8 text-xs font-medium text-center py-2"
-                />
-
-                <ComboboxGroup>
-                  <ComboboxItem
-                    v-for="item in listBarang"
-                    :key="item.index"
-                    class="text-sm leading-none rounded-[3px] flex items-center h-[25px] pr-[35px] pl-[25px] relative select-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-grass9 data-[highlighted]:text-grass1 capitalize"
-                    :value="item.name"
-                  >
-                    <ComboboxItemIndicator
-                      class="absolute left-0 w-[25px] inline-flex items-center justify-center"
-                    >
-                    </ComboboxItemIndicator>
-                    <span>
-                      {{ item.name }}
-                    </span>
-                  </ComboboxItem>
-                </ComboboxGroup>
-              </ComboboxViewport>
-            </ComboboxContent>
-          </ComboboxRoot>
+          <v-select
+            class="capitalized"
+            v-model="selected"
+            :options="listBarang"
+            label="name">
+            <template #selected-option="{ name }">
+              <div style="text-transform: capitalize">{{ name }}</div>
+            </template>
+            <template #option="{ name }">
+              <div style="text-transform: capitalize">{{ name }}</div>
+            </template>
+            <template #no-options="{ searching, search }">
+              <template v-if="searching">
+                <div style="opacity: 0.5">
+                  Barang <em>{{ search }}</em> tidak ditemukan.
+                </div>
+              </template>
+            </template>
+          </v-select>
         </div>
         <div class="flex flex-col w-1/4 gap-2">
           <Label class="text-primary">Jumlah</Label>
           <Input
             class="border-black/30 focus-visible:ring-primary"
             type="number"
-            v-model="jumlah"
-          />
+            v-model="jumlah" />
         </div>
         <div class="flex flex-col justify-end w-1/4 gap-2">
           <Button
             class="w-max bg-primary text-white"
-            @click="addToTransStore()"
-          >
+            @click="addToTransStore()">
             Tambah
           </Button>
         </div>
@@ -79,25 +57,34 @@
           <TableHead>Jumlah</TableHead>
           <TableHead>Total</TableHead>
         </TableHeader>
-        <TableBody>
+        <TableBody class="border-b border-primary">
           <TableRow
             v-for="item in transStore"
             :key="item.id"
-            class="borer-b border-black/10 capitalize"
-          >
+            class="borer-b border-black/10 capitalize">
             <TableCell>{{ item.name }}</TableCell>
-            <TableCell>{{ item.selling_price }}</TableCell>
+            <TableCell>{{
+              useFormat.currencyFormat(item.selling_price)
+            }}</TableCell>
             <TableCell>{{ item.quantity }}</TableCell>
-            <TableCell>{{ item.total_price }}</TableCell>
-            <TableCell><TrashIcon class="text-red w-6" @click="hapusItem(item.index)"></TrashIcon></TableCell>
+            <TableCell>{{
+              useFormat.currencyFormat(item.total_price)
+            }}</TableCell>
+            <TableCell
+              ><TrashIcon
+                class="text-red w-6"
+                @click="hapusItem(item.index)"></TrashIcon
+            ></TableCell>
           </TableRow>
         </TableBody>
       </Table>
+      <div class="text-sm">
+        Total Pembelian: {{ useFormat.currencyFormat(finalPrice) }}
+      </div>
       <div class="flex w-full justify-end gap-4">
         <Button
           class="w-max bg-red text-white"
-          @click="this.$router.push('/pembelian')"
-        >
+          @click="this.$router.push('/pembelian')">
           Kembali
         </Button>
         <Button class="w-max bg-primary text-white" @click="tambahPembelian()">
@@ -113,8 +100,7 @@
       <!-- comment this to pelit version -->
       <div
         class="d-flex flex-column align-items-center mb-3 pb-4"
-        style="border-bottom: 1px dashed"
-      >
+        style="border-bottom: 1px dashed">
         <div>PT. Acme Indonesia</div>
         <div>Jalan Sana-Sini No.13</div>
       </div>
@@ -152,8 +138,7 @@
       </div>
       <div
         class="d-flex flex-column align-items-center mb-4"
-        style="font-size: 13px"
-      >
+        style="font-size: 13px">
         <div>Powered by</div>
         <div>kasirgue.com</div>
       </div>
@@ -231,7 +216,7 @@ export default {
     TableBody,
     TableCell,
     TableRow,
-    TrashIcon
+    TrashIcon,
   },
   data() {
     return {
@@ -242,27 +227,28 @@ export default {
       showTable: false,
       harga_beli: null,
       jumlah: null,
+      finalPrice: null,
       returnBeli: [],
     };
   },
   methods: {
     addToTransStore() {
-      const filteredBarang = this.listBarang.filter(
-        (item) => item.name === this.selected
-      );
-      console.log(filteredBarang);
       let tempStore = {
-        name: this.selected,
-        product_id: filteredBarang[0].id,
-        selling_price: filteredBarang[0].selling_price,
+        name: this.selected.name,
+        product_id: this.selected.id,
+        selling_price: this.selected.selling_price,
         quantity: this.jumlah,
-        total_price: filteredBarang[0].selling_price * this.jumlah,
+        total_price: this.selected.selling_price * this.jumlah,
       };
       this.transStore.push(tempStore);
       const createIndex = this.transStore.map((obj, index) => ({
         ...obj,
         index: index + 1,
       }));
+      const finalPrice = this.transStore.reduce((accumulator, currentValue) => {
+        return accumulator + currentValue.total_price;
+      }, 0);
+      this.finalPrice = finalPrice;
       this.transStore = createIndex;
       this.showTable = true;
       this.jumlah = null;
@@ -275,7 +261,10 @@ export default {
         (obj) => obj.index !== indexToRemove
       );
       this.transStore = removedIndex;
-
+      const finalPrice = this.transStore.reduce((accumulator, currentValue) => {
+        return accumulator + currentValue.total_price;
+      }, 0);
+      this.finalPrice = finalPrice;
       const total_bayar = this.transStore.reduce(
         (total, obj) => total + obj.total_harga,
         0
@@ -295,9 +284,6 @@ export default {
     },
     async tambahPembelian() {
       const idNota = moment().format("YYYY" + "MM" + "DD" + "HH" + "mm" + "ss");
-      const finalPrice = this.transStore.reduce((accumulator, currentValue) => {
-        return accumulator + currentValue.total_price;
-      }, 0);
       const itemToPost = this.transStore.map(({ index, ...rest }) => rest);
       try {
         const beli = await axios
@@ -305,7 +291,7 @@ export default {
             date: moment(),
             nota_id: idNota,
             items: itemToPost,
-            final_price: finalPrice,
+            final_price: this.finalPrice,
           })
           .then((res) => {
             this.returnBeli = res.data.data;

@@ -4,60 +4,39 @@
     <div class="text-primary font-semibold text-2xl">Daftar Pembelian</div>
     <div class="h-[2px] w-full bg-primary/20 rounded-xl my-4"></div>
     <!-- content -->
-    <div class="flex justify-end">
+    <div class="flex gap-4 justify-end">
+      <Input
+        v-model="searchValue"
+        class="w-1/5 text-xs border-black/30 focus-visible:ring-primary"
+        placeholder="Cari Nomor Nota" />
       <NuxtLink to="/pembelian/tambah">
-        <Button class="flex align-center bg-primary">
+        <Button class="flex align-center bg-primary mb-4">
           <PlusIcon class="w-6 text-white" />
           <div class="text-white">Tambah Pembelian</div>
         </Button>
       </NuxtLink>
     </div>
-    <ScrollArea class="h-80 lg:h-[600px] w-full border-b-2 border-b-primary/20">
-      <Table>
-        <TableHeader class="text-primary bg-white font-poppins">
-          <TableRow>
-            <TableHead>Nomor Nota</TableHead>
-            <TableHead>Tanggal</TableHead>
-            <TableHead>Total Harga</TableHead>
-            <TableHead class="text-right"></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody v-if="loading">
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-          <TableCell>
-            <svg
-              class="mx-auto mt-10 animate-[pulse_0.75s_infinite] h-10 w-10 rounded-full bg-primary"
-              viewBox="0 0 24 24"
-            ></svg>
-          </TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-        </TableBody>
-        <TableBody v-else>
-          <TableRow
-            v-for="item in beliList"
-            :key="item.index"
-            class="border-b border-black/10"
-          >
-            <TableCell>{{ item.nota_id }}</TableCell>
-            <TableCell>{{ useFormat.dateFormat(item.date) }}</TableCell>
-            <TableCell>{{
-              useFormat.currencyFormat(item.final_price)
-            }}</TableCell>
-            <TableCell>
-              <NuxtLink
-                class="flex items-center text-primary text-xs gap-1"
-                :to="/pembelian/ + item.id"
-              >
-                <ArrowTopRightOnSquareIcon class="w-5" />Detail
-              </NuxtLink>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </ScrollArea>
+    <EasyDataTable
+      :headers="headers"
+      :items="beliList"
+      :search-value="searchValue"
+      :search-field="searchField"
+      :loading="loading"
+      :theme-color="color">
+      <template #item-date="item" v-slot:item.date="{ item }">
+        <div>{{ useFormat.dateFormat(item.date) }}</div>
+      </template>
+      <template #item-final_price="item" v-slot:item.final_price="{ item }">
+        <div>{{ useFormat.currencyFormat(item.final_price) }}</div>
+      </template>
+      <template #item-actions="item" v-slot:item.actions="{ item }">
+        <NuxtLink :to="/pembelian/ + item.id">
+          <div class="bg-primary text-white rounded-full p-2 m-1 w-8">
+            <ArrowTopRightOnSquareIcon />
+          </div>
+        </NuxtLink>
+      </template>
+    </EasyDataTable>
   </div>
 </template>
 
@@ -71,6 +50,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "@heroicons/vue/24/outline";
@@ -94,6 +74,7 @@ export default {
     TableHead,
     TableHeader,
     TableRow,
+    Input,
     Button,
     ScrollArea,
     PlusIcon,
@@ -102,7 +83,16 @@ export default {
   data() {
     return {
       loading: true,
+      headers: [
+        { text: "Nomor Nota", value: "nota_id" },
+        { text: "Tanggal", value: "date" },
+        { text: "Total Harga", value: "final_price" },
+        { text: "", value: "actions" },
+      ],
       beliList: [],
+      color: "#0b324f",
+      searchValue: "",
+      searchField: "nota_id",
     };
   },
   methods: {

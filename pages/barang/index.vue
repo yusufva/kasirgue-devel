@@ -4,7 +4,11 @@
     <div class="text-primary font-semibold text-2xl">Daftar Barang</div>
     <div class="h-[2px] w-full bg-primary/20 rounded-xl my-4"></div>
     <!-- content -->
-    <div class="flex justify-end">
+    <div class="flex gap-4 mb-4 justify-end">
+      <Input
+        v-model="searchValue"
+        class="w-1/5 text-xs border-black/30 focus-visible:ring-primary"
+        placeholder="Cari Barang" />
       <NuxtLink to="/barang/tambah-barang">
         <PlusCircleIcon class="w-8 text-primary" />
       </NuxtLink>
@@ -13,6 +17,8 @@
       class="capitalize"
       :headers="headers"
       :items="barang"
+      :search-value="searchValue"
+      :search-field="searchField"
       :loading="loading"
       :theme-color="color">
       <template #item-actions="item" v-slot:item.actions="{ item }">
@@ -36,6 +42,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -58,6 +65,7 @@ export default {
     TableHead,
     TableHeader,
     TableRow,
+    Input,
     Button,
     ScrollArea,
     PlusCircleIcon,
@@ -66,7 +74,7 @@ export default {
   data() {
     return {
       loading: true,
-      color:"#0b324f",
+      color: "#0b324f",
       headers: [
         { text: "Barang", value: "name" },
         { text: "Harga Beli", value: "buying_price" },
@@ -76,6 +84,8 @@ export default {
         { text: "", value: "actions" },
       ],
       barang: [],
+      searchValue: "",
+      searchField: "name",
     };
   },
   methods: {
