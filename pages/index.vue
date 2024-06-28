@@ -6,7 +6,7 @@
     </div>
     <div class="h-[2px] w-full bg-primary/20 rounded-xl my-4"></div>
     <!-- content -->
-    <div class="flex w-full h-full gap-4">
+    <div class="flex w-full h-full gap-4 items-end">
       <!-- stock warn table -->
       <div class="flex flex-col w-1/3 h-max bg-primary p-4">
         <div class="mx-auto text-white font-semibold">Stok Hampir Habis</div>
@@ -33,14 +33,16 @@
         </ScrollArea>
       </div>
       <div class="w-2/3">
-        <Bar :data="chartData" />
+        <ChartLegend class="text-sm" :legend-values="legendValues" />
+        <Line :data="chartData" :options="chartOptions" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { Bar } from "vue-chartjs";
+import { Line } from "vue-chartjs";
+import ChartLegend from "~/components/chart-legend.vue";
 import { useAuthStore } from "@/stores/authStore";
 import { useEnvStore } from "@/stores/envStore";
 import {
@@ -56,7 +58,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import axios from "axios";
 export default {
   components: {
-    Bar,
+    Line,
+    ChartLegend,
     Table,
     TableBody,
     TableCaption,
@@ -71,15 +74,37 @@ export default {
       userName: useAuthStore().name,
       stok: [],
       chartData: {
-        labels: ["January", "February", "March"],
+        labels: [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+        ],
         datasets: [
           {
-            label: "Data One",
-            backgroundColor: "#f87979",
-            data: [40, 20, 12],
+            backgroundColor: "#F18200",
+            data: [40, 39, 10, 40, 39, 80, 40],
+            tension: 0.3,
+            pointRadius: 0,
           },
         ],
       },
+      chartOptions: {
+        interaction: {
+          intersect: false,
+        },
+        borderColor: "#0B324F",
+        backgroundColor: "#0B324F",
+      },
+      legendValues: [
+        {
+          label: "Data One",
+          color: "#F18200",
+        },
+      ],
     };
   },
   methods: {
@@ -96,9 +121,24 @@ export default {
         console.log(err);
       }
     },
+    async getReportData() {
+      try {
+        const report = await axios.get(
+          useEnvStore().apiUrl + "/api/report/tx-sell/date",
+          {
+            startDate: "2024-06-28",
+            endDate: "2024-06-21",
+          }
+        );
+        console.log(report);
+      } catch (err) {
+        console.log(err);
+      }
+    },
   },
   mounted() {
     this.getStokWarn();
+    this.getReportData();
   },
 };
 </script>
