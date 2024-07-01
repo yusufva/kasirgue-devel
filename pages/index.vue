@@ -45,6 +45,8 @@ import { Line } from "vue-chartjs";
 import ChartLegend from "~/components/chart-legend.vue";
 import { useAuthStore } from "@/stores/authStore";
 import { useEnvStore } from "@/stores/envStore";
+import { useUseFormat } from "@/stores/useFormat";
+import moment from "moment";
 import {
   Table,
   TableBody,
@@ -74,34 +76,45 @@ export default {
       userName: useAuthStore().name,
       stok: [],
       chartData: {
-        labels: [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-        ],
-        datasets: [
-          {
-            backgroundColor: "#F18200",
-            data: [40, 39, 10, 40, 39, 80, 40],
-            tension: 0.3,
-            pointRadius: 0,
-          },
-        ],
+        labels: [],
+        datasets: [],
       },
       chartOptions: {
         interaction: {
           intersect: false,
+        },
+        scales: {
+          y: {
+            ticks: {
+              callback: (value, index, values) => {
+                return useUseFormat().currencyFormat(value);
+              },
+            },
+          },
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                let label = context.dataset.label || "";
+
+                if (label) {
+                  label += ": ";
+                }
+                if (context.parsed.y !== null) {
+                  label += useUseFormat().currencyFormat(context.parsed.y);
+                }
+                return label;
+              },
+            },
+          },
         },
         borderColor: "#0B324F",
         backgroundColor: "#0B324F",
       },
       legendValues: [
         {
-          label: "Data One",
+          label: "Penjualan (Rp)",
           color: "#F18200",
         },
       ],
@@ -123,14 +136,30 @@ export default {
     },
     async getReportData() {
       try {
-        const report = await axios.get(
+        const report = await axios.post(
           useEnvStore().apiUrl + "/api/report/tx-sell/date",
           {
-            startDate: "2024-06-28",
-            endDate: "2024-06-21",
+            startDate: moment().subtract(7, "days").format("YYYY-MM-DD"),
+            endDate: moment().format("YYYY-MM-DD"),
           }
         );
         console.log(report);
+        const labelChart = report.data.data.map((item) =>
+          useUseFormat().chartDateFormat(item.date)
+        );
+        const dataChart = report.data.data.map((item) => item.final_price);
+        this.chartData = {
+          labels: labelChart,
+          datasets: [
+            {
+              backgroundColor: "#F18200",
+              data: dataChart,
+              tension: 0.3,
+              pointRadius: 0,
+            },
+          ],
+        };
+        console.log(this.chartData);
       } catch (err) {
         console.log(err);
       }

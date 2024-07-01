@@ -7,6 +7,10 @@ export const useUseFormat = defineStore("format", {
       moment.locale("id");
       return moment(date).format("D MMMM YYYY [Jam] HH:mm:s");
     },
+    chartDateFormat(date) {
+      moment.locale("id");
+      return moment(date).format("D MMMM YYYY");
+    },
     receiptDateFormat(date) {
       moment.locale("id");
       return moment(date).format("D/MM/YY HH:mm:ss");
