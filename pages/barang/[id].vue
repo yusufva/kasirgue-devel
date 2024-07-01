@@ -47,7 +47,9 @@
         <NuxtLink :to="/edit-barang/ + dataBarang.id" class="w-1/2">
           <Button class="bg-secondary text-white">Edit</Button>
         </NuxtLink>
-        <Button class="w-1/2 bg-red text-white" @click="hapusBarang()">Hapus</Button>
+        <Button class="w-1/2 bg-red text-white" @click="hapusBarang()"
+          >Hapus</Button
+        >
       </div>
     </div>
   </div>
@@ -55,11 +57,12 @@
 
 <script>
 import axios from "axios";
+import { useUseToast } from "@/stores/useToast";
 import { useEnvStore } from "@/stores/envStore";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 export default {
-  setup(){
+  setup() {
     useSeoMeta({
       title: "Detail Barang | Kasirgue",
     });
@@ -95,7 +98,7 @@ export default {
         const hapus = await axios.delete(
           useEnvStore().apiUrl + "/api/product-master/" + this.$route.params.id
         );
-        console.log(hapus);
+        useUseToast().deleteToast
         this.$router.push("/barang");
       } catch (err) {
         console.log(err);
