@@ -3,8 +3,7 @@
     <div v-if="loading" class="flex flex-col w-full h-max gap-4">
       <svg
         class="mx-auto animate-[pulse_0.75s_infinite] h-10 w-10 rounded-full bg-primary"
-        viewBox="0 0 24 24"
-      ></svg>
+        viewBox="0 0 24 24"></svg>
     </div>
     <div v-else class="flex flex-col w-full h-max gap-4">
       <!-- header -->
@@ -22,8 +21,7 @@
           <Label class="text-primary">Nama Produk</Label>
           <Input
             class="border-black/30 focus-visible:ring-primary capitalize"
-            v-model="nama"
-          />
+            v-model="nama" />
         </div>
         <div class="flex flex-col w-1/4 gap-2">
           <Label class="text-primary">Harga Beli</Label>
@@ -31,35 +29,34 @@
             disabled
             class="border-black/30 focus-visible:ring-primary"
             type="number"
-            v-model="harga_beli"
-          />
+            v-model="harga_beli" />
         </div>
         <div class="flex flex-col w-1/4 gap-2">
           <Label class="text-primary">Harga Jual</Label>
           <Input
             class="border-black/30 focus-visible:ring-primary"
             type="number"
-            v-model="harga_jual"
-          />
+            v-model="harga_jual" />
         </div>
         <div class="flex flex-col w-1/4 gap-2">
           <Label class="text-primary">Satuan</Label>
           <Input
             disabled
             class="border-black/30 focus-visible:ring-primary"
-            v-model="satuan"
-          />
+            v-model="satuan" />
         </div>
       </div>
       <div class="flex w-full justify-end gap-4">
         <Button
           class="w-max bg-red text-white"
-          @click="this.$router.push('/barang')"
-        >
+          @click="this.$router.push('/barang')">
           Kembali
         </Button>
         <Button class="w-max bg-primary text-white" @click="editBarang()">
-          Simpan
+          <div v-if="loading">
+            <PulseLoader :color="loadingColor" :size="loadingSize"></PulseLoader>
+          </div>
+          <div v-else>Simpan</div>
         </Button>
       </div>
     </div>
@@ -68,19 +65,25 @@
 
 <script>
 import axios from "axios";
+import PulseLoader from "vue-spinner/src/PulseLoader.vue";
+import { useUseToast } from "@/stores/useToast";
 import { useEnvStore } from "@/stores/envStore";
 import { Input } from "@/components/ui/input";
 export default {
-  setup(){
+  setup() {
     useSeoMeta({
       title: "Edit Barang | Kasirgue",
     });
   },
   components: {
     Input,
+    PulseLoader,
   },
   data() {
     return {
+      loading: false,
+      loadingColor: "#ffffff",
+      loadingSize: "5px",
       dataBarang: [],
       loading: true,
       nama: null,
@@ -107,6 +110,7 @@ export default {
       }
     },
     async editBarang() {
+      this.loading = true;
       try {
         const edit = await axios.put(
           useEnvStore().apiUrl + "/api/product-master/" + this.$route.params.id,
@@ -118,7 +122,8 @@ export default {
             stock: this.dataBarang.stock.quantity,
           }
         );
-        this.$router.push("/barang")
+        useUseToast().editToast();
+        this.$router.push("/barang");
       } catch (err) {
         console.log(err);
       }

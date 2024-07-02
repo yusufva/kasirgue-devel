@@ -6568,6 +6568,11 @@ vue-select@^4.0.0-beta.6:
   resolved "https://registry.yarnpkg.com/vue-select/-/vue-select-4.0.0-beta.6.tgz#7c250cb7c01280b54a311cb446629801b3c8df98"
   integrity sha512-K+zrNBSpwMPhAxYLTCl56gaMrWZGgayoWCLqe5rWwkB8aUbAUh7u6sXjIR7v4ckp2WKC7zEEUY27g6h1MRsIHw==
 
+vue-spinner@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/vue-spinner/-/vue-spinner-1.0.4.tgz#0e794d9d93acb23b5b6564042157a531e7ce413b"
+  integrity sha512-GNG2F+8BLX201JT/jUX+84Gsi3ZteVQwt9K7mues3ts9FcQ95dGn7uu6a5ndSxdYYUEzfh1KngZiOE0u+l4itA==
+
 vue3-easy-data-table@^1.5.47:
   version "1.5.47"
   resolved "https://registry.yarnpkg.com/vue3-easy-data-table/-/vue3-easy-data-table-1.5.47.tgz#44d27129ac5e938988f0f4aef42b7b90b9c62137"

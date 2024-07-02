@@ -16,8 +16,7 @@
           <Input
             placeholder="Masukan username"
             class="border-primary text-primary"
-            v-model="user"
-          ></Input>
+            v-model="user"></Input>
         </div>
         <div class="flex gap-2">
           <LockClosedIcon class="w-8 text-primary"></LockClosedIcon>
@@ -26,14 +25,18 @@
             type="password"
             class="border-primary text-primary"
             v-model="pass"
-            @keyup.enter="toLogin()"
-          ></Input>
+            @keyup.enter="toLogin()"></Input>
         </div>
       </CardContent>
       <CardFooter>
-        <Button class="bg-primary text-white mx-auto" @click="toLogin()"
-          >Login</Button
-        >
+        <Button class="bg-primary text-white mx-auto" @click="toLogin()">
+          <div v-if="loading">
+            <PulseLoader
+              :color="loadingColor"
+              :size="loadingSize"></PulseLoader>
+          </div>
+          <div v-else>Login</div>
+        </Button>
       </CardFooter>
     </Card>
   </div>
@@ -42,6 +45,8 @@
 <script>
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import PulseLoader from "vue-spinner/src/PulseLoader.vue";
+import { useUseToast } from "@/stores/useToast";
 import { useEnvStore } from "@/stores/envStore";
 import { useAuthStore } from "@/stores/authStore";
 import { UserCircleIcon, LockClosedIcon } from "@heroicons/vue/24/solid";
@@ -73,16 +78,21 @@ export default {
     Button,
     UserCircleIcon,
     LockClosedIcon,
+    PulseLoader,
   },
   data() {
     return {
+      loading: false,
+      loadingColor: "#ffffff",
+      loadingSize: "5px",
       logo: Logo,
-      user: null,
-      pass: null,
+      user: "",
+      pass: "",
     };
   },
   methods: {
     async toLogin() {
+      this.loading = true;
       try {
         const onLogin = await axios.post(
           useEnvStore().loginUrl + "/api/users/login",
@@ -96,7 +106,11 @@ export default {
         useAuthStore().getToken(onLogin.data.data.access_token);
         this.$router.push("/");
       } catch (err) {
-        console.log(err);
+        console.log(err)
+        if (err.response.status === 404 || err.response.status === 400) {
+          this.loading = false;
+          useUseToast().failLogin();
+        }
       }
     },
     aquireToken() {

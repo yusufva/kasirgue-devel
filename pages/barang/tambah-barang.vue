@@ -15,42 +15,40 @@
           <Label class="text-primary">Nama Produk</Label>
           <Input
             class="border-black/30 focus-visible:ring-primary capitalize"
-            v-model="nama_produk"
-          />
+            v-model="nama_produk" />
         </div>
         <div class="flex flex-col w-1/4 gap-2">
           <Label class="text-primary">Harga Beli</Label>
           <Input
             class="border-black/30 focus-visible:ring-primary"
             type="number"
-            v-model="harga_beli"
-          />
+            v-model="harga_beli" />
         </div>
         <div class="flex flex-col w-1/4 gap-2">
           <Label class="text-primary">Harga Jual</Label>
           <Input
             class="border-black/30 focus-visible:ring-primary"
             type="number"
-            v-model="harga_jual"
-          />
+            v-model="harga_jual" />
         </div>
         <div class="flex flex-col w-1/4 gap-2">
           <Label class="text-primary">Satuan</Label>
           <Input
             class="border-black/30 focus-visible:ring-primary"
-            v-model="satuan"
-          />
+            v-model="satuan" />
         </div>
       </div>
       <div class="flex w-full justify-end gap-4">
         <Button
           class="w-max bg-red text-white"
-          @click="this.$router.push('/barang')"
-        >
+          @click="this.$router.push('/barang')">
           Kembali
         </Button>
         <Button class="w-max bg-primary text-white" @click="tambahBarang()">
-          Tambah
+          <div v-if="loading">
+            <PulseLoader :color="loadingColor" :size="loadingSize"></PulseLoader>
+          </div>
+          <div v-else>Tambah</div>
         </Button>
       </div>
     </div>
@@ -59,12 +57,14 @@
 
 <script>
 import axios from "axios";
+import PulseLoader from "vue-spinner/src/PulseLoader.vue";
+import { useUseToast } from "@/stores/useToast";
 import { useEnvStore } from "@/stores/envStore";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 export default {
-  setup(){
+  setup() {
     useSeoMeta({
       title: "Tambah Barang | Kasirgue",
     });
@@ -73,17 +73,22 @@ export default {
     Input,
     Label,
     Button,
+    PulseLoader,
   },
   data() {
     return {
-      nama_produk: null,
+      loading: false,
+      loadingColor: "#ffffff",
+      loadingSize: "5px",
+      nama_produk: "",
       harga_beli: null,
       harga_jual: null,
-      satuan: null
+      satuan: null,
     };
   },
   methods: {
     async tambahBarang() {
+      this.loading = true;
       try {
         const barang = await axios.post(
           useEnvStore().apiUrl + "/api/product-master",
@@ -91,15 +96,23 @@ export default {
             name: this.nama_produk.toLowerCase(),
             buying_price: this.harga_beli,
             selling_price: this.harga_jual,
-            stock:{
+            stock: {
               quantity: 0,
-              satuan: this.satuan
-            }
+              satuan: this.satuan,
+            },
           }
         );
+        useUseToast().addToast();
         this.$router.push("/barang");
       } catch (err) {
-        console.log(err);
+        if (err.response.status === 400) {
+          this.loading = false;
+          useUseToast().formNotCompleted();
+        }
+        if (err.response.status === 409) {
+          this.loading = false;
+          useUseToast().sameProductName();
+        }
       }
     },
   },

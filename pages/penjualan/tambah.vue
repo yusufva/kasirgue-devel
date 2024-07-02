@@ -77,10 +77,10 @@
             ></TableCell>
           </TableRow>
         </TableBody>
+        <div class="text-sm">
+          Total Pembelian: {{ useFormat.currencyFormat(finalPrice) }}
+        </div>
       </Table>
-      <div class="text-sm">
-        Total Pembelian: {{ useFormat.currencyFormat(finalPrice) }}
-      </div>
       <div class="flex w-full justify-end gap-4">
         <Button
           class="w-max bg-red text-white"
@@ -88,11 +88,17 @@
           Kembali
         </Button>
         <Button class="w-max bg-primary text-white" @click="tambahPembelian()">
-          Simpan
+          <div v-if="loading">
+            <PulseLoader
+              :color="loadingColor"
+              :size="loadingSize"></PulseLoader>
+          </div>
+          <div v-else>Simpan</div>
         </Button>
       </div>
     </div>
   </div>
+
   <!-- receipt print section -->
   <!-- normal version -->
   <div class="hidden" id="print-nota">
@@ -157,7 +163,9 @@
 <script>
 import axios from "axios";
 import moment from "moment";
+import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 import { usePaperizer } from "paperizer";
+import { useUseToast } from "@/stores/useToast";
 import { useEnvStore } from "@/stores/envStore";
 import { useUseFormat } from "@/stores/useFormat";
 import { Input } from "@/components/ui/input";
@@ -217,9 +225,13 @@ export default {
     TableCell,
     TableRow,
     TrashIcon,
+    PulseLoader,
   },
   data() {
     return {
+      loading: false,
+      loadingColor: "#ffffff",
+      loadingSize: "5px",
       listBarang: [],
       selected: "",
       transStore: [],
@@ -283,6 +295,7 @@ export default {
       }
     },
     async tambahPembelian() {
+      this.loading = true;
       const idNota = moment().format("YYYY" + "MM" + "DD" + "HH" + "mm" + "ss");
       const itemToPost = this.transStore.map(({ index, ...rest }) => rest);
       try {
@@ -301,9 +314,13 @@ export default {
         this.isFilled = false;
         this.transStore = [];
         this.showTable = false;
+        this.loading = false;
         // this.$router.push("/");
       } catch (err) {
-        console.log(err);
+        this.loading = false;
+        if (err.response.status === 400) {
+          useUseToast().emptyStock();
+        }
       }
     },
     printCallback() {

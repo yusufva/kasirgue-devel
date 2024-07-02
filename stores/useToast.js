@@ -1,11 +1,111 @@
 import { defineStore } from "pinia";
-import { useToast } from "@/components/ui/toast/use-toast";
 
 export const useUseToast = defineStore("toast", {
-  state: () => ({
-    deleteToast: useToast({
-      description: "Data Berhasil Dihapus",
-      variant: "destructive",
-    }),
-  }),
+  actions: {
+    deleteToast() {
+      const { $swal } = useNuxtApp();
+      $swal.fire({
+        position: "top-end",
+        toast: true,
+        timerProgressBar: true,
+        icon: "success",
+        text: "Data berhasil dihapus.",
+        background: "#E84545",
+        color: "#ffffff",
+        iconColor: "#ffffff",
+        showConfirmButton: false,
+        timer: 3000,
+      });
+    },
+    failLogin() {
+      const { $swal } = useNuxtApp();
+      $swal.fire({
+        position: "top-end",
+        toast: true,
+        timerProgressBar: true,
+        icon: "error",
+        text: "Login gagal. Periksa kembali user dan password anda.",
+        background: "#E84545",
+        color: "#ffffff",
+        iconColor: "#ffffff",
+        showConfirmButton: false,
+        timer: 3000,
+      });
+    },
+    emptyStock() {
+      const { $swal } = useNuxtApp();
+      $swal.fire({
+        position: "top-end",
+        toast: true,
+        timerProgressBar: true,
+        icon: "error",
+        text: "Ada stok yang habis.",
+        background: "#E84545",
+        color: "#ffffff",
+        iconColor: "#ffffff",
+        showConfirmButton: false,
+        timer: 3000,
+      });
+    },
+    sameProductName() {
+      const { $swal } = useNuxtApp();
+      $swal.fire({
+        position: "top-end",
+        toast: true,
+        timerProgressBar: true,
+        icon: "error",
+        text: "Produk dengan nama yang sama sudah terdaftar.",
+        background: "#E84545",
+        color: "#ffffff",
+        iconColor: "#ffffff",
+        showConfirmButton: false,
+        timer: 3000,
+      });
+    },
+    formNotCompleted() {
+      const { $swal } = useNuxtApp();
+      $swal.fire({
+        position: "top-end",
+        toast: true,
+        timerProgressBar: true,
+        icon: "error",
+        text: "Harap lengkapi form.",
+        background: "#E84545",
+        color: "#ffffff",
+        iconColor: "#ffffff",
+        showConfirmButton: false,
+        timer: 3000,
+      });
+    },
+    addToast() {
+      const { $swal } = useNuxtApp();
+      $swal.fire({
+        position: "top-end",
+        toast: true,
+        timerProgressBar: true,
+        icon: "success",
+        text: "Data berhasil ditambahkan.",
+        background: "#0B324F",
+        color: "#ffffff",
+        iconColor: "#ffffff",
+        showConfirmButton: false,
+        timer: 3000,
+      });
+    },
+    editToast() {
+      const { $swal } = useNuxtApp();
+      $swal.fire({
+        position: "top-end",
+        toast: true,
+        timerProgressBar: true,
+        icon: "success",
+        text: "Data berhasil diubah.",
+        background: "#F18200",
+        color: "#ffffff",
+        iconColor: "#ffffff",
+        showConfirmButton: false,
+        timer: 3000,
+      });
+    },
+  },
 });

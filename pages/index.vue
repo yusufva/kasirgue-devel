@@ -114,7 +114,7 @@ export default {
       },
       legendValues: [
         {
-          label: "Penjualan (Rp)",
+          label: "Penjualan",
           color: "#F18200",
         },
       ],

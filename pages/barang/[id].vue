@@ -3,8 +3,7 @@
     <div v-if="loading" class="flex flex-col w-full h-max gap-4">
       <svg
         class="mx-auto animate-[pulse_0.75s_infinite] h-10 w-10 rounded-full bg-primary"
-        viewBox="0 0 24 24"
-      ></svg>
+        viewBox="0 0 24 24"></svg>
     </div>
     <div v-else class="flex flex-col w-full h-max gap-4">
       <!-- header -->
@@ -47,9 +46,9 @@
         <NuxtLink :to="/edit-barang/ + dataBarang.id" class="w-1/2">
           <Button class="bg-secondary text-white">Edit</Button>
         </NuxtLink>
-        <Button class="w-1/2 bg-red text-white" @click="hapusBarang()"
-          >Hapus</Button
-        >
+        <Button class="w-1/2 bg-red text-white" @click="showDelDialog()">
+          Hapus
+        </Button>
       </div>
     </div>
   </div>
@@ -81,6 +80,27 @@ export default {
     };
   },
   methods: {
+    showDelDialog() {
+      const { $swal } = useNuxtApp();
+      $swal
+        .fire({
+          title: "Peringatan!",
+          text: "Apakah anda yakin akan menghapus barang ini? Perubahan tidak dapat dikembalikan.",
+          icon: "warning",
+          showDenyButton: true,
+          confirmButtonText: "Yakin",
+          denyButtonText: "Tidak",
+          confirmButtonColor: "#0B324F",
+          denyButtonColor: "#E84545",
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.hapusBarang();
+          } else if (result.isDenied) {
+            return;
+          }
+        });
+    },
     async getDataBarang() {
       try {
         const barang = await axios.get(
@@ -98,7 +118,7 @@ export default {
         const hapus = await axios.delete(
           useEnvStore().apiUrl + "/api/product-master/" + this.$route.params.id
         );
-        useUseToast().deleteToast
+        useUseToast().deleteToast();
         this.$router.push("/barang");
       } catch (err) {
         console.log(err);

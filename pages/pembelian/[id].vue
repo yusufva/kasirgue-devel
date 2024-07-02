@@ -12,7 +12,7 @@
         <NuxtLink to="/pembelian" class="text-black/60 hover:text-primary"
           >Pembelian
         </NuxtLink>
-        <div class="text-primary capitalize">/ {{ dataBarang.nota_id }}</div>
+        <div class="text-primary">/ {{ dataBarang.nota_id }}</div>
       </div>
       <div class="text-primary font-semibold text-2xl">Detail Pembelian</div>
       <div class="h-[2px] w-full bg-primary/20 rounded-xl"></div>
