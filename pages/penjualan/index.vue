@@ -7,6 +7,44 @@
     <div class="h-[2px] w-full bg-primary/20 rounded-xl my-4"></div>
     <!-- content -->
     <div class="flex gap-4 mb-4 justify-end">
+      <div class="w-1/5 mr-auto">
+        <Popover>
+          <PopoverTrigger>
+            <Button variant="outline" class="text-primary font-semibold"
+              >Filter Tanggal</Button
+            >
+          </PopoverTrigger>
+          <PopoverContent class="flex flex-col w-full border-primary gap-2">
+            <div class="flex gap-2">
+              <div class="flex flex-col w-36">
+                <div class="text-xs">Tanggal Awal</div>
+                <VueDatePicker
+                  v-model="startDate"
+                  auto-apply
+                  :format="dpFormat"
+                  model-type="yyyy-MM-dd"></VueDatePicker>
+              </div>
+              <div class="flex flex-col w-36">
+                <div class="text-xs">Tanggal Akhir</div>
+                <VueDatePicker
+                  v-model="endDate"
+                  auto-apply
+                  :format="dpFormat"
+                  model-type="yyyy-MM-dd"></VueDatePicker>
+              </div>
+            </div>
+            <Button class="bg-primary text-white" @click="getByDate()">
+              <div v-if="filterLoading">
+                <PulseLoader
+                  :color="filterLoadingColor"
+                  :size="filterLoadingSize">
+                </PulseLoader>
+              </div>
+              <div v-else>Submit</div>
+            </Button>
+          </PopoverContent>
+        </Popover>
+      </div>
       <Input
         v-model="searchValue"
         class="w-1/5 text-xs border-black/30 focus-visible:ring-primary"
@@ -38,19 +76,18 @@
 
 <script>
 import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "@heroicons/vue/24/outline";
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/vue/24/solid";
+import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 import { useEnvStore } from "@/stores/envStore";
 import { useUseFormat } from "@/stores/useFormat";
 import axios from "axios";
@@ -63,22 +100,23 @@ export default {
     return { useFormat };
   },
   components: {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
     Input,
     Button,
     ScrollArea,
+    VueDatePicker,
+    PulseLoader,
     PlusIcon,
     ArrowTopRightOnSquareIcon,
   },
   data() {
     return {
       loading: true,
+      filterLoading: false,
+      filterLoadingColor: "#ffffff",
+      filterLoadingSize: "5px",
       headers: [
         { text: "Nomor Nota", value: "nota_id" },
         { text: "Tanggal", value: "date" },
@@ -89,6 +127,15 @@ export default {
       color: "#0b324f",
       searchField: "nota_id",
       searchValue: "",
+      startDate: "",
+      endDate: "",
+      dpFormat: (date) => {
+        const day = date.getDate();
+        const month = date.getMonth() + 1;
+        const year = date.getFullYear();
+
+        return day + "-" + month + "-" + year;
+      },
     };
   },
   methods: {
@@ -98,6 +145,22 @@ export default {
         this.jualList = beli.data.data;
         console.log(this.jualList);
         this.loading = false;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    async getByDate() {
+      this.filterLoading = true;
+      try {
+        const report = await axios.post(
+          useEnvStore().apiUrl + "/api/report/tx-sell/date",
+          {
+            startDate: this.startDate,
+            endDate: this.endDate,
+          }
+        );
+        this.jualList = report.data.data;
+        this.filterLoading = false;
       } catch (err) {
         console.log(err);
       }
