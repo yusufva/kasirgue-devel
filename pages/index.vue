@@ -8,7 +8,7 @@
     <!-- content -->
     <div class="flex w-full h-full gap-4 items-end">
       <!-- stock warn table -->
-      <div class="flex flex-col w-1/3 h-max bg-primary p-4">
+      <div class="flex flex-col w-1/3 h-auto max-h-full bg-primary p-4">
         <div class="mx-auto text-white font-semibold">Stok Hampir Habis</div>
         <ScrollArea class="h-full w-full border-b-2 border-b-white/20">
           <Table>

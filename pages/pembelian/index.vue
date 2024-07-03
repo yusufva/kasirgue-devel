@@ -5,10 +5,14 @@
     <div class="h-[2px] w-full bg-primary/20 rounded-xl my-4"></div>
     <!-- content -->
     <div class="flex gap-4 justify-end">
+      <div class="w-1/5 mr-auto">
+        <VueDatePicker></VueDatePicker>
+      </div>
       <Input
         v-model="searchValue"
         class="w-1/5 text-xs border-black/30 focus-visible:ring-primary"
-        placeholder="Cari Nomor Nota" />
+        placeholder="Cari Nomor Nota"
+      />
       <NuxtLink to="/pembelian/tambah">
         <Button class="flex align-center bg-primary mb-4">
           <PlusIcon class="w-6 text-white" />
@@ -22,7 +26,8 @@
       :search-value="searchValue"
       :search-field="searchField"
       :loading="loading"
-      :theme-color="color">
+      :theme-color="color"
+    >
       <template #item-date="item" v-slot:item.date="{ item }">
         <div>{{ useFormat.dateFormat(item.date) }}</div>
       </template>
@@ -54,6 +59,8 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "@heroicons/vue/24/outline";
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/vue/24/solid";
 import { useEnvStore } from "@/stores/envStore";
 import { useUseFormat } from "@/stores/useFormat";
@@ -77,6 +84,7 @@ export default {
     Input,
     Button,
     ScrollArea,
+    VueDatePicker,
     PlusIcon,
     ArrowTopRightOnSquareIcon,
   },
