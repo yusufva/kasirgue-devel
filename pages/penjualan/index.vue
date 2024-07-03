@@ -42,6 +42,11 @@
               </div>
               <div v-else>Submit</div>
             </Button>
+            <Button
+              class="bg-secondary text-white"
+              @click="jualList = initialJualList">
+              Reset
+            </Button>
           </PopoverContent>
         </Popover>
       </div>
@@ -124,6 +129,7 @@ export default {
         { text: "", value: "actions" },
       ],
       jualList: [],
+      initialJualList: [],
       color: "#0b324f",
       searchField: "nota_id",
       searchValue: "",
@@ -143,6 +149,7 @@ export default {
       try {
         const beli = await axios.get(useEnvStore().apiUrl + "/api/tx-sell");
         this.jualList = beli.data.data;
+        this.initialJualList = beli.data.data;
         console.log(this.jualList);
         this.loading = false;
       } catch (err) {

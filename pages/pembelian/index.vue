@@ -40,6 +40,11 @@
               </div>
               <div v-else>Submit</div>
             </Button>
+            <Button
+              class="bg-secondary text-white"
+              @click="beliList = initialBeliList">
+              Reset
+            </Button>
           </PopoverContent>
         </Popover>
       </div>
@@ -128,6 +133,7 @@ export default {
         { text: "", value: "actions" },
       ],
       beliList: [],
+      initialBeliList: [],
       color: "#0b324f",
       searchValue: "",
       searchField: "nota_id",
@@ -147,6 +153,7 @@ export default {
       try {
         const beli = await axios.get(useEnvStore().apiUrl + "/api/tx-buy");
         this.beliList = beli.data.data;
+        this.initialBeliList = beli.data.data;
         console.log(this.beliList);
         this.loading = false;
       } catch (err) {
