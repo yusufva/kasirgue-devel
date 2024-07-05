@@ -21,6 +21,12 @@
       :search-field="searchField"
       :loading="loading"
       :theme-color="color">
+      <template #item-buying_price="item" v-slot:item.buying_price="{ item }">
+        <div>{{ useFormat.currencyFormat(item.buying_price) }}</div>
+      </template>
+      <template #item-selling_price="item" v-slot:item.selling_price="{ item }">
+        <div>{{ useFormat.currencyFormat(item.selling_price) }}</div>
+      </template>
       <template #item-actions="item" v-slot:item.actions="{ item }">
         <NuxtLink :to="/barang/ + item.id">
           <div class="bg-primary text-white rounded-full p-2 m-1 w-8">
@@ -50,12 +56,15 @@ import {
   ArrowTopRightOnSquareIcon,
 } from "@heroicons/vue/24/solid";
 import { useEnvStore } from "@/stores/envStore";
+import { useUseFormat } from "@/stores/useFormat";
 import axios from "axios";
 export default {
   setup() {
     useSeoMeta({
       title: "Barang | Kasirgue",
     });
+    const useFormat = useUseFormat();
+    return { useFormat };
   },
   components: {
     Table,

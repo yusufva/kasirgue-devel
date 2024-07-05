@@ -6553,6 +6553,11 @@ vue-chartjs@^5.3.1:
   resolved "https://registry.yarnpkg.com/vue-chartjs/-/vue-chartjs-5.3.1.tgz#73484d569ec4994ba5accd30fe6714ef28e86f5b"
   integrity sha512-rZjqcHBxKiHrBl0CIvcOlVEBwRhpWAVf6rDU3vUfa7HuSRmGtCslc0Oc8m16oAVuk0erzc1FCtH1VCriHsrz+A==
 
+vue-currency-input@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/vue-currency-input/-/vue-currency-input-3.1.0.tgz#869a89bbbb98cc8e483cb410adbdd0f8d6eb1d74"
+  integrity sha512-XZ8bg61zRNJjRDo7I4K0UAah9qtkipexRcn/h9MzEqZQ9gVZWABObgN+042UchmCTiwSfsjGOd6DZGzd/TUUMA==
+
 vue-demi@>=0.13.0:
   version "0.14.6"
   resolved "https://registry.npmjs.org/vue-demi/-/vue-demi-0.14.6.tgz"

@@ -25,11 +25,15 @@
             </TableRow>
             <TableRow class="border-b border-black/10">
               <TableCell class="w-1/3">Harga Beli</TableCell>
-              <TableCell>: {{ dataBarang.buying_price }}</TableCell>
+              <TableCell>
+                : {{ useFormat.currencyFormat(dataBarang.buying_price) }}
+              </TableCell>
             </TableRow>
             <TableRow class="border-b border-black/10">
               <TableCell class="w-1/3">Harga Jual</TableCell>
-              <TableCell>: {{ dataBarang.selling_price }}</TableCell>
+              <TableCell>
+                : {{ useFormat.currencyFormat(dataBarang.selling_price) }}
+              </TableCell>
             </TableRow>
             <TableRow class="border-b border-black/10">
               <TableCell class="w-1/3">Stock</TableCell>
@@ -65,6 +69,8 @@ export default {
     useSeoMeta({
       title: "Detail Barang | Kasirgue",
     });
+    const useFormat = useUseFormat();
+    return { useFormat };
   },
   components: {
     Table,
