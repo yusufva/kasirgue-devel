@@ -6,31 +6,34 @@
     </div>
     <div class="h-[2px] w-full bg-primary/20 rounded-xl my-4"></div>
     <!-- content -->
-    <div class="flex w-full h-full gap-4 items-end">
+    <div class="flex w-full h-full gap-4 items-start">
       <!-- stock warn table -->
-      <div class="flex flex-col w-1/3 h-auto max-h-full bg-primary p-4">
-        <div class="mx-auto text-white font-semibold">Stok Hampir Habis</div>
-        <ScrollArea class="h-full w-full border-b-2 border-b-white/20">
-          <Table>
-            <TableHeader class="text-white bg-primary">
-              <TableRow>
-                <TableHead>Barang</TableHead>
-                <TableHead>Stok</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow
-                v-for="item in stok"
-                :key="item.index"
-                class="border-b text-white border-black/10">
-                <TableCell class="font-normal capitalize">
-                  {{ item.product.name }}
-                </TableCell>
-                <TableCell>{{ item.quantity }} {{ item.satuan }}</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </ScrollArea>
+      <div
+        class="flex flex-col w-1/3 h-[37rem] bg-primary p-4 overflow-y-scroll scrollbar-hide"
+      >
+        <div class="mx-auto text-white font-semibold text-xl">
+          Stok Hampir Habis
+        </div>
+        <Table>
+          <TableHeader class="text-white bg-primary">
+            <TableRow>
+              <TableHead>Barang</TableHead>
+              <TableHead>Stok</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow
+              v-for="item in stok"
+              :key="item.index"
+              class="border-b text-white border-black/10"
+            >
+              <TableCell class="font-normal capitalize">
+                {{ item.product.name }}
+              </TableCell>
+              <TableCell>{{ item.quantity }} {{ item.satuan }}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
       </div>
       <div class="w-2/3">
         <ChartLegend class="text-sm" :legend-values="legendValues" />
@@ -171,3 +174,15 @@ export default {
   },
 };
 </script>
+
+<style>
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* For IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+</style>
