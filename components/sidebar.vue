@@ -2,7 +2,7 @@
   <div>
     <!-- sheet sidebar -->
     <Sheet>
-      <div class="flex p-4 gap-2 items-baseline">
+      <div class="hidden md:flex p-4 gap-2 items-baseline">
         <img :src="logo" class="w-[100px]" />
         <SheetTrigger>
           <ChevronDoubleRightIcon class="text-primary w-6" />
@@ -39,7 +39,7 @@
       </SheetContent>
     </Sheet>
     <!-- button sidebar -->
-    <div class="flex flex-col gap-4 pl-4 mt-10">
+    <div class="hidden md:flex flex-col gap-4 pl-4 mt-10">
       <div v-for="item in links" :key="item.index">
             <NuxtLink
               :to="item.route"

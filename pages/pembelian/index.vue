@@ -4,7 +4,7 @@
     <div class="text-primary font-semibold text-2xl">Daftar Pembelian</div>
     <div class="h-[2px] w-full bg-primary/20 rounded-xl my-4"></div>
     <!-- content -->
-    <div class="flex gap-4 justify-end">
+    <div class="flex flex-col md:flex-row gap-4 justify-end">
       <div class="w-1/5 mr-auto">
         <Popover>
           <PopoverTrigger>
@@ -50,9 +50,9 @@
       </div>
       <Input
         v-model="searchValue"
-        class="w-1/5 text-xs border-black/30 focus-visible:ring-primary"
+        class="w-2/3 md:w-1/5 text-xs border-black/30 focus-visible:ring-primary"
         placeholder="Cari Nomor Nota" />
-      <NuxtLink to="/pembelian/tambah">
+      <NuxtLink to="/pembelian/tambah" class="w-max">
         <Button class="flex align-center bg-primary mb-4">
           <PlusIcon class="w-6 text-white" />
           <div class="text-white">Tambah Pembelian</div>
@@ -127,7 +127,7 @@ export default {
       filterLoadingColor: "#ffffff",
       filterLoadingSize: "5px",
       headers: [
-        { text: "Nomor Nota", value: "nota_id" },
+        { text: "Nomor Nota", value: "nota_id", fixed: true },
         { text: "Tanggal", value: "date" },
         { text: "Total Harga", value: "final_price" },
         { text: "", value: "actions" },

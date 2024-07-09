@@ -4,10 +4,10 @@
     <div class="text-primary font-semibold text-2xl">Daftar Barang</div>
     <div class="h-[2px] w-full bg-primary/20 rounded-xl my-4"></div>
     <!-- content -->
-    <div class="flex gap-4 mb-4 justify-end">
+    <div class="flex gap-4 mb-4 justify-between md:justify-end">
       <Input
         v-model="searchValue"
-        class="w-1/5 text-xs border-black/30 focus-visible:ring-primary"
+        class="w-1/2 md:w-1/5 text-xs border-black/30 focus-visible:ring-primary"
         placeholder="Cari Barang" />
       <NuxtLink to="/barang/tambah-barang">
         <PlusCircleIcon class="w-8 text-primary" />
@@ -85,7 +85,7 @@ export default {
       loading: true,
       color: "#0b324f",
       headers: [
-        { text: "Barang", value: "name" },
+        { text: "Barang", value: "name", fixed: true },
         { text: "Harga Beli", value: "buying_price" },
         { text: "Harga Jual", value: "selling_price" },
         { text: "Stok", value: "stock.quantity" },

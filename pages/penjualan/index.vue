@@ -52,7 +52,7 @@
       </div>
       <Input
         v-model="searchValue"
-        class="w-1/5 text-xs border-black/30 focus-visible:ring-primary"
+        class="w-1/2 md:w-1/5 text-xs border-black/30 focus-visible:ring-primary"
         placeholder="Cari Nomor Nota" />
     </div>
     <EasyDataTable
@@ -123,7 +123,7 @@ export default {
       filterLoadingColor: "#ffffff",
       filterLoadingSize: "5px",
       headers: [
-        { text: "Nomor Nota", value: "nota_id" },
+        { text: "Nomor Nota", value: "nota_id", fixed: true },
         { text: "Tanggal", value: "date" },
         { text: "Total Harga", value: "final_price" },
         { text: "", value: "actions" },

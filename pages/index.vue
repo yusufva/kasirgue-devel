@@ -1,15 +1,15 @@
 <template>
   <div>
     <!-- header -->
-    <div class="text-primary font-semibold text-2xl">
+    <div class="text-primary font-semibold text-xl md:text-2xl">
       Welcome, {{ userName }}!
     </div>
     <div class="h-[2px] w-full bg-primary/20 rounded-xl my-4"></div>
     <!-- content -->
-    <div class="flex w-full h-full gap-4 items-start">
+    <div class="flex flex-col md:flex-row w-full h-full gap-4 items-start">
       <!-- stock warn table -->
       <div
-        class="flex flex-col w-1/3 h-[37rem] bg-primary p-4 overflow-y-scroll scrollbar-hide"
+        class="flex flex-col w-full md:w-1/3 h-[70vh] md:h-[25rem] 2xl:h-[37rem] bg-primary p-4 overflow-y-scroll scrollbar-hide"
       >
         <div class="mx-auto text-white font-semibold text-xl">
           Stok Hampir Habis
@@ -35,7 +35,7 @@
           </TableBody>
         </Table>
       </div>
-      <div class="w-2/3">
+      <div class="w-full md:w-2/3">
         <ChartLegend class="text-sm" :legend-values="legendValues" />
         <Line :data="chartData" :options="chartOptions" />
       </div>

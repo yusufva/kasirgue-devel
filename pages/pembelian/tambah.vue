@@ -11,16 +11,16 @@
       <div class="h-[2px] w-full bg-primary/20 rounded-xl"></div>
       <!-- content section -->
       <div class="flex flex-row w-full gap-4">
-        <div class="flex flex-col w-1/4 gap-2">
+        <div class="flex flex-col w-full md:w-1/4 gap-2">
           <Label class="text-primary">Nomor Nota</Label>
           <Input
             class="border-black/30 focus-visible:ring-primary"
             v-model="idNota" />
         </div>
       </div>
-      <div class="flex flex-row w-full gap-4">
+      <div class="flex flex-col md:flex-row w-full gap-4">
         <!-- select dropdown -->
-        <div class="flex flex-col w-1/4 gap-2">
+        <div class="flex flex-col w-full md:w-1/4 gap-2">
           <Label class="text-primary">Nama Produk</Label>
 
           <ComboboxRoot v-model="selected" class="relative">
@@ -56,14 +56,14 @@
             </ComboboxContent>
           </ComboboxRoot>
         </div>
-        <div class="flex flex-col w-1/4 gap-2">
+        <div class="flex flex-col w-full md:w-1/4 gap-2">
           <Label class="text-primary">Harga Beli</Label>
-          <Input
-            class="border-black/30 focus-visible:ring-primary"
-            type="number"
+          <CurrencyInput
+            class="border-black/30 focus-visible:ring-primary flex h-9 w-full rounded-md border border-slate-200 border-slate-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-950 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:border-slate-800 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300"
+            :options="{ currency: 'IDR', locale: 'id-ID' }"
             v-model="harga_beli" />
         </div>
-        <div class="flex flex-col w-1/4 gap-2">
+        <div class="flex flex-col w-full md:w-1/4 gap-2">
           <Label class="text-primary">Jumlah</Label>
           <Input
             class="border-black/30 focus-visible:ring-primary"
@@ -92,9 +92,13 @@
             :key="item.id"
             class="borer-b border-black/10 capitalize">
             <TableCell>{{ item.name }}</TableCell>
-            <TableCell>{{ item.buying_price }}</TableCell>
+            <TableCell>{{
+              useFormat.currencyFormat(item.buying_price)
+            }}</TableCell>
             <TableCell>{{ item.quantity }}</TableCell>
-            <TableCell>{{ item.total_price }}</TableCell>
+            <TableCell>{{
+              useFormat.currencyFormat(item.total_price)
+            }}</TableCell>
           </TableRow>
         </TableBody>
       </Table>
@@ -121,6 +125,7 @@
 import axios from "axios";
 import moment from "moment";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
+import CurrencyInput from "@/components/currency-input.vue";
 import { useUseToast } from "@/stores/useToast";
 import { useEnvStore } from "@/stores/envStore";
 import { Input } from "@/components/ui/input";
@@ -153,9 +158,12 @@ export default {
     useSeoMeta({
       title: "Tambah Pembelian | Kasirgue",
     });
+    const useFormat = useUseFormat();
+    return { useFormat };
   },
   components: {
     Input,
+    CurrencyInput,
     Label,
     Button,
     ComboboxAnchor,

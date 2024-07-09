@@ -10,9 +10,9 @@
       <div class="text-primary font-semibold text-2xl">Tambah Penjualan</div>
       <div class="h-[2px] w-full bg-primary/20 rounded-xl"></div>
       <!-- content section -->
-      <div class="flex flex-row w-full gap-4">
+      <div class="flex flex-col md:flex-row w-full gap-4">
         <!-- select dropdown -->
-        <div class="flex flex-col w-1/4 gap-2 justify-end">
+        <div class="flex flex-col w-full md:w-1/4 gap-2 justify-end">
           <Label class="text-primary">Nama Produk</Label>
           <v-select
             class="capitalized"
@@ -34,7 +34,7 @@
             </template>
           </v-select>
         </div>
-        <div class="flex flex-col w-1/4 gap-2">
+        <div class="flex flex-col w-full md:w-1/4 gap-2">
           <Label class="text-primary">Jumlah</Label>
           <Input
             class="border-black/30 focus-visible:ring-primary"
@@ -131,7 +131,7 @@
             <tr v-for="items in returnBeli.items" :key="items.index">
               <td>{{ items.quantity }}x</td>
               <td class="text-capitalize">{{ items.name }}</td>
-              <td class="text-end">{{ items.total_price }}</td>
+              <td class="text-end">{{ useFormat.currencyFormat(items.total_price) }}</td>
             </tr>
           </tbody>
         </table>
@@ -139,7 +139,7 @@
       <div class="mb-6">
         <div class="d-flex justify-content-between">
           <p>TOTAL</p>
-          <p>{{ returnBeli.final_price }}</p>
+          <p>{{ useFormat.currencyFormat(returnBeli.final_price) }}</p>
         </div>
       </div>
       <div

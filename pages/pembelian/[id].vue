@@ -19,7 +19,7 @@
       <!-- content -->
       <div class="flex flex-col w-full gap-4">
         <!-- title -->
-        <Table class="w-1/2">
+        <Table class="w-full md:w-1/2">
           <TableBody>
             <TableRow class="border-none">
               <TableCell class="pb-0">Nomor Nota</TableCell>
