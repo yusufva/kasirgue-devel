@@ -48,6 +48,7 @@ import {
   HomeIcon,
   ArchiveBoxIcon,
   RectangleStackIcon,
+  UsersIcon,
   SquaresPlusIcon,
   ShoppingCartIcon,
 } from "@heroicons/vue/24/solid";
@@ -62,6 +63,7 @@ export default {
     HomeIcon,
     ArchiveBoxIcon,
     RectangleStackIcon,
+    UsersIcon,
     SquaresPlusIcon,
     ShoppingCartIcon,
   },
@@ -73,6 +75,7 @@ export default {
         { title: "Beranda", icon: "HomeIcon", route: "/" },
         { title: "Barang", icon: "ArchiveBoxIcon", route: "/barang" },
         { title: "Stok", icon: "RectangleStackIcon", route: "/stok" },
+        { title: "Supplier", icon: "UsersIcon", route: "/supplier" },
         { title: "Pembelian", icon: "SquaresPlusIcon", route: "/pembelian" },
         { title: "Penjualan", icon: "ShoppingCartIcon", route: "/penjualan" },
       ],
