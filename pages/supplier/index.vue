@@ -20,23 +20,40 @@
       :search-field="searchField"
       :loading="loading"
       :theme-color="color">
+      <template #item-nama="item" v-slot:item.nama="{ item }">
+        <div class="capitalize">{{ item.nama }}</div>
+      </template>
+      <template #item-alamat="item" v-slot:item.alamat="{ item }">
+        <div class="capitalize">{{ item.alamat }}</div>
+      </template>
+      <template #item-opsi="item" v-slot:item.opsi="{ item }">
+        <NuxtLink :to="/supplier/ + item.id">
+          <div class="bg-primary text-white rounded-full p-2 m-1 w-8">
+            <ArrowTopRightOnSquareIcon />
+          </div>
+        </NuxtLink>
+      </template>
     </EasyDataTable>
   </div>
 </template>
 
 <script>
-import { PlusCircleIcon } from "@heroicons/vue/24/solid";
+import {
+  PlusCircleIcon,
+  ArrowTopRightOnSquareIcon,
+} from "@heroicons/vue/24/solid";
 import { useEnvStore } from "@/stores/envStore";
 import { useUseFormat } from "@/stores/useFormat";
 import axios from "axios";
 export default {
-    setup() {
+  setup() {
     useSeoMeta({
       title: "Supplier | Kasirgue",
     });
   },
   components: {
     PlusCircleIcon,
+    ArrowTopRightOnSquareIcon,
   },
   data() {
     return {
@@ -46,6 +63,7 @@ export default {
         { text: "Nama", value: "nama" },
         { text: "Alamat", value: "alamat" },
         { text: "CP", value: "cp" },
+        { text: "", value: "opsi" },
       ],
       supplierList: [],
       searchField: "nama",

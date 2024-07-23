@@ -84,7 +84,7 @@
       <div class="flex w-full justify-end gap-4">
         <Button
           class="w-max bg-red text-white"
-          @click="this.$router.push('/pembelian')">
+          @click="this.$router.push('/')">
           Kembali
         </Button>
         <Button class="w-max bg-primary text-white" @click="tambahPembelian()">

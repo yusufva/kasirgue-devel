@@ -53,7 +53,7 @@
           Kembali
         </Button>
         <Button class="w-max bg-primary text-white" @click="editBarang()">
-          <div v-if="loading">
+          <div v-if="loadingSubmit">
             <PulseLoader
               :color="loadingColor"
               :size="loadingSize"></PulseLoader>
@@ -86,6 +86,7 @@ export default {
   data() {
     return {
       loading: false,
+      loadingSubmit: false,
       loadingColor: "#ffffff",
       loadingSize: "5px",
       dataBarang: [],
@@ -114,7 +115,7 @@ export default {
       }
     },
     async editBarang() {
-      this.loading = true;
+      this.loadingSubmit = true;
       try {
         const edit = await axios.put(
           useEnvStore().apiUrl + "/api/product-master/" + this.$route.params.id,
