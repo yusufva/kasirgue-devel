@@ -72,6 +72,9 @@
       <template #item-final_price="item" v-slot:item.final_price="{ item }">
         <div>{{ useFormat.currencyFormat(item.final_price) }}</div>
       </template>
+      <template #item-supplier.nama="item" v-slot:item.supplier.nama="{ item }">
+        <div class="capitalize">{{ item.supplier.nama }}</div>
+      </template>
       <template #item-actions="item" v-slot:item.actions="{ item }">
         <NuxtLink :to="/pembelian/ + item.id">
           <div class="bg-primary text-white rounded-full p-2 m-1 w-8">
@@ -130,6 +133,7 @@ export default {
         { text: "Nomor Nota", value: "nota_id", fixed: true },
         { text: "Tanggal", value: "date" },
         { text: "Total Harga", value: "final_price" },
+        { text: "Supplier", value: "supplier.nama" },
         { text: "", value: "actions" },
       ],
       beliList: [],

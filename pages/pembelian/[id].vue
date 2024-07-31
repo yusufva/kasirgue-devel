@@ -3,8 +3,7 @@
     <div v-if="loading" class="flex flex-col w-full h-max gap-4">
       <svg
         class="mx-auto animate-[pulse_0.75s_infinite] h-10 w-10 rounded-full bg-primary"
-        viewBox="0 0 24 24"
-      ></svg>
+        viewBox="0 0 24 24"></svg>
     </div>
     <div v-else class="flex flex-col w-full h-max gap-4">
       <!-- header -->
@@ -26,8 +25,16 @@
               <TableCell class="pb-0">: {{ dataBarang.nota_id }}</TableCell>
             </TableRow>
             <TableRow class="border-none">
-              <TableCell>Tanggal</TableCell>
-              <TableCell>: {{ useFormat.dateFormat(dataBarang.date) }}</TableCell>
+              <TableCell class="pb-0">Tanggal</TableCell>
+              <TableCell class="pb-0">
+                : {{ useFormat.dateFormat(dataBarang.date) }}</TableCell
+              >
+            </TableRow>
+            <TableRow class="border-none">
+              <TableCell>Supplier</TableCell>
+              <TableCell class="capitalize">
+                : {{ dataBarang.supplier.nama }}</TableCell
+              >
             </TableRow>
           </TableBody>
         </Table>
@@ -43,8 +50,12 @@
             <TableRow v-for="item in detailBarang" :key="item.index">
               <TableCell>{{ item.name }}</TableCell>
               <TableCell>{{ item.quantity }}</TableCell>
-              <TableCell>{{ useFormat.currencyFormat(item.buying_price) }}</TableCell>
-              <TableCell>{{ useFormat.currencyFormat(item.total_price) }}</TableCell>
+              <TableCell>{{
+                useFormat.currencyFormat(item.buying_price)
+              }}</TableCell>
+              <TableCell>{{
+                useFormat.currencyFormat(item.total_price)
+              }}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -52,7 +63,10 @@
           <TableBody>
             <TableRow>
               <TableCell class="font-semibold"
-                >Total Pembelian: {{ useFormat.currencyFormat(dataBarang.final_price) }}</TableCell
+                >Total Pembelian:
+                {{
+                  useFormat.currencyFormat(dataBarang.final_price)
+                }}</TableCell
               >
             </TableRow>
           </TableBody>
