@@ -78,6 +78,7 @@ export default {
         { title: "Supplier", icon: "UsersIcon", route: "/supplier" },
         { title: "Pembelian", icon: "SquaresPlusIcon", route: "/pembelian" },
         { title: "Penjualan", icon: "ShoppingCartIcon", route: "/penjualan" },
+        { title: "Laba Rugi", icon: "ArrowsUpDownIcon", route: "/labarugi" },
       ],
     };
   },
