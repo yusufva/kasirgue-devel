@@ -17,6 +17,15 @@
             class="border-black/30 focus-visible:ring-primary"
             v-model="idNota" />
         </div>
+        <div class="flex flex-col w-full md:w-1/4 gap-2">
+          <Label class="text-primary">Supplier</Label>
+          <v-select
+            class="border-black/30 focus-visible:ring-primary capitalize"
+            :options="listSupplier"
+            label="nama"
+            :reduce="(supplier) => supplier.id"
+            v-model="supplier" />
+        </div>
       </div>
       <div class="flex flex-col md:flex-row w-full gap-4">
         <!-- select dropdown -->
@@ -198,6 +207,8 @@ export default {
       idNota: null,
       harga_beli: null,
       jumlah: null,
+      listSupplier: [],
+      supplier: null,
     };
   },
   methods: {
@@ -231,6 +242,16 @@ export default {
         console.log(err);
       }
     },
+    async getSupplierList() {
+      try {
+        const supplier = await axios.get(
+          useEnvStore().apiUrl + "/api/supplier"
+        );
+        this.listSupplier = supplier.data.data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
     async tambahPembelian() {
       this.loading = true;
       const finalPrice = this.transStore.reduce((accumulator, currentValue) => {
@@ -240,6 +261,7 @@ export default {
         const beli = await axios.post(useEnvStore().apiUrl + "/api/tx-buy", {
           date: moment(),
           nota_id: this.idNota,
+          supplier_id: this.supplier,
           items: this.transStore,
           final_price: finalPrice,
         });
@@ -252,6 +274,7 @@ export default {
   },
   mounted() {
     this.getBarangList();
+    this.getSupplierList();
   },
 };
 </script>

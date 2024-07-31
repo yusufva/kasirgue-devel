@@ -33,9 +33,10 @@
         </div>
         <div class="flex flex-col w-full md:w-1/4 gap-2">
           <Label class="text-primary">Satuan</Label>
-          <Input
+          <v-select
             class="border-black/30 focus-visible:ring-primary"
-            v-model="satuan" />
+            v-model="satuan"
+            :options="satuanList" />
         </div>
       </div>
       <div class="flex w-full justify-end gap-4">
@@ -87,6 +88,16 @@ export default {
       nama_produk: "",
       harga_beli: null,
       harga_jual: null,
+      satuanList: [
+        "Pcs",
+        "Kg",
+        "Gram",
+        "Liter",
+        "Gross",
+        "Kodi",
+        "Lusin",
+        "Pack",
+      ],
       satuan: null,
     };
   },

@@ -72,7 +72,8 @@ import {
   RectangleStackIcon,
   UsersIcon,
   SquaresPlusIcon,
-  ShoppingCartIcon
+  ShoppingCartIcon,
+  ArrowsUpDownIcon
 } from "@heroicons/vue/24/solid";
 
 export default {
@@ -93,7 +94,8 @@ export default {
     RectangleStackIcon,
     UsersIcon,
     SquaresPlusIcon,
-    ShoppingCartIcon
+    ShoppingCartIcon,
+    ArrowsUpDownIcon
   },
   data() {
     return {
@@ -105,6 +107,7 @@ export default {
         { title: "Supplier", icon: "UsersIcon", route: "/supplier" },
         { title: "Pembelian", icon: "SquaresPlusIcon", route: "/pembelian" },
         { title: "Penjualan", icon: "ShoppingCartIcon", route: "/penjualan" },
+        { title: "Laba Rugi", icon: "ArrowsUpDownIcon", route: "/labarugi" },
       ],
     };
   },
