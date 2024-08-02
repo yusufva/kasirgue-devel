@@ -147,10 +147,35 @@ export default {
           }
         );
         console.log(report);
-        const labelChart = report.data.data.map((item) =>
+
+        // Step 1: Group by created_date
+        const groupedByDate = report.data.data.reduce((acc, transaction) => {
+          const date = transaction.created_date.split("T")[0]; // Extract the date part from created_date
+          if (!acc[date]) {
+            acc[date] = [];
+          }
+          acc[date].push(transaction);
+          return acc;
+        }, {});
+        console.log(groupedByDate);
+
+        // Step 2: Sum the final_price for each group
+        const summedByDate = Object.keys(groupedByDate).map((date) => {
+          const transactions = groupedByDate[date];
+          const totalFinalPrice = transactions.reduce(
+            (sum, transaction) => sum + transaction.final_price,
+            0
+          );
+          return {
+            date,
+            totalFinalPrice,
+          };
+        });
+        console.log(summedByDate);
+        const labelChart = summedByDate.map((item) =>
           useUseFormat().chartDateFormat(item.date)
         );
-        const dataChart = report.data.data.map((item) => item.final_price);
+        const dataChart = summedByDate.map((item) => item.totalFinalPrice);
         this.chartData = {
           labels: labelChart,
           datasets: [
