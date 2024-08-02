@@ -4,7 +4,8 @@
       <div class="text-xl md:text-2xl">PT. ACME Indonesia</div>
       <Bars3Icon
         class="md:hidden w-8"
-        @click="showMobileMenu = !showMobileMenu"></Bars3Icon>
+        @click="showMobileMenu = !showMobileMenu"
+      ></Bars3Icon>
       <Button class="hidden md:flex bg-red text-white" @click="logOut()">
         Logout
       </Button>
@@ -12,11 +13,13 @@
     <Transition name="slide">
       <div
         v-if="showMobileMenu"
-        class="flex flex-col bg-white w-full h-full fixed p-4 top-0 z-20">
+        class="flex flex-col bg-white w-full h-full fixed p-4 top-0 z-20"
+      >
         <div class="flex w-full h-max">
           <XMarkIcon
             class="ml-auto mb-auto w-8"
-            @click="showMobileMenu = !showMobileMenu"></XMarkIcon>
+            @click="showMobileMenu = !showMobileMenu"
+          ></XMarkIcon>
         </div>
         <img :src="Logo" class="w-1/2 mx-auto" />
         <div class="flex flex-col gap-4 mt-10 mx-auto">
@@ -25,7 +28,8 @@
               :to="item.route"
               class="flex w-max p-2 text-primary rounded-md hover:bg-primary hover:text-white"
               exactActiveClass="bg-primary text-white"
-              @click="showMobileMenu = !showMobileMenu">
+              @click="showMobileMenu = !showMobileMenu"
+            >
               <component :is="item.icon" class="w-6"></component>
               <div>{{ item.title }}</div>
             </NuxtLink>
@@ -51,6 +55,7 @@ import {
   UsersIcon,
   SquaresPlusIcon,
   ShoppingCartIcon,
+  ArrowsUpDownIcon,
 } from "@heroicons/vue/24/solid";
 import Logo from "@/assets/images/logo.png";
 import { useAuthStore } from "@/stores/authStore";
@@ -66,6 +71,7 @@ export default {
     UsersIcon,
     SquaresPlusIcon,
     ShoppingCartIcon,
+    ArrowsUpDownIcon,
   },
   data() {
     return {

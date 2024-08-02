@@ -107,5 +107,21 @@ export const useUseToast = defineStore("toast", {
         timer: 3000,
       });
     },
+    invalidDate() {
+      const { $swal } = useNuxtApp();
+      $swal.fire({
+        position: "top-end",
+        toast: true,
+        timerProgressBar: true,
+        icon: "warning",
+        title: "Tanggal Invalid.",
+        text: "Pastikan tanggal mulai dan tanggal akhir terisi",
+        background: "#E84545",
+        color: "#ffffff",
+        iconColor: "#ffffff",
+        showConfirmButton: false,
+        timer: 3000,
+      });
+    },
   },
 });

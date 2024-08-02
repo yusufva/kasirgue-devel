@@ -11,7 +11,8 @@
           v-model="startDate"
           auto-apply
           :format="dpFormat"
-          model-type="yyyy-MM-dd"></VueDatePicker>
+          model-type="yyyy-MM-dd"
+        ></VueDatePicker>
       </div>
       <div class="flex flex-col w-36">
         <div class="text-xs">Tanggal Akhir</div>
@@ -19,7 +20,8 @@
           v-model="endDate"
           auto-apply
           :format="dpFormat"
-          model-type="yyyy-MM-dd"></VueDatePicker>
+          model-type="yyyy-MM-dd"
+        ></VueDatePicker>
       </div>
       <Button class="bg-primary text-white" @click="showWithCustomDate()"
         >Lihat</Button
@@ -31,7 +33,8 @@
         :items="dataForDefault"
         :loading="loading"
         :theme-color="color"
-        hide-footer>
+        hide-footer
+      >
         <template #item-totalSell="item" v-slot:item.totalSell="{ item }">
           <div>
             {{ useFormat.currencyFormat(item.totalSell) }}
@@ -55,6 +58,7 @@
 <script>
 import axios from "axios";
 import moment from "moment/min/moment-with-locales";
+import { useUseToast } from "@/stores/useToast";
 import { useEnvStore } from "@/stores/envStore";
 import { useUseFormat } from "@/stores/useFormat";
 import VueDatePicker from "@vuepic/vue-datepicker";
@@ -238,49 +242,56 @@ export default {
     async showWithCustomDate() {
       this.loading = true;
       // get total buy
-      const buyCustom = await axios.post(
-        useEnvStore().apiUrl + "/api/report/tx-buy/date",
-        {
-          startDate: this.startDate,
-          endDate: this.endDate,
-        }
-      );
-      console.log(buyCustom);
-      const totalbuyCustom = buyCustom.data.data.reduce(
-        (sum, transaction) => sum + transaction.final_price,
-        0
-      );
-      console.log(totalbuyCustom);
+      try {
+        const buyCustom = await axios.post(
+          useEnvStore().apiUrl + "/api/report/tx-buy/date",
+          {
+            startDate: this.startDate,
+            endDate: this.endDate,
+          }
+        );
+        console.log(buyCustom);
+        const totalbuyCustom = buyCustom.data.data.reduce(
+          (sum, transaction) => sum + transaction.final_price,
+          0
+        );
+        console.log(totalbuyCustom);
 
-      // get total sell
-      const sellCustom = await axios.post(
-        useEnvStore().apiUrl + "/api/report/tx-sell/date",
-        {
-          startDate: this.startDate,
-          endDate: this.endDate,
+        // get total sell
+        const sellCustom = await axios.post(
+          useEnvStore().apiUrl + "/api/report/tx-sell/date",
+          {
+            startDate: this.startDate,
+            endDate: this.endDate,
+          }
+        );
+        console.log(sellCustom);
+        const totalsellCustom = sellCustom.data.data.reduce(
+          (sum, transaction) => sum + transaction.final_price,
+          0
+        );
+        console.log(totalsellCustom);
+        const dayData = {
+          name:
+            "Laba/Rugi " +
+            moment(this.startDate).format("D/MM/YYYY") +
+            "-" +
+            moment(this.endDate).format("D/MM/YYYY"),
+          totalBuy: totalbuyCustom,
+          totalSell: totalsellCustom,
+          diff: totalsellCustom - totalbuyCustom,
+        };
+        this.dataForDefault.push(dayData);
+        console.log(this.dataForDefault);
+        this.loading = false;
+      } catch (err) {
+        if (err.response.status === 400) {
+          useUseToast().invalidDate();
+          this.loading = false;
         }
-      );
-      console.log(sellCustom);
-      const totalsellCustom = sellCustom.data.data.reduce(
-        (sum, transaction) => sum + transaction.final_price,
-        0
-      );
-      console.log(totalsellCustom);
+      }
 
       // add to data
-      const dayData = {
-        name:
-          "Laba/Rugi " +
-          moment(this.startDate).format("D/MM/YYYY") +
-          "-" +
-          moment(this.endDate).format("D/MM/YYYY"),
-        totalBuy: totalbuyCustom,
-        totalSell: totalsellCustom,
-        diff: totalsellCustom - totalbuyCustom,
-      };
-      this.dataForDefault.push(dayData);
-      console.log(this.dataForDefault);
-      this.loading = false;
     },
     setColour(value) {
       var values = value.toString();
