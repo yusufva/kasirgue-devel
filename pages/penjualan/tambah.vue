@@ -82,19 +82,63 @@
         </div>
       </Table>
       <div class="flex w-full justify-end gap-4">
-        <Button
-          class="w-max bg-red text-white"
-          @click="this.$router.push('/')">
+        <Button class="w-max bg-red text-white" @click="this.$router.push('/')">
           Kembali
         </Button>
-        <Button class="w-max bg-primary text-white" @click="tambahPembelian()">
-          <div v-if="loading">
-            <PulseLoader
-              :color="loadingColor"
-              :size="loadingSize"></PulseLoader>
-          </div>
-          <div v-else>Simpan</div>
-        </Button>
+        <Dialog>
+          <DialogTrigger>
+            <Button class="bg-primary text-white">Simpan</Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle class="text-red">Teliti Kembali!</DialogTitle>
+              <DialogDescription>
+                <div class="text-red">
+                  <div>Pastikan tidak ada kesalahan pada input penjualan.</div>
+                  <div>
+                    Data yang sudah tersimpan tidak dapat diubah/ dihapus.
+                  </div>
+                </div>
+                <div class="mt-2 text-lg font-bold">
+                  Total Harga: {{ useFormat.currencyFormat(finalPrice) }}
+                </div>
+                <Label>Masukkan Uang yang dibayarkan</Label>
+                <CurrencyInput
+                  class="border-black/30 focus-visible:ring-primary flex h-9 w-full rounded-md border border-slate-200 border-slate-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-950 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:border-slate-800 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300"
+                  :options="{ currency: 'IDR', locale: 'id-ID' }"
+                  @input="change = true"
+                  v-model="payment" />
+                <div class="flex justify-between mt-4">
+                  <Button
+                    v-for="items in moneyList"
+                    :key="items.id"
+                    @click="(payment = items), (change = true)"
+                    class="bg-primary text-white hover:bg-white hover:text-primary"
+                    >{{ useFormat.currencyFormat(items) }}</Button
+                  >
+                </div>
+                <div v-if="change" class="text-lg font-bold mt-4">
+                  Kembali: {{ useFormat.currencyFormat(payment - finalPrice) }}
+                </div>
+              </DialogDescription>
+            </DialogHeader>
+
+            <DialogFooter>
+              <DialogClose>
+                <Button
+                  class="w-max bg-primary text-white"
+                  @click="tambahPembelian()">
+                  <div v-if="loading">
+                    <PulseLoader
+                      :color="loadingColor"
+                      :size="loadingSize"></PulseLoader>
+                  </div>
+                  <div v-else>Simpan</div>
+                </Button>
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   </div>
@@ -131,16 +175,30 @@
             <tr v-for="items in returnBeli.items" :key="items.index">
               <td>{{ items.quantity }}x</td>
               <td class="text-capitalize">{{ items.name }}</td>
-              <td class="text-end">{{ useFormat.currencyFormat(items.total_price) }}</td>
+              <td class="text-end">
+                {{ useFormat.currencyFormat(items.total_price) }}
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div class="mb-6">
-        <div class="d-flex justify-content-between">
-          <p>TOTAL</p>
-          <p>{{ useFormat.currencyFormat(returnBeli.final_price) }}</p>
-        </div>
+      <div class="mb-6 d-flex justify-content-end">
+        <table>
+          <tbody>
+            <tr>
+              <td>TOTAL</td>
+              <td>: {{ useFormat.currencyFormat(returnBeli.final_price) }}</td>
+            </tr>
+            <tr>
+              <td>BAYAR</td>
+              <td>: {{ useFormat.currencyFormat(returnBeli.payment) }}</td>
+            </tr>
+            <tr>
+              <td>KEMBALI</td>
+              <td>: {{ useFormat.currencyFormat(returnBeli.changes) }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       <div
         class="d-flex flex-column align-items-center mb-4"
@@ -172,6 +230,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { TrashIcon } from "@heroicons/vue/24/solid";
+import CurrencyInput from "@/components/currency-input.vue";
 import {
   Table,
   TableHead,
@@ -181,19 +240,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  ComboboxAnchor,
-  ComboboxContent,
-  ComboboxEmpty,
-  ComboboxGroup,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxItemIndicator,
-  ComboboxLabel,
-  ComboboxRoot,
-  ComboboxSeparator,
-  ComboboxTrigger,
-  ComboboxViewport,
-} from "radix-vue";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from "@/components/ui/dialog";
 export default {
   setup() {
     useSeoMeta({
@@ -206,30 +261,28 @@ export default {
     Input,
     Label,
     Button,
-    ComboboxAnchor,
-    ComboboxContent,
-    ComboboxEmpty,
-    ComboboxGroup,
-    ComboboxInput,
-    ComboboxItem,
-    ComboboxItemIndicator,
-    ComboboxLabel,
-    ComboboxRoot,
-    ComboboxSeparator,
-    ComboboxTrigger,
-    ComboboxViewport,
+    CurrencyInput,
     Table,
     TableHead,
     TableHeader,
     TableBody,
     TableCell,
     TableRow,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+    DialogClose,
     TrashIcon,
     PulseLoader,
   },
   data() {
     return {
       loading: false,
+      change: false,
       loadingColor: "#ffffff",
       loadingSize: "5px",
       listBarang: [],
@@ -240,6 +293,8 @@ export default {
       harga_beli: null,
       jumlah: null,
       finalPrice: null,
+      payment: null,
+      moneyList: [10000, 20000, 50000, 100000],
       returnBeli: [],
     };
   },
@@ -289,7 +344,6 @@ export default {
           useEnvStore().apiUrl + "/api/product-master"
         );
         this.listBarang = barang.data.data;
-        console.log(this.listBarang);
       } catch (err) {
         console.log(err);
       }
@@ -305,18 +359,22 @@ export default {
             nota_id: idNota,
             items: itemToPost,
             final_price: this.finalPrice,
+            payment: this.payment,
+            changes: this.payment - this.finalPrice,
           })
           .then((res) => {
             this.returnBeli = res.data.data;
+            console.log(this.returnBeli);
           });
-        console.log(beli);
         this.printFunction();
         this.isFilled = false;
         this.transStore = [];
         this.showTable = false;
         this.loading = false;
+        this.payment = null;
         // this.$router.push("/");
       } catch (err) {
+        console.log(err);
         this.loading = false;
         if (err.response.status === 400) {
           useUseToast().emptyStock();
