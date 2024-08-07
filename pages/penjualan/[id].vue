@@ -3,8 +3,7 @@
     <div v-if="loading" class="flex flex-col w-full h-max gap-4">
       <svg
         class="mx-auto animate-[pulse_0.75s_infinite] h-10 w-10 rounded-full bg-primary"
-        viewBox="0 0 24 24"
-      ></svg>
+        viewBox="0 0 24 24"></svg>
     </div>
     <div v-else class="flex flex-col w-full h-max gap-4">
       <!-- header -->
@@ -27,7 +26,9 @@
             </TableRow>
             <TableRow class="border-none">
               <TableCell>Tanggal</TableCell>
-              <TableCell>: {{ useFormat.dateFormat(dataBarang.date) }}</TableCell>
+              <TableCell
+                >: {{ useFormat.dateFormat(dataBarang.date) }}</TableCell
+              >
             </TableRow>
           </TableBody>
         </Table>
@@ -43,17 +44,34 @@
             <TableRow v-for="item in detailBarang" :key="item.index">
               <TableCell>{{ item.name }}</TableCell>
               <TableCell>{{ item.quantity }}</TableCell>
-              <TableCell>{{ useFormat.currencyFormat(item.selling_price) }}</TableCell>
-              <TableCell>{{ useFormat.currencyFormat(item.total_price) }}</TableCell>
+              <TableCell>{{
+                useFormat.currencyFormat(item.selling_price)
+              }}</TableCell>
+              <TableCell>{{
+                useFormat.currencyFormat(item.total_price)
+              }}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
         <Table class="w-full text-right">
           <TableBody>
-            <TableRow>
-              <TableCell class="font-semibold"
-                >Total Penjualan: {{ useFormat.currencyFormat(dataBarang.final_price) }}</TableCell
-              >
+            <TableRow class="border-none">
+              <TableCell class="font-semibold">
+                Total Penjualan:
+                {{ useFormat.currencyFormat(dataBarang.final_price) }}
+              </TableCell>
+            </TableRow>
+            <TableRow class="border-none">
+              <TableCell class="font-semibold">
+                Pembayaran:
+                {{ useFormat.currencyFormat(dataBarang.payment) }}
+              </TableCell>
+            </TableRow>
+            <TableRow class="border-none">
+              <TableCell class="font-semibold">
+                Kembali:
+                {{ useFormat.currencyFormat(dataBarang.changes) }}
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
