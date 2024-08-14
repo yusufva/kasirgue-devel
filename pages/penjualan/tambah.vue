@@ -377,7 +377,12 @@ export default {
         console.log(err);
         this.loading = false;
         if (err.response.status === 400) {
-          useUseToast().emptyStock();
+          if (err.response.data.message === "Data Creation Failed") {
+            useUseToast().emptyStock("Stock tidak mencukupi/ habis.");
+          } else {
+            const error = err.response.data.error[0].message;
+            useUseToast().emptyStock(error);
+          }
         }
       }
     },

@@ -4,8 +4,9 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "shadcn-nuxt",
     "@pinia/nuxt",
-    "@pinia-plugin-persistedstate/nuxt",
+    "@pinia-plugin-persistedstate/nuxt"
   ],
+
   build: {
     transpile: ["@vuepic/vue-datepicker"],
   },

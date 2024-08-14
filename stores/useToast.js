@@ -32,14 +32,14 @@ export const useUseToast = defineStore("toast", {
         timer: 3000,
       });
     },
-    emptyStock() {
+    emptyStock(error) {
       const { $swal } = useNuxtApp();
       $swal.fire({
         position: "top-end",
         toast: true,
         timerProgressBar: true,
         icon: "error",
-        text: "Ada stok yang habis.",
+        text: error,
         background: "#E84545",
         color: "#ffffff",
         iconColor: "#ffffff",
