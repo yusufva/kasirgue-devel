@@ -132,7 +132,6 @@ export default {
         );
         this.stok = filteredData;
         this.loading = false;
-        console.log(stok);
       } catch (err) {
         console.log(err);
       }

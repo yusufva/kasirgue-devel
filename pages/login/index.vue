@@ -4,7 +4,6 @@
       <CardHeader>
         <CardTitle class="flex flex-col items-center gap-2 text-primary">
           <img :src="logo" class="w-24" />
-          <div>PT. ACME Indonesia</div>
         </CardTitle>
         <CardDescription class="mx-auto text-xs text-primary"
           >Silahkan login untuk melanjutkan</CardDescription
@@ -107,7 +106,7 @@ export default {
         this.$router.push("/");
       } catch (err) {
         console.log(err)
-        if (err.response.status === 404 || err.response.status === 400) {
+        if (err.response.status === 404 || err.response.status === 400 || err.response.status === 401) {
           this.loading = false;
           useUseToast().failLogin();
         }

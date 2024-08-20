@@ -151,8 +151,9 @@
       <div
         class="d-flex flex-column align-items-center mb-3 pb-4"
         style="border-bottom: 1px dashed">
-        <div>PT. Acme Indonesia</div>
-        <div>Jalan Sana-Sini No.13</div>
+        <div>{{useAuthStore().org_name}}</div>
+        <div>{{ useAuthStore().alamat }}</div>
+        <div>{{ useAuthStore().phone }}</div>
       </div>
       <!--  -->
       <div class="mb-3" style="border-bottom: 1px dashed">
@@ -225,6 +226,7 @@ import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 import { usePaperizer } from "paperizer";
 import { useUseToast } from "@/stores/useToast";
 import { useEnvStore } from "@/stores/envStore";
+import { useAuthStore } from "@/stores/authStore";
 import { useUseFormat } from "@/stores/useFormat";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
