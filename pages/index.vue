@@ -9,8 +9,7 @@
     <div class="flex flex-col md:flex-row w-full h-full gap-4 items-start">
       <!-- stock warn table -->
       <div
-        class="flex flex-col w-full md:w-1/3 h-[70vh] md:h-[25rem] 2xl:h-[37rem] bg-primary p-4 overflow-y-scroll scrollbar-hide"
-      >
+        class="flex flex-col w-full md:w-1/3 h-[70vh] md:h-[25rem] 2xl:h-[37rem] bg-primary p-4 overflow-y-scroll scrollbar-hide">
         <div class="mx-auto text-white font-semibold text-xl">
           Stok Hampir Habis
         </div>
@@ -25,8 +24,7 @@
             <TableRow
               v-for="item in stok"
               :key="item.index"
-              class="border-b text-white border-black/10"
-            >
+              class="border-b text-white border-black/10">
               <TableCell class="font-normal capitalize">
                 {{ item.product.name }}
               </TableCell>
@@ -39,6 +37,7 @@
         <ChartLegend class="text-sm" :legend-values="legendValues" />
         <Line :data="chartData" :options="chartOptions" />
       </div>
+      <button @click="getRefresh()">Get Refresh</button>
     </div>
   </div>
 </template>
@@ -190,6 +189,18 @@ export default {
       } catch (err) {
         console.log(err);
       }
+    },
+    getRefresh() {
+      axios
+        .get(useEnvStore().loginUrl + "/api/users/refresh", {
+          withCredentials: true,
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
   mounted() {

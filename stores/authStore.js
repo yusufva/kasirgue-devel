@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
-    accessToken: null,
+    refreshToken: null,
     name: null,
     role: null,
     isLoggedIn: false,
@@ -12,7 +12,7 @@ export const useAuthStore = defineStore("auth", {
   }),
   actions: {
     getToken(token) {
-      this.accessToken = token;
+      this.refreshToken = token;
     },
     login(response) {
       this.isLoggedIn = true;
@@ -29,7 +29,7 @@ export const useAuthStore = defineStore("auth", {
       this.alamat = null;
       this.phone = null;
       this.org_name = null;
-      this.accessToken = null;
+      this.refreshToken = null;
     },
   },
   getters: {

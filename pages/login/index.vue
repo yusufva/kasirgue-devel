@@ -102,7 +102,7 @@ export default {
         );
         console.log(onLogin.data);
         this.decodejwt(onLogin.data.data.access_token);
-        useAuthStore().getToken(onLogin.data.data.access_token);
+        useAuthStore().getToken(onLogin.data.data.refresh_token);
         this.$router.push("/");
       } catch (err) {
         console.log(err)

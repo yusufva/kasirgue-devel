@@ -20,6 +20,9 @@ export default defineNuxtConfig({
       api: process.env.NUXT_PUBLIC_API_BASE,
     },
   },
+  devServer: {
+    port: 2727
+  },
   ssr: false,
   devtools: { enabled: true },
 });
