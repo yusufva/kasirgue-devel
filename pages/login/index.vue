@@ -100,33 +100,30 @@ export default {
             password: this.pass,
           }
         );
-        console.log(onLogin.data);
+        // console.log(onLogin.data);
         this.decodejwt(onLogin.data.data.access_token);
-        useAuthStore().getToken(onLogin.data.data.refresh_token);
+        useAuthStore().getToken(
+          onLogin.data.data.access_token,
+          onLogin.data.data.refresh_token
+        );
         this.$router.push("/");
       } catch (err) {
-        console.log(err)
-        if (err.response.status === 404 || err.response.status === 400 || err.response.status === 401) {
+        console.log(err);
+        if (
+          err.response.status === 404 ||
+          err.response.status === 400 ||
+          err.response.status === 401
+        ) {
           this.loading = false;
           useUseToast().failLogin();
         }
       }
     },
-    aquireToken() {
-      axios
-        .get(useEnvStore().apiUrl + "token")
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
     decodejwt(acctoken) {
       const token = acctoken;
       try {
         const decoded = jwtDecode(token);
-        console.log(decoded);
+        // console.log(decoded);
         useAuthStore().login(decoded);
       } catch (err) {
         console.log(err);

@@ -193,7 +193,9 @@ export default {
     getRefresh() {
       axios
         .get(useEnvStore().loginUrl + "/api/users/refresh", {
-          withCredentials: true,
+          headers: {
+            "x-refresh-token": useAuthStore().refreshToken,
+          },
         })
         .then((res) => {
           console.log(res);

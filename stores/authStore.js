@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     refreshToken: null,
+    accessToken: null,
     name: null,
     role: null,
     isLoggedIn: false,
@@ -11,8 +12,13 @@ export const useAuthStore = defineStore("auth", {
     phone: null,
   }),
   actions: {
-    getToken(token) {
-      this.refreshToken = token;
+    getToken(accessToken, refreshToken) {
+      this.refreshToken = refreshToken;
+      this.accessToken = accessToken;
+    },
+    clearToken() {
+      this.refreshToken = null;
+      this.accessToken = null;
     },
     login(response) {
       this.isLoggedIn = true;
