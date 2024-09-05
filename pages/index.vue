@@ -37,7 +37,7 @@
         <ChartLegend class="text-sm" :legend-values="legendValues" />
         <Line :data="chartData" :options="chartOptions" />
       </div>
-      <button @click="getRefresh()">Get Refresh</button>
+      <!-- <button @click="getRefresh()">Get Refresh</button> -->
     </div>
   </div>
 </template>
@@ -190,20 +190,20 @@ export default {
         console.log(err);
       }
     },
-    getRefresh() {
-      axios
-        .get(useEnvStore().loginUrl + "/api/users/refresh", {
-          headers: {
-            "x-refresh-token": useAuthStore().refreshToken,
-          },
-        })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
+    // getRefresh() {
+    //   axios
+    //     .get(useEnvStore().loginUrl + "/api/users/refresh", {
+    //       headers: {
+    //         "x-refresh-token": useAuthStore().refreshToken,
+    //       },
+    //     })
+    //     .then((res) => {
+    //       console.log(res);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // },
   },
   mounted() {
     this.getStokWarn();
