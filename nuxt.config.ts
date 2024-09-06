@@ -17,7 +17,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      api: process.env.NUXT_PUBLIC_API_BASE,
+      apiUrl: process.env.KASIRGUE_API_ENDPOINT,
+      loginUrl: process.env.KASIRGUE_AUTH_ENDPOINT,
     },
   },
   devServer: {
