@@ -40,6 +40,9 @@
 </template>
 
 <script>
+import axios from "axios";
+import { useEnvStore } from "@/stores/envStore";
+import { useUseToast } from "@/stores/useToast";
 import Button from "@/components/ui/button/Button.vue";
 import {
   Bars3Icon,
@@ -85,9 +88,22 @@ export default {
     };
   },
   methods: {
-    logOut() {
-      useAuthStore().logout();
-      this.$router.push("/login");
+    async logOut() {
+      try {
+        const logout = await axios.delete(
+          useEnvStore().loginUrl + "/api/users/logout",
+          {
+            headers: {
+              "x-refresh-token": useAuthStore().refreshToken,
+            },
+          }
+        );
+        useAuthStore().logout();
+        this.$router.push("/login");
+        useUseToast().logout();
+      } catch (err) {
+        console.log(err);
+      }
     },
   },
 };

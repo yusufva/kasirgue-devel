@@ -123,5 +123,21 @@ export const useUseToast = defineStore("toast", {
         timer: 3000,
       });
     },
+    logout() {
+      const { $swal } = useNuxtApp();
+      $swal.fire({
+        position: "top-end",
+        toast: true,
+        timerProgressBar: true,
+        icon: "success",
+        title: "Logout Berhasil",
+        text: "Silahkan login kembali untuk mengakses layanan.",
+        background: "#E84545",
+        color: "#ffffff",
+        iconColor: "#ffffff",
+        showConfirmButton: false,
+        timer: 3000,
+      });
+    },
   },
 });
