@@ -32,6 +32,21 @@ export const useUseToast = defineStore("toast", {
         timer: 3000,
       });
     },
+    noDomain() {
+      const { $swal } = useNuxtApp();
+      $swal.fire({
+        position: "top-end",
+        toast: true,
+        timerProgressBar: true,
+        icon: "error",
+        text: "Login gagal. Akun ini tidak tersedia pada domain ini.",
+        background: "#E84545",
+        color: "#ffffff",
+        iconColor: "#ffffff",
+        showConfirmButton: false,
+        timer: 3000,
+      });
+    },
     emptyStock(error) {
       const { $swal } = useNuxtApp();
       $swal.fire({

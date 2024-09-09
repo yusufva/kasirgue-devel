@@ -100,13 +100,23 @@ export default {
             password: this.pass,
           }
         );
-        // console.log(onLogin.data);
-        this.decodejwt(onLogin.data.data.access_token);
-        useAuthStore().getToken(
-          onLogin.data.data.access_token,
-          onLogin.data.data.refresh_token
-        );
-        this.$router.push("/");
+        console.log(onLogin.data);
+        console.log(window.location.origin);
+        if (
+          window.location.origin === "http://localhost:2727" ||
+          window.location.origin ===
+          "https://" + onLogin.data.data.sub_domain + ".kasirgue.com"
+        ) {
+          this.decodejwt(onLogin.data.data.access_token);
+          useAuthStore().getToken(
+            onLogin.data.data.access_token,
+            onLogin.data.data.refresh_token
+          );
+          this.$router.push("/");
+        } else {
+          useUseToast().noDomain();
+          this.loading = false;
+        }
       } catch (err) {
         console.log(err);
         if (
