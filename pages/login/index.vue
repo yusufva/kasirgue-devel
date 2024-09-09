@@ -100,8 +100,8 @@ export default {
             password: this.pass,
           }
         );
-        console.log(onLogin.data);
-        console.log(window.location.origin);
+        // console.log(onLogin.data);
+        // console.log(window.location.origin);
         if (
           window.location.origin === "http://localhost:2727" ||
           window.location.origin ===
