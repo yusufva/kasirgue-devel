@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { useRouter } from "vue-router";
 import { useEnvStore } from "@/stores/envStore";
 import { useAuthStore } from "@/stores/authStore";
 
@@ -88,6 +88,12 @@ axios.interceptors.response.use(
             isRefreshing = false;
           });
       });
+    }
+
+    if (error.response.status === 401) {
+      const router = useRouter()
+      useAuthStore().logout()
+      router.addRoute({ path: '/login', redirect: "/login" })
     }
 
     return Promise.reject(error);
