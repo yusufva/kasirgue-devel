@@ -49,6 +49,9 @@
           </Button>
         </div>
       </div>
+      <div class="text-red text-xs -mt-4">
+        {{ error }}
+      </div>
       <!-- table content -->
       <Table v-if="showTable">
         <TableHeader class="border-b border-primary">
@@ -151,7 +154,7 @@
       <div
         class="d-flex flex-column align-items-center mb-3 pb-4"
         style="border-bottom: 1px dashed">
-        <div>{{useAuthStore().org_name}}</div>
+        <div>{{ useAuthStore().org_name }}</div>
         <div>{{ useAuthStore().alamat }}</div>
         <div>{{ useAuthStore().phone }}</div>
       </div>
@@ -226,7 +229,6 @@ import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 import { usePaperizer } from "paperizer";
 import { useUseToast } from "@/stores/useToast";
 import { useEnvStore } from "@/stores/envStore";
-import { useAuthStore } from "@/stores/authStore";
 import { useUseFormat } from "@/stores/useFormat";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -284,11 +286,12 @@ export default {
   data() {
     return {
       loading: false,
+      error: "",
       change: false,
       loadingColor: "#ffffff",
       loadingSize: "5px",
       listBarang: [],
-      selected: "",
+      selected: null,
       transStore: [],
       isFilled: false,
       showTable: false,
@@ -302,27 +305,41 @@ export default {
   },
   methods: {
     addToTransStore() {
-      let tempStore = {
-        name: this.selected.name,
-        product_id: this.selected.id,
-        selling_price: this.selected.selling_price,
-        quantity: this.jumlah,
-        total_price: this.selected.selling_price * this.jumlah,
-      };
-      this.transStore.push(tempStore);
-      const createIndex = this.transStore.map((obj, index) => ({
-        ...obj,
-        index: index + 1,
-      }));
-      const finalPrice = this.transStore.reduce((accumulator, currentValue) => {
-        return accumulator + currentValue.total_price;
-      }, 0);
-      this.finalPrice = finalPrice;
-      this.transStore = createIndex;
-      this.showTable = true;
-      this.jumlah = null;
-      this.selected = "";
-      this.isFilled = true;
+      console.log(this.selected);
+      if (this.selected === null) {
+        this.error = "Tidak ada barang yang dipilih";
+        return;
+      }
+      if (this.jumlah === null || this.jumlah === 0) {
+        this.error = "Jumlah barang belum diisi";
+        return;
+      } else {
+        let tempStore = {
+          name: this.selected.name,
+          product_id: this.selected.id,
+          selling_price: this.selected.selling_price,
+          quantity: this.jumlah,
+          total_price: this.selected.selling_price * this.jumlah,
+        };
+        this.transStore.push(tempStore);
+        const createIndex = this.transStore.map((obj, index) => ({
+          ...obj,
+          index: index + 1,
+        }));
+        const finalPrice = this.transStore.reduce(
+          (accumulator, currentValue) => {
+            return accumulator + currentValue.total_price;
+          },
+          0
+        );
+        this.finalPrice = finalPrice;
+        this.transStore = createIndex;
+        this.showTable = true;
+        this.error = "";
+        this.jumlah = null;
+        this.selected = null;
+        this.isFilled = true;
+      }
     },
     hapusItem(index) {
       const indexToRemove = index;
@@ -366,11 +383,10 @@ export default {
           })
           .then((res) => {
             this.returnBeli = res.data.data;
-            console.log(this.returnBeli);
           });
         this.printFunction();
-        this.isFilled = false;
         this.transStore = [];
+        this.isFilled = false;
         this.showTable = false;
         this.loading = false;
         this.payment = null;
@@ -379,6 +395,7 @@ export default {
         console.log(err);
         this.loading = false;
         if (err.response.status === 400) {
+          this.isFilled = true;
           if (err.response.data.message === "Data Creation Failed") {
             useUseToast().emptyStock("Stock tidak mencukupi/ habis.");
           } else {
