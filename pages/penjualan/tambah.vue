@@ -11,6 +11,13 @@
       <div class="h-[2px] w-full bg-primary/20 rounded-xl"></div>
       <!-- content section -->
       <div class="flex flex-col md:flex-row w-full gap-4">
+        <!-- select header -->
+        <div class="flex flex-col w-full md:w-1/4 gap-2 justify-end">
+          <Label class="text-primary">Pilih Header</Label>
+          <v-select v-model="header" :options="headerList"></v-select>
+        </div>
+      </div>
+      <div class="flex flex-col md:flex-row w-full gap-4">
         <!-- select dropdown -->
         <div class="flex flex-col w-full md:w-1/4 gap-2 justify-end">
           <Label class="text-primary">Nama Produk</Label>
@@ -152,14 +159,14 @@
     <div style="font-size: 13px" class="font-monospace mx-auto p-0">
       <!-- comment this to pelit version -->
       <div
-        class="d-flex flex-column align-items-center mb-3 pb-4"
+        class="d-flex flex-column align-items-center mb-1"
         style="border-bottom: 1px dashed">
-        <div>{{ useAuthStore().org_name }}</div>
-        <div>{{ useAuthStore().alamat }}</div>
+        <div>{{ header }}</div>
+        <div class="text-center">{{ useAuthStore().alamat }}</div>
         <div>{{ useAuthStore().phone }}</div>
       </div>
       <!--  -->
-      <div class="mb-3" style="border-bottom: 1px dashed">
+      <div class="mb-1" style="border-bottom: 1px dashed">
         <table class="table table-borderless table-sm">
           <tbody style="font-size: 13px">
             <tr>
@@ -173,7 +180,7 @@
           </tbody>
         </table>
       </div>
-      <div class="mb-3" style="border-bottom: 1px dashed">
+      <div class="mb-1" style="border-bottom: 1px dashed">
         <table class="table table-borderless table-sm">
           <tbody style="font-size: 13px">
             <tr v-for="items in returnBeli.items" :key="items.index">
@@ -186,9 +193,9 @@
           </tbody>
         </table>
       </div>
-      <div class="mb-6 d-flex justify-content-end">
+      <div class="mb-2 d-flex justify-content-end">
         <table>
-          <tbody>
+          <tbody style="font-size: 13px">
             <tr>
               <td>TOTAL</td>
               <td>: {{ useFormat.currencyFormat(returnBeli.final_price) }}</td>
@@ -290,6 +297,8 @@ export default {
       change: false,
       loadingColor: "#ffffff",
       loadingSize: "5px",
+      header: "Kapital Printing",
+      headerList: ["Kapital Printng", "LowCost Digital"],
       listBarang: [],
       selected: null,
       transStore: [],
