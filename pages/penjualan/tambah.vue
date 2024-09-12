@@ -3,7 +3,7 @@
     <div class="flex flex-col w-full h-max gap-4">
       <div class="flex gap-1 text-xs">
         <NuxtLink to="/pembelian" class="text-black/60 hover:text-primary"
-          >Pembelian
+          >Penjualan
         </NuxtLink>
         <div class="text-primary">/ Tambah Penjualan</div>
       </div>
@@ -14,7 +14,10 @@
         <!-- select header -->
         <div class="flex flex-col w-full md:w-1/4 gap-2 justify-end">
           <Label class="text-primary">Pilih Header</Label>
-          <v-select v-model="header" :options="headerList"></v-select>
+          <v-select
+            v-model="header"
+            :options="headerList"
+            label="name"></v-select>
         </div>
       </div>
       <div class="flex flex-col md:flex-row w-full gap-4">
@@ -158,13 +161,13 @@
   <div class="hidden" id="print-nota">
     <div style="font-size: 13px" class="font-monospace mx-auto p-0">
       <!-- comment this to pelit version -->
-      <div
+      <!-- <div
         class="d-flex flex-column align-items-center mb-1"
         style="border-bottom: 1px dashed">
-        <div>{{ header }}</div>
+        <div>{{ header.name }}</div>
         <div class="text-center">{{ useAuthStore().alamat }}</div>
-        <div>{{ useAuthStore().phone }}</div>
-      </div>
+        <div>{{ header.no }}</div>
+      </div> -->
       <!--  -->
       <div class="mb-1" style="border-bottom: 1px dashed">
         <table class="table table-borderless table-sm">
@@ -218,13 +221,13 @@
         <div>kasirgue.com</div>
       </div>
       <!-- uncomment below for pelit version -->
-      <!-- <div
-        class="d-flex flex-column align-items-center mb-3 pb-4"
-        style="border-bottom: 1px dashed"
-      >
-        <div>PT. Acme Indonesia</div>
-        <div>Jalan Sana-Sini No.14</div>
-      </div> -->
+      <div
+        class="d-flex flex-column align-items-center mb-1"
+        style="border-bottom: 1px dashed">
+        <div>{{ header.name }}</div>
+        <div class="text-center">{{ useAuthStore().alamat }}</div>
+        <div>{{ header.no }}</div>
+      </div>
     </div>
   </div>
 </template>
@@ -298,7 +301,10 @@ export default {
       loadingColor: "#ffffff",
       loadingSize: "5px",
       header: "Kapital Printing",
-      headerList: ["Kapital Printng", "LowCost Digital"],
+      headerList: [
+        { name: "Kapital Printng", no: "089507699099" },
+        { name: "LowCost Digital", no: "08970293060" },
+      ],
       listBarang: [],
       selected: null,
       transStore: [],
