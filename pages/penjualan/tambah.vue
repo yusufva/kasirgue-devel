@@ -10,6 +10,8 @@
       <div class="text-primary font-semibold text-2xl">Tambah Penjualan</div>
       <div class="h-[2px] w-full bg-primary/20 rounded-xl"></div>
       <!-- content section -->
+
+      <!-- custom header -->
       <!-- <div class="flex flex-col md:flex-row w-full gap-4"> -->
       <!-- select header -->
       <!-- <div class="flex flex-col w-full md:w-1/4 gap-2 justify-end">
@@ -94,15 +96,57 @@
           Total Pembelian: {{ useFormat.currencyFormat(finalPrice) }}
         </div>
       </Table>
+      <div class="flex flex-col gap-4">
+        <div class="flex flex-col w-full md:w-1/2 gap-2">
+          <Label>Keterangan</Label>
+          <Input
+            class="border-black/30 focus-visible:ring-primary"
+            v-model="keterangan" />
+        </div>
+
+        <!-- is marketplace -->
+        <div class="flex flex-col gap-2">
+          <div class="flex gap-1 items-center">
+            <Checkbox
+              @click="
+                (isMarketplace = !isMarketplace),
+                  isMarketplace === false
+                    ? (fromMarketplace = 0)
+                    : fromMarketplace
+              "
+              class="border-black/30 focus-visible:ring-primary" />
+            <Label>Marketplace</Label>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <QuestionMarkCircleIcon class="w-5 text-primary" />
+                </TooltipTrigger>
+                <TooltipContent
+                  class="bg-white outline outline-1 outline-primary">
+                  <p>Klik jika penjualan ini dilakukan di marketplace.</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+          <div v-if="isMarketplace">
+            <Label>Pendapatan dari Marketplace</Label>
+            <CurrencyInput
+              class="border-black/30 focus-visible:ring-primary flex h-9 w-full md:w-1/4 rounded-md border border-slate-200 border-slate-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-950 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:border-slate-800 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300"
+              :options="{ currency: 'IDR', locale: 'id-ID' }"
+              v-model="fromMarketplace" />
+          </div>
+        </div>
+      </div>
       <div class="flex w-full justify-end gap-4">
         <Button class="w-max bg-red text-white" @click="this.$router.push('/')">
           Kembali
         </Button>
+        <!-- konfirmasi pembayaran -->
         <Dialog>
           <DialogTrigger>
             <Button class="bg-primary text-white">Simpan</Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent class="w-11/12">
             <DialogHeader>
               <DialogTitle class="text-red">Teliti Kembali!</DialogTitle>
               <DialogDescription>
@@ -119,9 +163,18 @@
                 <CurrencyInput
                   class="border-black/30 focus-visible:ring-primary flex h-9 w-full rounded-md border border-slate-200 border-slate-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-950 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:border-slate-800 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300"
                   :options="{ currency: 'IDR', locale: 'id-ID' }"
+                  v-model="payment"
                   @input="change = true"
-                  v-model="payment" />
-                <div class="flex justify-between mt-4">
+                  :disabled="paymentDisable" />
+                <Label>Metode Pembayaran</Label>
+                <v-select
+                  :input="pembayaranControl()"
+                  v-model="metodePembayaran"
+                  label="name"
+                  :clearable="false"
+                  :reduce="(metode) => metode.name"
+                  :options="metodePembayaranList"></v-select>
+                <div class="flex flex-wrap gap-2 justify-between mt-4">
                   <Button
                     v-for="items in moneyList"
                     :key="items.id"
@@ -244,8 +297,9 @@ import { useUseFormat } from "@/stores/useFormat";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { TrashIcon } from "@heroicons/vue/24/solid";
+import { TrashIcon, QuestionMarkCircleIcon } from "@heroicons/vue/24/solid";
 import CurrencyInput from "@/components/currency-input.vue";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
   TableHead,
@@ -264,6 +318,12 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 export default {
   setup() {
     useSeoMeta({
@@ -277,6 +337,7 @@ export default {
     Label,
     Button,
     CurrencyInput,
+    Checkbox,
     Table,
     TableHead,
     TableHeader,
@@ -291,31 +352,42 @@ export default {
     DialogTitle,
     DialogTrigger,
     DialogClose,
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
     TrashIcon,
+    QuestionMarkCircleIcon,
     PulseLoader,
   },
   data() {
     return {
       loading: false,
+      error: "",
       change: false,
+      isMarketplace: false,
+      fromMarketplace: null,
+      keterangan: "",
       loadingColor: "#ffffff",
       loadingSize: "5px",
+      metodePembayaran: "Cash",
+      metodePembayaranList: [],
       listBarang: [],
-      selected: "",
+      selected: null,
       transStore: [],
       isFilled: false,
       showTable: false,
       harga_beli: null,
       jumlah: null,
       finalPrice: null,
-      payment: null,
+      payment: 0,
+      paymentDisable: false,
       moneyList: [10000, 20000, 50000, 100000],
       returnBeli: [],
     };
   },
   methods: {
     addToTransStore() {
-      console.log(this.selected);
       if (this.selected === null) {
         this.error = "Tidak ada barang yang dipilih";
         return;
@@ -367,12 +439,30 @@ export default {
       );
       this.totalBayar = total_bayar;
     },
+    pembayaranControl() {
+      if (this.metodePembayaran === "Cash") {
+        this.paymentDisable = false;
+      } else {
+        this.paymentDisable = true;
+        this.payment = this.finalPrice;
+      }
+    },
     async getBarangList() {
       try {
         const barang = await axios.get(
           useEnvStore().apiUrl + "/api/product-master"
         );
         this.listBarang = barang.data.data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    async getPembayaranList() {
+      try {
+        const pembayaran = await axios.get(
+          useEnvStore().apiUrl + "/api/payment-types"
+        );
+        this.metodePembayaranList = pembayaran.data.data;
       } catch (err) {
         console.log(err);
       }
@@ -390,6 +480,12 @@ export default {
             final_price: this.finalPrice,
             payment: this.payment,
             changes: this.payment - this.finalPrice,
+            payment_note: this.keterangan,
+            payment_type: this.metodePembayaran,
+            admin_cut:
+              this.isMarketplace === false
+                ? 0
+                : this.finalPrice - this.fromMarketplace,
           })
           .then((res) => {
             this.returnBeli = res.data.data;
@@ -398,8 +494,12 @@ export default {
         this.transStore = [];
         this.isFilled = false;
         this.showTable = false;
+        this.finalPrice = null;
         this.loading = false;
         this.payment = null;
+        this.keterangan = "";
+        this.fromMarketplace = 0;
+        this.metodePembayaran = "Cash";
         // this.$router.push("/");
       } catch (err) {
         console.log(err);
@@ -450,6 +550,7 @@ export default {
   },
   mounted() {
     this.getBarangList();
+    this.getPembayaranList();
   },
   beforeRouteLeave(to, from, next) {
     if (this.isFilled === true) {

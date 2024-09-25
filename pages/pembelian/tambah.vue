@@ -117,14 +117,40 @@
           @click="this.$router.push('/pembelian')">
           Kembali
         </Button>
-        <Button class="w-max bg-primary text-white" @click="tambahPembelian()">
-          <div v-if="loading">
-            <PulseLoader
-              :color="loadingColor"
-              :size="loadingSize"></PulseLoader>
-          </div>
-          <div v-else>Simpan</div>
-        </Button>
+        <Dialog>
+          <DialogTrigger as-child>
+            <Button class="w-max bg-primary text-white">
+              <div v-if="loading">
+                <PulseLoader
+                  :color="loadingColor"
+                  :size="loadingSize"></PulseLoader>
+              </div>
+              <div v-else>Simpan</div>
+            </Button>
+          </DialogTrigger>
+          <DialogContent class="sm:w-max-md">
+            <DialogHeader>
+              <VisuallyHidden>
+                <DialogTitle></DialogTitle>
+              </VisuallyHidden>
+            </DialogHeader>
+            <div class="mx-auto">
+              Apakah anda yakin ingin menambahkan pembelian ini?
+            </div>
+            <DialogFooter class="sm:justify-around">
+              <DialogClose as-child>
+                <div class="flex justify-around gap-6">
+                  <Button class="bg-red text-white">Tidak</Button>
+                  <Button
+                    class="bg-primary text-white"
+                    @click="tambahPembelian()">
+                    Yakin
+                  </Button>
+                </div>
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   </div>
@@ -149,6 +175,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   ComboboxAnchor,
   ComboboxContent,
   ComboboxEmpty,
@@ -162,6 +198,7 @@ import {
   ComboboxTrigger,
   ComboboxViewport,
 } from "radix-vue";
+import { VisuallyHidden } from "radix-vue";
 export default {
   setup() {
     useSeoMeta({
@@ -193,6 +230,14 @@ export default {
     TableBody,
     TableCell,
     TableRow,
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
     PulseLoader,
   },
   data() {
