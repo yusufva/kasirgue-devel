@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 include:
     - project: kapitalsoftware1/Kasirgue-App/ci-fe-template
       ref: main
