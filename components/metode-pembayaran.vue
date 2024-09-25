@@ -3,28 +3,26 @@
     <!-- header -->
     <div class="flex flex-col sticky top-0 p-2 bg-white z-10">
       <div class="flex justify-between items-center">
-        <div class="text-primary font-semibold text-xl">Satuan</div>
+        <div class="text-primary font-semibold text-xl">Metode Pembayaran</div>
         <Dialog>
           <DialogTrigger as-child>
             <PlusCircleIcon class="text-primary w-8 cursor-pointer" />
           </DialogTrigger>
           <DialogContent class="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>Tambah Satuan</DialogTitle>
+              <DialogTitle>Tambah Metode</DialogTitle>
             </DialogHeader>
             <div class="flex items-center space-x-2">
               <div class="grid flex-1 gap-2">
-                <Label>Nama Satuan</Label>
+                <Label>Nama Metode</Label>
                 <Input v-model="nama" />
-                <Label>Simbol</Label>
-                <Input v-model="simbol" />
               </div>
             </div>
             <DialogFooter class="sm:justify-around">
               <DialogClose as-child>
                 <div class="flex justify-around gap-6">
                   <Button class="bg-red text-white">Tutup</Button>
-                  <Button class="bg-primary text-white" @click="addSatuan()">
+                  <Button class="bg-primary text-white" @click="addMetode()">
                     Simpan
                   </Button>
                 </div>
@@ -43,35 +41,31 @@
       :size="loadingSize" />
     <Table v-else>
       <TableHeader class="sticky top-10 z-0 bg-white">
-        <TableHead>Nama</TableHead>
-        <TableHead>Simbol</TableHead>
+        <TableHead>Metode</TableHead>
         <TableHead></TableHead>
       </TableHeader>
       <TableBody>
         <TableRow
-          v-for="items in satuan"
+          v-for="items in metode"
           :key="items.id"
           class="border-b border-black/10">
-          <TableCell>{{ items.nama_satuan }}</TableCell>
-          <TableCell>{{ items.kd_satuan }}</TableCell>
+          <TableCell>{{ items.name }}</TableCell>
           <TableCell class="flex gap-2 justify-end">
             <!-- edit item -->
             <Dialog>
               <DialogTrigger as-child>
                 <PencilSquareIcon
                   class="w-5 text-secondary cursor-pointer"
-                  @click="getSatuanById(items.id)" />
+                  @click="getMetodeById(items.id)" />
               </DialogTrigger>
               <DialogContent class="sm:w-max-md">
                 <DialogHeader>
-                  <DialogTitle> Ubah Satuan </DialogTitle>
+                  <DialogTitle> Ubah Metode </DialogTitle>
                 </DialogHeader>
                 <div class="flex items-center space-x-2">
                   <div class="grid flex-1 gap-2">
                     <Label>Nama Satuan</Label>
                     <Input v-model="nama" :disabled="!isLoaded" />
-                    <Label>Simbol</Label>
-                    <Input v-model="simbol" :disabled="!isLoaded" />
                   </div>
                 </div>
                 <DialogFooter class="sm:justify-around">
@@ -104,7 +98,7 @@
                   </VisuallyHidden>
                 </DialogHeader>
                 <div class="mx-auto">
-                  Apakah anda yakin ingin menghapus satuan ini?
+                  Apakah anda yakin ingin menghapus metode ini?
                 </div>
                 <DialogFooter class="sm:justify-around">
                   <DialogClose as-child>
@@ -112,7 +106,7 @@
                       <Button class="bg-primary text-white">Tidak</Button>
                       <Button
                         class="bg-red text-white"
-                        @click="deleteSatuan(items.id)">
+                        @click="deleteMetode(items.id)">
                         Yakin
                       </Button>
                     </div>
@@ -186,9 +180,8 @@ export default {
   },
   data() {
     return {
-      satuan: [],
+      metode: [],
       nama: null,
-      simbol: null,
       isLoaded: false,
       loading: true,
       loadingColor: "#0B324F",
@@ -196,38 +189,40 @@ export default {
     };
   },
   methods: {
-    async getSatuan() {
+    async getMetode() {
       try {
-        const satuan = await axios.get(useEnvStore().apiUrl + "/api/satuan");
-        this.satuan = satuan.data.data;
+        const metode = await axios.get(
+          useEnvStore().apiUrl + "/api/payment-types"
+        );
+        this.metode = metode.data.data;
         this.loading = false;
       } catch (err) {
         console.log(err);
       }
     },
-    async getSatuanById(id) {
+    async getMetodeById(id) {
       try {
-        const satuan = await axios.get(
-          useEnvStore().apiUrl + "/api/satuan/" + id
+        const metode = await axios.get(
+          useEnvStore().apiUrl + "/api/payment-types/" + id
         );
-        this.nama = satuan.data.data.nama_satuan;
-        this.simbol = satuan.data.data.kd_satuan;
+        this.nama = metode.data.data.name;
         this.isLoaded = true;
       } catch (err) {
         console.log(err);
       }
     },
-    async addSatuan() {
+    async addMetode() {
       this.loading = true;
       try {
-        const tambah = await axios.post(useEnvStore().apiUrl + "/api/satuan", {
-          nama_satuan: this.nama,
-          kd_satuan: this.simbol,
-        });
+        const tambah = await axios.post(
+          useEnvStore().apiUrl + "/api/payment-types",
+          {
+            name: this.nama,
+          }
+        );
         useUseToast().addToast();
         this.nama = null;
-        this.simbol = null;
-        this.getSatuan();
+        this.getMetode();
       } catch (err) {
         console.log(err);
       }
@@ -236,35 +231,34 @@ export default {
       this.loading = true;
       try {
         const edit = await axios.put(
-          useEnvStore().apiUrl + "/api/satuan/" + id,
+          useEnvStore().apiUrl + "/api/payment-types/" + id,
           {
-            nama_satuan: this.nama,
-            kd_satuan: this.simbol,
+            name: this.nama,
           }
         );
         useUseToast().editToast();
         this.nama = null;
         this.simbol = null;
-        this.getSatuan();
+        this.getMetode();
       } catch (err) {
         console.log(err);
       }
     },
-    async deleteSatuan(id) {
+    async deleteMetode(id) {
       this.loading = true;
       try {
         const del = await axios.delete(
-          useEnvStore().apiUrl + "/api/satuan/" + id
+          useEnvStore().apiUrl + "/api/payment-types/" + id
         );
         useUseToast().deleteToast();
-        this.getSatuan();
+        this.getMetode();
       } catch (err) {
         console.log(err);
       }
     },
   },
   mounted() {
-    this.getSatuan();
+    this.getMetode();
   },
 };
 </script>
