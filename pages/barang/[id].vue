@@ -41,7 +41,7 @@
             </TableRow>
             <TableRow class="border-b border-black/10">
               <TableCell class="w-1/3">Satuan</TableCell>
-              <TableCell>: {{ dataBarang.stock.satuan }}</TableCell>
+              <TableCell>: {{ dataBarang.stock.satuan.kd_satuan }}</TableCell>
             </TableRow>
           </TableBody>
         </Table>

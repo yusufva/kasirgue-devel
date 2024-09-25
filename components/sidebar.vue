@@ -78,6 +78,7 @@
   </div>
 </template>
 <script>
+import { useRouteStore } from "@/stores/routeStore";
 import { useAuthStore } from "@/stores/authStore";
 import {
   Sheet,
@@ -99,6 +100,7 @@ import {
   SquaresPlusIcon,
   ShoppingCartIcon,
   ArrowsUpDownIcon,
+  Cog6ToothIcon,
 } from "@heroicons/vue/24/solid";
 
 export default {
@@ -121,20 +123,13 @@ export default {
     SquaresPlusIcon,
     ShoppingCartIcon,
     ArrowsUpDownIcon,
+    Cog6ToothIcon,
   },
   data() {
     return {
       logo: Logo,
       role: useAuthStore().role,
-      links: [
-        { title: "Beranda", icon: "HomeIcon", route: "/" },
-        { title: "Barang", icon: "ArchiveBoxIcon", route: "/barang" },
-        { title: "Stok", icon: "RectangleStackIcon", route: "/stok" },
-        { title: "Supplier", icon: "UsersIcon", route: "/supplier" },
-        { title: "Pembelian", icon: "SquaresPlusIcon", route: "/pembelian" },
-        { title: "Penjualan", icon: "ShoppingCartIcon", route: "/penjualan" },
-        { title: "Laba Rugi", icon: "ArrowsUpDownIcon", route: "/labarugi" },
-      ],
+      links: useRouteStore().route,
     };
   },
 };

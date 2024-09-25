@@ -36,7 +36,9 @@
           <v-select
             class="border-black/30 focus-visible:ring-primary"
             v-model="satuan"
-            :options="satuanList" />
+            :options="satuanList"
+            :reduce="(satuan) => satuan.id"
+            label="kd_satuan" />
         </div>
       </div>
       <div class="flex w-full justify-end gap-4">
@@ -88,20 +90,20 @@ export default {
       nama_produk: "",
       harga_beli: null,
       harga_jual: null,
-      satuanList: [
-        "Pcs",
-        "Kg",
-        "Gram",
-        "Liter",
-        "Gross",
-        "Kodi",
-        "Lusin",
-        "Pack",
-      ],
+      satuanList: [],
       satuan: null,
     };
   },
   methods: {
+    async getSatuan() {
+      try {
+        const satuan = await axios.get(useEnvStore().apiUrl + "/api/satuan");
+        console.log(satuan);
+        this.satuanList = satuan.data.data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
     async tambahBarang() {
       this.loading = true;
       try {
@@ -113,7 +115,7 @@ export default {
             selling_price: this.harga_jual,
             stock: {
               quantity: 0,
-              satuan: this.satuan,
+              id_satuan: this.satuan,
             },
           }
         );
@@ -130,6 +132,9 @@ export default {
         }
       }
     },
+  },
+  mounted() {
+    this.getSatuan();
   },
 };
 </script>

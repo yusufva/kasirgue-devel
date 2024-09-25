@@ -28,7 +28,7 @@
               <TableCell class="font-normal capitalize">
                 {{ item.product.name }}
               </TableCell>
-              <TableCell>{{ item.quantity }} {{ item.satuan }}</TableCell>
+              <TableCell>{{ item.quantity }} {{ item.satuan.kd_satuan }}</TableCell>
             </TableRow>
           </TableBody>
         </Table>

@@ -3,13 +3,23 @@
     <div class="flex flex-col w-full h-max gap-4">
       <div class="flex gap-1 text-xs">
         <NuxtLink to="/pembelian" class="text-black/60 hover:text-primary"
-          >Pembelian
+          >Penjualan
         </NuxtLink>
         <div class="text-primary">/ Tambah Penjualan</div>
       </div>
       <div class="text-primary font-semibold text-2xl">Tambah Penjualan</div>
       <div class="h-[2px] w-full bg-primary/20 rounded-xl"></div>
       <!-- content section -->
+      <!-- <div class="flex flex-col md:flex-row w-full gap-4"> -->
+      <!-- select header -->
+      <!-- <div class="flex flex-col w-full md:w-1/4 gap-2 justify-end">
+          <Label class="text-primary">Pilih Header</Label>
+          <v-select
+            v-model="header"
+            :options="headerList"
+            label="name"></v-select>
+        </div>
+      </div> -->
       <div class="flex flex-col md:flex-row w-full gap-4">
         <!-- select dropdown -->
         <div class="flex flex-col w-full md:w-1/4 gap-2 justify-end">
@@ -49,6 +59,9 @@
           </Button>
         </div>
       </div>
+      <div class="text-red text-xs -mt-4">
+        {{ error }}
+      </div>
       <!-- table content -->
       <Table v-if="showTable">
         <TableHeader class="border-b border-primary">
@@ -70,11 +83,11 @@
             <TableCell>{{
               useFormat.currencyFormat(item.total_price)
             }}</TableCell>
-            <TableCell
-              ><TrashIcon
+            <TableCell>
+              <TrashIcon
                 class="text-red w-6"
-                @click="hapusItem(item.index)"></TrashIcon
-            ></TableCell>
+                @click="hapusItem(item.index)"></TrashIcon>
+            </TableCell>
           </TableRow>
         </TableBody>
         <div class="text-sm">
@@ -151,7 +164,7 @@
       <div
         class="d-flex flex-column align-items-center mb-3 pb-4"
         style="border-bottom: 1px dashed">
-        <div>{{useAuthStore().org_name}}</div>
+        <div>{{ useAuthStore().org_name }}</div>
         <div>{{ useAuthStore().alamat }}</div>
         <div>{{ useAuthStore().phone }}</div>
       </div>
@@ -170,7 +183,7 @@
           </tbody>
         </table>
       </div>
-      <div class="mb-3" style="border-bottom: 1px dashed">
+      <div class="mb-1" style="border-bottom: 1px dashed">
         <table class="table table-borderless table-sm">
           <tbody style="font-size: 13px">
             <tr v-for="items in returnBeli.items" :key="items.index">
@@ -183,9 +196,9 @@
           </tbody>
         </table>
       </div>
-      <div class="mb-6 d-flex justify-content-end">
+      <div class="mb-2 d-flex justify-content-end">
         <table>
-          <tbody>
+          <tbody style="font-size: 13px">
             <tr>
               <td>TOTAL</td>
               <td>: {{ useFormat.currencyFormat(returnBeli.final_price) }}</td>
@@ -302,27 +315,41 @@ export default {
   },
   methods: {
     addToTransStore() {
-      let tempStore = {
-        name: this.selected.name,
-        product_id: this.selected.id,
-        selling_price: this.selected.selling_price,
-        quantity: this.jumlah,
-        total_price: this.selected.selling_price * this.jumlah,
-      };
-      this.transStore.push(tempStore);
-      const createIndex = this.transStore.map((obj, index) => ({
-        ...obj,
-        index: index + 1,
-      }));
-      const finalPrice = this.transStore.reduce((accumulator, currentValue) => {
-        return accumulator + currentValue.total_price;
-      }, 0);
-      this.finalPrice = finalPrice;
-      this.transStore = createIndex;
-      this.showTable = true;
-      this.jumlah = null;
-      this.selected = "";
-      this.isFilled = true;
+      console.log(this.selected);
+      if (this.selected === null) {
+        this.error = "Tidak ada barang yang dipilih";
+        return;
+      }
+      if (this.jumlah === null || this.jumlah === 0) {
+        this.error = "Jumlah barang belum diisi";
+        return;
+      } else {
+        let tempStore = {
+          name: this.selected.name,
+          product_id: this.selected.id,
+          selling_price: this.selected.selling_price,
+          quantity: this.jumlah,
+          total_price: this.selected.selling_price * this.jumlah,
+        };
+        this.transStore.push(tempStore);
+        const createIndex = this.transStore.map((obj, index) => ({
+          ...obj,
+          index: index + 1,
+        }));
+        const finalPrice = this.transStore.reduce(
+          (accumulator, currentValue) => {
+            return accumulator + currentValue.total_price;
+          },
+          0
+        );
+        this.finalPrice = finalPrice;
+        this.transStore = createIndex;
+        this.showTable = true;
+        this.error = "";
+        this.jumlah = null;
+        this.selected = null;
+        this.isFilled = true;
+      }
     },
     hapusItem(index) {
       const indexToRemove = index;
@@ -366,11 +393,10 @@ export default {
           })
           .then((res) => {
             this.returnBeli = res.data.data;
-            console.log(this.returnBeli);
           });
         this.printFunction();
-        this.isFilled = false;
         this.transStore = [];
+        this.isFilled = false;
         this.showTable = false;
         this.loading = false;
         this.payment = null;
@@ -379,6 +405,7 @@ export default {
         console.log(err);
         this.loading = false;
         if (err.response.status === 400) {
+          this.isFilled = true;
           if (err.response.data.message === "Data Creation Failed") {
             useUseToast().emptyStock("Stock tidak mencukupi/ habis.");
           } else {

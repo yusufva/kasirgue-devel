@@ -6,7 +6,10 @@
         class="md:hidden w-8"
         @click="showMobileMenu = !showMobileMenu"></Bars3Icon>
       <Button class="hidden md:flex bg-red text-white" @click="logOut()">
-        Logout
+        <div v-if="loading">
+          <PulseLoader :color="loadingColor" :size="loadingSize" />
+        </div>
+        <div v-else>Logout</div>
       </Button>
     </div>
     <Transition name="slide">
@@ -32,7 +35,10 @@
           </div>
         </div>
         <Button class="md:hidden flex bg-red text-white mt-4" @click="logOut()">
-          Logout
+          <div v-if="loading">
+            <PulseLoader :color="loadingColor" :size="loadingSize" />
+          </div>
+          <div v-else>Logout</div>
         </Button>
       </div>
     </Transition>
@@ -41,8 +47,11 @@
 
 <script>
 import axios from "axios";
+import { useRouteStore } from "@/stores/routeStore";
 import { useEnvStore } from "@/stores/envStore";
 import { useUseToast } from "@/stores/useToast";
+import { useAuthStore } from "@/stores/authStore";
+import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 import Button from "@/components/ui/button/Button.vue";
 import {
   Bars3Icon,
@@ -55,9 +64,9 @@ import {
   SquaresPlusIcon,
   ShoppingCartIcon,
   ArrowsUpDownIcon,
+  Cog6ToothIcon,
 } from "@heroicons/vue/24/solid";
 import Logo from "@/assets/images/logo.png";
-import { useAuthStore } from "@/stores/authStore";
 export default {
   components: {
     Button,
@@ -71,24 +80,22 @@ export default {
     SquaresPlusIcon,
     ShoppingCartIcon,
     ArrowsUpDownIcon,
+    Cog6ToothIcon,
+    PulseLoader,
   },
   data() {
     return {
       showMobileMenu: false,
       Logo: Logo,
-      links: [
-        { title: "Beranda", icon: "HomeIcon", route: "/" },
-        { title: "Barang", icon: "ArchiveBoxIcon", route: "/barang" },
-        { title: "Stok", icon: "RectangleStackIcon", route: "/stok" },
-        { title: "Supplier", icon: "UsersIcon", route: "/supplier" },
-        { title: "Pembelian", icon: "SquaresPlusIcon", route: "/pembelian" },
-        { title: "Penjualan", icon: "ShoppingCartIcon", route: "/penjualan" },
-        { title: "Laba Rugi", icon: "ArrowsUpDownIcon", route: "/labarugi" },
-      ],
+      loading: false,
+      loadingColor: "#ffffff",
+      loadingSize: "5px",
+      links: useRouteStore().route,
     };
   },
   methods: {
     async logOut() {
+      this.loading = true;
       try {
         const logout = await axios.delete(
           useEnvStore().loginUrl + "/api/users/logout",
@@ -103,6 +110,7 @@ export default {
         useUseToast().logout();
       } catch (err) {
         console.log(err);
+        this.loading = false;
       }
     },
   },

@@ -108,7 +108,7 @@ export default {
         this.nama = this.dataBarang.name;
         this.harga_beli = this.dataBarang.buying_price;
         this.harga_jual = this.dataBarang.selling_price;
-        this.satuan = this.dataBarang.stock.satuan;
+        this.satuan = this.dataBarang.stock.satuan.kd_satuan;
         this.loading = false;
       } catch (err) {
         console.log(err);

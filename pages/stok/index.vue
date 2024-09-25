@@ -11,7 +11,7 @@
       :loading="loading"
       :theme-color="color">
       <template #item-quantity="item" v-slot:item.actions="{ item }">
-        <div>{{ item.quantity + " " + item.satuan }}</div>
+        <div>{{ item.quantity + " (" + item.satuan.kd_satuan + ")" }}</div>
       </template>
     </EasyDataTable>
   </div>

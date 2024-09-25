@@ -19,6 +19,7 @@ export const useAuthStore = defineStore("auth", {
     clearToken() {
       this.refreshToken = null;
       this.accessToken = null;
+      this.isLoggedIn = false;
     },
     login(response) {
       this.isLoggedIn = true;

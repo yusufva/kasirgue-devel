@@ -269,6 +269,10 @@ export default {
         this.$router.push("/pembelian");
       } catch (err) {
         console.log(err);
+        if (err.response.status === 400 || err.response.status === 500) {
+          useUseToast().formNotCompleted();
+          this.loading = false;
+        }
       }
     },
   },

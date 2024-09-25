@@ -39,15 +39,6 @@
 </template>
 
 <script>
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -67,13 +58,6 @@ export default {
     return { useFormat };
   },
   components: {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
     Input,
     Button,
     ScrollArea,
@@ -89,7 +73,7 @@ export default {
         { text: "Harga Beli", value: "buying_price" },
         { text: "Harga Jual", value: "selling_price" },
         { text: "Stok", value: "stock.quantity" },
-        { text: "Satuan", value: "stock.satuan" },
+        { text: "Satuan", value: "stock.satuan.kd_satuan" },
         { text: "", value: "actions" },
       ],
       barang: [],

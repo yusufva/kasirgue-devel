@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useRouter } from "vue-router";
 import { useEnvStore } from "@/stores/envStore";
 import { useAuthStore } from "@/stores/authStore";
 
@@ -44,6 +43,11 @@ axios.interceptors.response.use(
     const authStore = useAuthStore();
     const originalRequest = error.config;
 
+    if (error.response.status === 403 && error.config.url === "https://api.kasirgue.com/auth/api/users/refresh") {
+      authStore.clearToken();
+      window.location.reload()
+    }
+
     if (error.response.status === 403 && !originalRequest._retry) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
@@ -79,21 +83,14 @@ axios.interceptors.response.use(
             processQueue(null, data.data.access_token);
             resolve(axios(originalRequest));
           })
-          .catch(err => {
+          .catch((err) => {
             processQueue(err, null);
-            // authStore.clearToken();
             reject(err);
           })
           .finally(() => {
             isRefreshing = false;
           });
       });
-    }
-
-    if (error.response.status === 401) {
-      const router = useRouter()
-      useAuthStore().logout()
-      router.addRoute({ path: '/login', redirect: "/login" })
     }
 
     return Promise.reject(error);
