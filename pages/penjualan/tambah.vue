@@ -469,48 +469,55 @@ export default {
     },
     async tambahPembelian() {
       this.loading = true;
-      const idNota = moment().format("YYYY" + "MM" + "DD" + "HH" + "mm" + "ss");
-      const itemToPost = this.transStore.map(({ index, ...rest }) => rest);
-      try {
-        const beli = await axios
-          .post(useEnvStore().apiUrl + "/api/tx-sell", {
-            date: moment(),
-            nota_id: idNota,
-            items: itemToPost,
-            final_price: this.finalPrice,
-            payment: this.payment,
-            changes: this.payment - this.finalPrice,
-            payment_note: this.keterangan,
-            payment_type: this.metodePembayaran,
-            admin_cut:
-              this.isMarketplace === false
-                ? 0
-                : this.finalPrice - this.fromMarketplace,
-          })
-          .then((res) => {
-            this.returnBeli = res.data.data;
-          });
-        this.printFunction();
-        this.transStore = [];
-        this.isFilled = false;
-        this.showTable = false;
-        this.finalPrice = null;
+      if (this.transStore.length === 0) {
+        useUseToast().noItem();
         this.loading = false;
-        this.payment = null;
-        this.keterangan = "";
-        this.fromMarketplace = 0;
-        this.metodePembayaran = "Cash";
-        // this.$router.push("/");
-      } catch (err) {
-        console.log(err);
-        this.loading = false;
-        if (err.response.status === 400) {
-          this.isFilled = true;
-          if (err.response.data.message === "Data Creation Failed") {
-            useUseToast().emptyStock("Stock tidak mencukupi/ habis.");
-          } else {
-            const error = err.response.data.error[0].message;
-            useUseToast().emptyStock(error);
+      } else {
+        const idNota = moment().format(
+          "YYYY" + "MM" + "DD" + "HH" + "mm" + "ss"
+        );
+        const itemToPost = this.transStore.map(({ index, ...rest }) => rest);
+        try {
+          const beli = await axios
+            .post(useEnvStore().apiUrl + "/api/tx-sell", {
+              date: moment(),
+              nota_id: idNota,
+              items: itemToPost,
+              final_price: this.finalPrice,
+              payment: this.payment,
+              changes: this.payment - this.finalPrice,
+              payment_note: this.keterangan,
+              payment_type: this.metodePembayaran,
+              admin_cut:
+                this.isMarketplace === false
+                  ? 0
+                  : this.finalPrice - this.fromMarketplace,
+            })
+            .then((res) => {
+              this.returnBeli = res.data.data;
+            });
+          this.printFunction();
+          this.transStore = [];
+          this.isFilled = false;
+          this.showTable = false;
+          this.finalPrice = null;
+          this.loading = false;
+          this.payment = null;
+          this.keterangan = "";
+          this.fromMarketplace = 0;
+          this.metodePembayaran = "Cash";
+          // this.$router.push("/");
+        } catch (err) {
+          console.log(err);
+          this.loading = false;
+          if (err.response.status === 400) {
+            this.isFilled = true;
+            if (err.response.data.message === "Data Creation Failed") {
+              useUseToast().emptyStock("Stock tidak mencukupi/ habis.");
+            } else {
+              const error = err.response.data.error[0].message;
+              useUseToast().emptyStock(error);
+            }
           }
         }
       }

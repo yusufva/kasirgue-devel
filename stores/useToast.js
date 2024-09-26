@@ -92,6 +92,21 @@ export const useUseToast = defineStore("toast", {
         timer: 3000,
       });
     },
+    noItem() {
+      const { $swal } = useNuxtApp();
+      $swal.fire({
+        position: "top-end",
+        toast: true,
+        timerProgressBar: true,
+        icon: "error",
+        text: "Tidak ada item yang dipilih.",
+        background: "#E84545",
+        color: "#ffffff",
+        iconColor: "#ffffff",
+        showConfirmButton: false,
+        timer: 3000,
+      });
+    },
     addToast() {
       const { $swal } = useNuxtApp();
       $swal.fire({
