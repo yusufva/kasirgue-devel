@@ -25,10 +25,25 @@
               <TableCell class="pb-0">: {{ dataBarang.nota_id }}</TableCell>
             </TableRow>
             <TableRow class="border-none">
-              <TableCell>Tanggal</TableCell>
-              <TableCell
-                >: {{ useFormat.dateFormat(dataBarang.date) }}</TableCell
-              >
+              <TableCell class="pb-0">Tanggal</TableCell>
+              <TableCell class="pb-0">
+                : {{ useFormat.dateFormat(dataBarang.date) }}
+              </TableCell>
+            </TableRow>
+            <TableRow
+              v-if="
+                dataBarang.payment_note !== '' &&
+                dataBarang.payment_note !== null
+              "
+              class="border-none">
+              <TableCell class="pb-0">Keterangan</TableCell>
+              <TableCell class="pb-0">
+                : {{ dataBarang.payment_note }}
+              </TableCell>
+            </TableRow>
+            <TableRow class="border-none">
+              <TableCell>Metode Pembayaran</TableCell>
+              <TableCell>: {{ dataBarang.payment_type }}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -71,6 +86,12 @@
               <TableCell class="font-semibold">
                 Kembali:
                 {{ useFormat.currencyFormat(dataBarang.changes) }}
+              </TableCell>
+            </TableRow>
+            <TableRow v-if="dataBarang.admin_cut !== 0" class="border-none">
+              <TableCell class="font-semibold">
+                Biaya Admin (Marketplace):
+                {{ useFormat.currencyFormat(dataBarang.admin_cut) }}
               </TableCell>
             </TableRow>
           </TableBody>
