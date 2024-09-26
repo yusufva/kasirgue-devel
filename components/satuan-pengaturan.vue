@@ -229,7 +229,10 @@ export default {
         this.simbol = null;
         this.getSatuan();
       } catch (err) {
-        console.log(err);
+        if (err.response.status === 400) {
+          useUseToast().formNotCompleted();
+          this.loading = false;
+        }
       }
     },
     async editSatuan(id) {
@@ -247,7 +250,10 @@ export default {
         this.simbol = null;
         this.getSatuan();
       } catch (err) {
-        console.log(err);
+        if (err.response.status === 400) {
+          useUseToast().formNotCompleted();
+          this.loading = false;
+        }
       }
     },
     async deleteSatuan(id) {

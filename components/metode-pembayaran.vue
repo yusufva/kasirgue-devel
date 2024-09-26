@@ -224,7 +224,10 @@ export default {
         this.nama = null;
         this.getMetode();
       } catch (err) {
-        console.log(err);
+        if (err.response.status === 400) {
+          useUseToast().formNotCompleted();
+          this.loading = false;
+        }
       }
     },
     async editMetode(id) {
@@ -241,7 +244,10 @@ export default {
         this.simbol = null;
         this.getMetode();
       } catch (err) {
-        console.log(err);
+        if (err.response.status === 400) {
+          useUseToast().formNotCompleted();
+          this.loading = false;
+        }
       }
     },
     async deleteMetode(id) {
