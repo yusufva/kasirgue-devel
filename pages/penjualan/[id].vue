@@ -57,7 +57,7 @@
           </TableHeader>
           <TableBody class="border-b border-black/10 capitalize">
             <TableRow v-for="item in detailBarang" :key="item.index">
-              <TableCell>{{ item.name }}</TableCell>
+              <TableCell>{{ item.name }} ({{ item.satuan }})</TableCell>
               <TableCell>{{ item.quantity }}</TableCell>
               <TableCell>{{
                 useFormat.currencyFormat(item.selling_price)
