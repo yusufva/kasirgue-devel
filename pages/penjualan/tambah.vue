@@ -30,12 +30,15 @@
             class="capitalized"
             v-model="selected"
             :options="listBarang"
-            label="name">
+            label="name"
+            :dropdown-should-open="barangDropdownOpen">
             <template #selected-option="{ name }">
               <div style="text-transform: capitalize">{{ name }}</div>
             </template>
-            <template #option="{ name }">
-              <div style="text-transform: capitalize">{{ name }}</div>
+            <template #option="{ name, stock }">
+              <div style="text-transform: capitalize">
+                {{ name }} ({{ stock.satuan.kd_satuan }})
+              </div>
             </template>
             <template #no-options="{ searching, search }">
               <template v-if="searching">
@@ -453,6 +456,7 @@ export default {
           useEnvStore().apiUrl + "/api/product-master"
         );
         this.listBarang = barang.data.data;
+        console.log(this.listBarang);
       } catch (err) {
         console.log(err);
       }
@@ -521,6 +525,12 @@ export default {
           }
         }
       }
+    },
+    barangDropdownOpen(VueSelect) {
+      if (this.selected !== null) {
+        return VueSelect.open;
+      }
+      return VueSelect.search.length !== 0 && VueSelect.open;
     },
     printCallback() {
       const { $swal } = useNuxtApp();
