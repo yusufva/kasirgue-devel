@@ -22,6 +22,11 @@
 import Satuan from "@/components/satuan-pengaturan.vue";
 import MetodePembayaran from "@/components/metode-pembayaran.vue";
 export default {
+  setup() {
+    useSeoMeta({
+      title: "Pengaturan | Kasirgue",
+    });
+  },
   components: {
     Satuan,
     MetodePembayaran,

@@ -11,8 +11,7 @@
           v-model="startDate"
           auto-apply
           :format="dpFormat"
-          model-type="yyyy-MM-dd"
-        ></VueDatePicker>
+          model-type="yyyy-MM-dd"></VueDatePicker>
       </div>
       <div class="flex flex-col w-36">
         <div class="text-xs">Tanggal Akhir</div>
@@ -20,8 +19,7 @@
           v-model="endDate"
           auto-apply
           :format="dpFormat"
-          model-type="yyyy-MM-dd"
-        ></VueDatePicker>
+          model-type="yyyy-MM-dd"></VueDatePicker>
       </div>
       <Button class="bg-primary text-white" @click="showWithCustomDate()"
         >Lihat</Button
@@ -33,8 +31,7 @@
         :items="dataForDefault"
         :loading="loading"
         :theme-color="color"
-        hide-footer
-      >
+        hide-footer>
         <template #item-totalSell="item" v-slot:item.totalSell="{ item }">
           <div>
             {{ useFormat.currencyFormat(item.totalSell) }}
@@ -66,6 +63,9 @@ import "@vuepic/vue-datepicker/dist/main.css";
 import { Button } from "@/components/ui/button";
 export default {
   setup() {
+    useSeoMeta({
+      title: "Laba-Rugi | Kasirgue",
+    });
     const useFormat = useUseFormat();
     return { useFormat };
   },

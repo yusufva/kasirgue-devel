@@ -96,13 +96,26 @@
             </TableRow>
           </TableBody>
         </Table>
+        <div class="flex mx-auto gap-6">
+          <NuxtLink to="/penjualan">
+            <Button class="bg-red text-white">Kembali</Button>
+          </NuxtLink>
+          <Button
+            class="flex gap-1 bg-primary text-white"
+            @click="printFunction()">
+            <PrinterIcon class="w-5" />
+            Cetak Ulang
+          </Button>
+        </div>
       </div>
     </div>
   </div>
+  <PrintNota class="hidden" id="print-nota" :returnBeli="dataBarang" />
 </template>
 
 <script>
 import axios from "axios";
+import { usePaperizer } from "paperizer";
 import { useUseFormat } from "@/stores/useFormat";
 import { useEnvStore } from "@/stores/envStore";
 import {
@@ -113,6 +126,9 @@ import {
   TableCell,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { PrinterIcon } from "@heroicons/vue/24/solid";
+import PrintNota from "@/components/nota-print-area.vue";
 export default {
   setup() {
     useSeoMeta({
@@ -128,6 +144,9 @@ export default {
     TableBody,
     TableCell,
     TableRow,
+    PrintNota,
+    Button,
+    PrinterIcon,
   },
   data() {
     return {
@@ -149,6 +168,15 @@ export default {
       } catch (err) {
         console.log(err);
       }
+    },
+    printFunction() {
+      const { paperize } = usePaperizer("print-nota", {
+        features: ["titlebar=no"],
+        styles: [
+          "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css",
+        ],
+      });
+      paperize();
     },
   },
   mounted() {
