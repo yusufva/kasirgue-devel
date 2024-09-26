@@ -64,7 +64,7 @@
                 </DialogHeader>
                 <div class="flex items-center space-x-2">
                   <div class="grid flex-1 gap-2">
-                    <Label>Nama Satuan</Label>
+                    <Label>Nama Metode</Label>
                     <Input v-model="nama" :disabled="!isLoaded" />
                   </div>
                 </div>
@@ -78,7 +78,7 @@
                       >
                       <Button
                         class="bg-primary text-white"
-                        @click="editSatuan(items.id)">
+                        @click="editMetode(items.id)">
                         Simpan
                       </Button>
                     </div>
@@ -227,7 +227,7 @@ export default {
         console.log(err);
       }
     },
-    async editSatuan(id) {
+    async editMetode(id) {
       this.loading = true;
       try {
         const edit = await axios.put(
