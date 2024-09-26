@@ -32,8 +32,10 @@
             :options="listBarang"
             label="name"
             :dropdown-should-open="barangDropdownOpen">
-            <template #selected-option="{ name }">
-              <div style="text-transform: capitalize">{{ name }}</div>
+            <template #selected-option="{ name, stock }">
+              <div style="text-transform: capitalize">
+                {{ name }} ({{ stock.satuan.kd_satuan }})
+              </div>
             </template>
             <template #option="{ name, stock }">
               <div style="text-transform: capitalize">
@@ -80,7 +82,10 @@
             v-for="item in transStore"
             :key="item.id"
             class="borer-b border-black/10 capitalize">
-            <TableCell>{{ item.name }}</TableCell>
+            <TableCell class="flex gap-1">
+              <div class="text-capitalize">{{ item.name }}</div>
+              <div>({{ item.satuan }})</div>
+            </TableCell>
             <TableCell>{{
               useFormat.currencyFormat(item.selling_price)
             }}</TableCell>
@@ -244,7 +249,10 @@
           <tbody style="font-size: 13px">
             <tr v-for="items in returnBeli.items" :key="items.index">
               <td>{{ items.quantity }}x</td>
-              <td class="text-capitalize">{{ items.name }}</td>
+              <td class="d-flex gap-1">
+                <div class="text-capitalize">{{ items.name }}</div>
+                <div>({{ items.satuan }})</div>
+              </td>
               <td class="text-end">
                 {{ useFormat.currencyFormat(items.total_price) }}
               </td>
@@ -404,8 +412,10 @@ export default {
           product_id: this.selected.id,
           selling_price: this.selected.selling_price,
           quantity: this.jumlah,
+          satuan: this.selected.stock.satuan.kd_satuan,
           total_price: this.selected.selling_price * this.jumlah,
         };
+        console.log(tempStore);
         this.transStore.push(tempStore);
         const createIndex = this.transStore.map((obj, index) => ({
           ...obj,
