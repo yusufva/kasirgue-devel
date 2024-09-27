@@ -28,7 +28,9 @@
               <TableCell class="font-normal capitalize">
                 {{ item.product.name }}
               </TableCell>
-              <TableCell>{{ item.quantity }} {{ item.satuan.kd_satuan }}</TableCell>
+              <TableCell
+                >{{ item.quantity }} {{ item.satuan.kd_satuan }}</TableCell
+              >
             </TableRow>
           </TableBody>
         </Table>
@@ -164,16 +166,21 @@ export default {
             (sum, transaction) => sum + transaction.final_price,
             0
           );
+          const adminCut = transactions.reduce(
+            (sum, transaction) => sum + transaction.admin_cut,
+            0
+          );
+          const clearFinalPrice = totalFinalPrice - adminCut;
           return {
             date,
-            totalFinalPrice,
+            clearFinalPrice,
           };
         });
         console.log(summedByDate);
         const labelChart = summedByDate.map((item) =>
           useUseFormat().chartDateFormat(item.date)
         );
-        const dataChart = summedByDate.map((item) => item.totalFinalPrice);
+        const dataChart = summedByDate.map((item) => item.clearFinalPrice);
         this.chartData = {
           labels: labelChart,
           datasets: [

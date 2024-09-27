@@ -113,6 +113,7 @@ export default {
           (sum, transaction) => sum + transaction.final_price,
           0
         );
+
         console.log(totalBuyMonth);
 
         // get total sell month
@@ -128,14 +129,18 @@ export default {
           (sum, transaction) => sum + transaction.final_price,
           0
         );
+        const adminCut = sellMonth.data.data.reduce(
+          (sum, transaction) => sum + transaction.admin_cut,
+          0
+        );
         console.log(totalSellMonth);
 
         // add to data
         const monthData = {
           name: "Laba/Rugi Bulan " + moment().locale("id").format("MMMM"),
           totalBuy: totalBuyMonth,
-          totalSell: totalSellMonth,
-          diff: totalSellMonth - totalBuyMonth,
+          totalSell: totalSellMonth - adminCut,
+          diff: totalSellMonth - totalBuyMonth - adminCut,
         };
         this.dataForDefault.push(monthData);
         console.log(this.dataForDefault);
@@ -147,7 +152,7 @@ export default {
     // get week data
     async getByWeek() {
       try {
-        // get total buy month
+        // get total buy week
         const buyWeek = await axios.post(
           useEnvStore().apiUrl + "/api/report/tx-buy/date",
           {
@@ -162,7 +167,7 @@ export default {
         );
         console.log(totalbuyWeek);
 
-        // get total sell month
+        // get total sell week
         const sellWeek = await axios.post(
           useEnvStore().apiUrl + "/api/report/tx-sell/date",
           {
@@ -175,14 +180,18 @@ export default {
           (sum, transaction) => sum + transaction.final_price,
           0
         );
+        const adminCut = sellWeek.data.data.reduce(
+          (sum, transaction) => sum + transaction.admin_cut,
+          0
+        );
         console.log(totalsellWeek);
 
         // add to data
         const weekData = {
           name: "Laba/Rugi Minggu Ini",
           totalBuy: totalbuyWeek,
-          totalSell: totalsellWeek,
-          diff: totalsellWeek - totalbuyWeek,
+          totalSell: totalsellWeek - adminCut,
+          diff: totalsellWeek - totalbuyWeek - adminCut,
         };
         this.dataForDefault.push(weekData);
         console.log(this.dataForDefault);
@@ -194,7 +203,7 @@ export default {
     // get day data
     async getByDay() {
       try {
-        // get total buy month
+        // get total buy day
         const buyDay = await axios.post(
           useEnvStore().apiUrl + "/api/report/tx-buy/date",
           {
@@ -209,7 +218,7 @@ export default {
         );
         console.log(totalbuyDay);
 
-        // get total sell month
+        // get total sell day
         const sellDay = await axios.post(
           useEnvStore().apiUrl + "/api/report/tx-sell/date",
           {
@@ -222,14 +231,18 @@ export default {
           (sum, transaction) => sum + transaction.final_price,
           0
         );
+        const adminCut = sellDay.data.data.reduce(
+          (sum, transaction) => sum + transaction.admin_cut,
+          0
+        );
         console.log(totalsellDay);
 
         // add to data
         const dayData = {
           name: "Laba/Rugi Hari Ini",
           totalBuy: totalbuyDay,
-          totalSell: totalsellDay,
-          diff: totalsellDay - totalbuyDay,
+          totalSell: totalsellDay - adminCut,
+          diff: totalsellDay - totalbuyDay - adminCut,
         };
         this.dataForDefault.push(dayData);
         console.log(this.dataForDefault);
