@@ -283,6 +283,10 @@ export default {
           (sum, transaction) => sum + transaction.final_price,
           0
         );
+        const adminCut = sellCustom.data.data.reduce(
+          (sum, transaction) => sum + transaction.admin_cut,
+          0
+        );
         console.log(totalsellCustom);
         const dayData = {
           name:
@@ -291,8 +295,8 @@ export default {
             "-" +
             moment(this.endDate).format("D/MM/YYYY"),
           totalBuy: totalbuyCustom,
-          totalSell: totalsellCustom,
-          diff: totalsellCustom - totalbuyCustom,
+          totalSell: totalsellCustom - adminCut,
+          diff: totalsellCustom - totalbuyCustom - adminCut,
         };
         this.dataForDefault.push(dayData);
         console.log(this.dataForDefault);
