@@ -238,6 +238,7 @@ export default {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
+    VisuallyHidden,
     PulseLoader,
   },
   data() {
@@ -254,6 +255,7 @@ export default {
       jumlah: null,
       listSupplier: [],
       supplier: null,
+      isFilled: false,
     };
   },
   methods: {
@@ -274,6 +276,7 @@ export default {
       this.harga_beli = null;
       this.jumlah = null;
       this.showTable = true;
+      this.isFilled = true;
       console.log(this.transStore);
     },
     async getBarangList() {
@@ -324,6 +327,32 @@ export default {
   mounted() {
     this.getBarangList();
     this.getSupplierList();
+  },
+  beforeRouteLeave(to, from, next) {
+    if (this.isFilled === true) {
+      const { $swal } = useNuxtApp();
+
+      $swal
+        .fire({
+          title: "Peringatan!",
+          text: "Apakah anda yakin meninggalkan halaman ini? Perubahan tidak akan tersimpan.",
+          icon: "warning",
+          showDenyButton: true,
+          confirmButtonText: "Yakin",
+          denyButtonText: "Tidak",
+          confirmButtonColor: "#0B324F",
+          denyButtonColor: "#E84545",
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            next();
+          } else if (result.isDenied) {
+            next(false);
+          }
+        });
+    } else {
+      next();
+    }
   },
 };
 </script>
