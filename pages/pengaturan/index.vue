@@ -15,12 +15,19 @@
         class="flex w-full md:w-1/3 h-72 border-2 rounded-xl border-primary/60 overflow-auto scrollbar-hide">
         <MetodePembayaran />
       </div>
+      <!-- kas pengaturan -->
+      <div
+        class="flex w-full md:w-1/3 h-72 border-2 rounded-xl border-primary/60 overflow-auto scrollbar-hide">
+        <KasPengaturan />
+      </div>
     </div>
   </div>
 </template>
 <script>
 import Satuan from "@/components/satuan-pengaturan.vue";
 import MetodePembayaran from "@/components/metode-pembayaran.vue";
+import kasPengaturan from "@/components/kas-pengaturan.vue";
+import KasPengaturan from "@/components/kas-pengaturan.vue";
 export default {
   setup() {
     useSeoMeta({
@@ -30,6 +37,7 @@ export default {
   components: {
     Satuan,
     MetodePembayaran,
+    KasPengaturan,
   },
 };
 </script>
