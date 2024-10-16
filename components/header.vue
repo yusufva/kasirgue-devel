@@ -63,6 +63,7 @@ import {
   UsersIcon,
   SquaresPlusIcon,
   ShoppingCartIcon,
+  BanknotesIcon,
   ArrowsUpDownIcon,
   Cog6ToothIcon,
 } from "@heroicons/vue/24/solid";
@@ -79,6 +80,7 @@ export default {
     UsersIcon,
     SquaresPlusIcon,
     ShoppingCartIcon,
+    BanknotesIcon,
     ArrowsUpDownIcon,
     Cog6ToothIcon,
     PulseLoader,

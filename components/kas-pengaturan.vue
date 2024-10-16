@@ -38,7 +38,7 @@
               </DialogTrigger>
               <DialogContent class="sm:w-max-md">
                 <DialogHeader>
-                  <DialogTitle> Ubah Satuan </DialogTitle>
+                  <DialogTitle> Ubah Pengaturan Kas </DialogTitle>
                 </DialogHeader>
                 <div class="flex items-center space-x-2">
                   <div class="grid flex-1 gap-2">
@@ -170,12 +170,12 @@ export default {
     },
     async getKasById(id) {
       try {
-        const satuan = await axios.get(
+        const kas = await axios.get(
           useEnvStore().apiUrl + "/api/kas-option/" + id
         );
-        this.type = satuan.data.data.type;
-        this.limit = satuan.data.data.limit;
-        this.periode = satuan.data.data.period;
+        this.type = kas.data.data.type;
+        this.limit = kas.data.data.limit;
+        this.periode = kas.data.data.period;
         this.isLoaded = true;
       } catch (err) {
         console.log(err);

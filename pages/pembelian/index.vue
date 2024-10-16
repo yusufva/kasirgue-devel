@@ -158,7 +158,6 @@ export default {
         const beli = await axios.get(useEnvStore().apiUrl + "/api/tx-buy");
         this.beliList = beli.data.data;
         this.initialBeliList = beli.data.data;
-        console.log(this.beliList);
         this.loading = false;
       } catch (err) {
         console.log(err);
