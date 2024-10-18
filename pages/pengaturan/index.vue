@@ -16,10 +16,10 @@
         <MetodePembayaran />
       </div>
       <!-- kas pengaturan -->
-      <div
+      <!-- <div
         class="flex w-full md:w-1/3 h-72 border-2 rounded-xl border-primary/60 overflow-auto scrollbar-hide">
         <KasPengaturan />
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
