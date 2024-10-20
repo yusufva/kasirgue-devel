@@ -114,7 +114,7 @@ export default {
           0
         );
 
-        console.log(totalBuyMonth);
+        console.log("Buy Month: ", totalBuyMonth);
 
         // get total sell month
         const sellMonth = await axios.post(
@@ -133,14 +133,29 @@ export default {
           (sum, transaction) => sum + transaction.admin_cut,
           0
         );
-        console.log(totalSellMonth);
+        console.log("Sell Month+Admin: ", totalSellMonth);
+
+        // get total kas month
+        const kasMonth = await axios.post(
+          useEnvStore().apiUrl + "/api/report/kas-tx/date",
+          {
+            startDate: moment().startOf("month").format("YYYY-MM-D"),
+            endDate: moment().format("YYYY-MM-D"),
+          }
+        );
+        console.log(kasMonth);
+        const totalKasMonth = kasMonth.data.data.reduce(
+          (sum, transaction) => sum + transaction.amount,
+          0
+        );
+        console.log("Kas month: ", totalKasMonth);
 
         // add to data
         const monthData = {
           name: "Laba/Rugi Bulan " + moment().locale("id").format("MMMM"),
-          totalBuy: totalBuyMonth,
+          totalBuy: totalBuyMonth + totalKasMonth,
           totalSell: totalSellMonth - adminCut,
-          diff: totalSellMonth - totalBuyMonth - adminCut,
+          diff: totalSellMonth - totalBuyMonth - adminCut - totalKasMonth,
         };
         this.dataForDefault.push(monthData);
         console.log(this.dataForDefault);
