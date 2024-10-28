@@ -43,19 +43,22 @@
                 </div>
                 <div v-else>Submit</div>
               </Button>
-              <Button
-                class="bg-secondary text-white"
-                @click="jualList = initialJualList">
+              <Button class="bg-secondary text-white" @click="getJualList()">
                 Reset
               </Button>
             </PopoverContent>
           </Popover>
         </div>
         <div class="w-1/5">
-          <Button class="flex bg-primary text-white items-center gap-2">
-            <FolderArrowDownIcon class="size-6"></FolderArrowDownIcon>
-            Export
-          </Button>
+          <xlsx-workbook>
+            <xlsx-sheet :collection="dataToExport" :sheet-name="sheetName" />
+            <xlsx-download :filename="fileName">
+              <Button class="flex bg-primary text-white items-center gap-2">
+                <FolderArrowDownIcon class="size-6"></FolderArrowDownIcon>
+                Export
+              </Button>
+            </xlsx-download>
+          </xlsx-workbook>
         </div>
       </div>
       <Input
@@ -107,6 +110,13 @@ import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 import { useEnvStore } from "@/stores/envStore";
 import { useUseFormat } from "@/stores/useFormat";
 import axios from "axios";
+import {
+  XlsxWorkbook,
+  XlsxSheet,
+  XlsxDownload,
+} from "vue3-xlsx/dist/vue3-xlsx.cjs.prod";
+import moment from "moment";
+
 export default {
   setup() {
     useSeoMeta({
@@ -127,6 +137,9 @@ export default {
     PlusIcon,
     ArrowTopRightOnSquareIcon,
     FolderArrowDownIcon,
+    XlsxWorkbook,
+    XlsxSheet,
+    XlsxDownload,
   },
   data() {
     return {
@@ -141,7 +154,6 @@ export default {
         { text: "", value: "actions" },
       ],
       jualList: [],
-      initialJualList: [],
       color: "#0b324f",
       searchField: "nota_id",
       searchValue: "",
@@ -154,15 +166,23 @@ export default {
 
         return day + "-" + month + "-" + year;
       },
+      dataToExport: null,
+      sheetName: "Data Penjualan",
+      fileName: "Data Penjualan_" + moment().format("D-M-YYYY") + ".xlsx",
     };
   },
   methods: {
     async getJualList() {
+      this.loading = true;
       try {
         const beli = await axios.get(useEnvStore().apiUrl + "/api/tx-sell");
         this.jualList = beli.data.data;
-        this.initialJualList = beli.data.data;
-        console.log(this.jualList);
+        this.dataToExport = beli.data.data.map((item) => ({
+          "Nomor Nota": item.nota_id,
+          Tanggal: useUseFormat().dateFormat(item.created_date),
+          "Total Harga": useUseFormat().currencyFormat(item.final_price),
+        }));
+        console.log(this.dataToExport);
         this.loading = false;
       } catch (err) {
         console.log(err);
@@ -179,6 +199,11 @@ export default {
           }
         );
         this.jualList = report.data.data;
+        this.dataToExport = report.data.data.map((item) => ({
+          "Nomor Nota": item.nota_id,
+          Tanggal: useUseFormat().dateFormat(item.created_date),
+          "Total Harga": useUseFormat().currencyFormat(item.final_price),
+        }));
         this.filterLoading = false;
       } catch (err) {
         console.log(err);
