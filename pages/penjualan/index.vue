@@ -175,9 +175,9 @@ export default {
     async getJualList() {
       this.loading = true;
       try {
-        const beli = await axios.get(useEnvStore().apiUrl + "/api/tx-sell");
-        this.jualList = beli.data.data;
-        this.dataToExport = beli.data.data.map((item) => ({
+        const jual = await axios.get(useEnvStore().apiUrl + "/api/tx-sell");
+        this.jualList = jual.data.data;
+        this.dataToExport = jual.data.data.map((item) => ({
           "Nomor Nota": item.nota_id,
           Tanggal: useUseFormat().dateFormat(item.created_date),
           "Total Harga": useUseFormat().currencyFormat(item.final_price),

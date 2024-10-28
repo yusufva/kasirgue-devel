@@ -5,48 +5,59 @@
     <div class="h-[2px] w-full bg-primary/20 rounded-xl my-4"></div>
     <!-- content -->
     <div class="flex flex-col md:flex-row gap-4 justify-end">
-      <div class="w-1/5 mr-auto">
-        <Popover>
-          <PopoverTrigger>
-            <Button variant="outline" class="text-primary font-semibold"
-              >Filter Tanggal</Button
-            >
-          </PopoverTrigger>
-          <PopoverContent class="flex flex-col w-full border-primary gap-2">
-            <div class="flex gap-2">
-              <div class="flex flex-col w-36">
-                <div class="text-xs">Tanggal Awal</div>
-                <VueDatePicker
-                  v-model="startDate"
-                  auto-apply
-                  :format="dpFormat"
-                  model-type="yyyy-MM-dd"></VueDatePicker>
+      <div class="flex mr-auto justify-between">
+        <div class="w-1/5">
+          <Popover>
+            <PopoverTrigger>
+              <Button variant="outline" class="text-primary font-semibold"
+                >Filter Tanggal</Button
+              >
+            </PopoverTrigger>
+            <PopoverContent class="flex flex-col w-full border-primary gap-2">
+              <div class="flex gap-2">
+                <div class="flex flex-col w-36">
+                  <div class="text-xs">Tanggal Awal</div>
+                  <VueDatePicker
+                    v-model="startDate"
+                    auto-apply
+                    :format="dpFormat"
+                    model-type="yyyy-MM-dd"></VueDatePicker>
+                </div>
+                <div class="flex flex-col w-36">
+                  <div class="text-xs">Tanggal Akhir</div>
+                  <VueDatePicker
+                    v-model="endDate"
+                    auto-apply
+                    :format="dpFormat"
+                    model-type="yyyy-MM-dd"></VueDatePicker>
+                </div>
               </div>
-              <div class="flex flex-col w-36">
-                <div class="text-xs">Tanggal Akhir</div>
-                <VueDatePicker
-                  v-model="endDate"
-                  auto-apply
-                  :format="dpFormat"
-                  model-type="yyyy-MM-dd"></VueDatePicker>
-              </div>
-            </div>
-            <Button class="bg-primary text-white" @click="getByDate()">
-              <div v-if="filterLoading">
-                <PulseLoader
-                  :color="filterLoadingColor"
-                  :size="filterLoadingSize">
-                </PulseLoader>
-              </div>
-              <div v-else>Submit</div>
-            </Button>
-            <Button
-              class="bg-secondary text-white"
-              @click="beliList = initialBeliList">
-              Reset
-            </Button>
-          </PopoverContent>
-        </Popover>
+              <Button class="bg-primary text-white" @click="getByDate()">
+                <div v-if="filterLoading">
+                  <PulseLoader
+                    :color="filterLoadingColor"
+                    :size="filterLoadingSize">
+                  </PulseLoader>
+                </div>
+                <div v-else>Submit</div>
+              </Button>
+              <Button class="bg-secondary text-white" @click="getBeliList()">
+                Reset
+              </Button>
+            </PopoverContent>
+          </Popover>
+        </div>
+        <div class="w-1/5">
+          <xlsx-workbook>
+            <xlsx-sheet :collection="dataToExport" :sheet-name="sheetName" />
+            <xlsx-download :filename="fileName">
+              <Button class="flex bg-primary text-white items-center gap-2">
+                <FolderArrowDownIcon class="size-6"></FolderArrowDownIcon>
+                Export
+              </Button>
+            </xlsx-download>
+          </xlsx-workbook>
+        </div>
       </div>
       <Input
         v-model="searchValue"
@@ -98,11 +109,20 @@ import { Button } from "@/components/ui/button";
 import { PlusIcon } from "@heroicons/vue/24/outline";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import { ArrowTopRightOnSquareIcon } from "@heroicons/vue/24/solid";
+import {
+  ArrowTopRightOnSquareIcon,
+  FolderArrowDownIcon,
+} from "@heroicons/vue/24/solid";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 import { useEnvStore } from "@/stores/envStore";
 import { useUseFormat } from "@/stores/useFormat";
 import axios from "axios";
+import {
+  XlsxWorkbook,
+  XlsxSheet,
+  XlsxDownload,
+} from "vue3-xlsx/dist/vue3-xlsx.cjs.prod";
+import moment from "moment";
 export default {
   setup() {
     useSeoMeta({
@@ -122,6 +142,10 @@ export default {
     PulseLoader,
     PlusIcon,
     ArrowTopRightOnSquareIcon,
+    FolderArrowDownIcon,
+    XlsxWorkbook,
+    XlsxSheet,
+    XlsxDownload,
   },
   data() {
     return {
@@ -137,7 +161,6 @@ export default {
         { text: "", value: "actions" },
       ],
       beliList: [],
-      initialBeliList: [],
       color: "#0b324f",
       searchValue: "",
       searchField: "nota_id",
@@ -150,14 +173,22 @@ export default {
 
         return day + "-" + month + "-" + year;
       },
+      dataToExport: null,
+      sheetName: "Data Pembelian",
+      fileName: "Data Pembelian_" + moment().format("D-M-YYYY") + ".xlsx",
     };
   },
   methods: {
     async getBeliList() {
+      this.loading = true;
       try {
         const beli = await axios.get(useEnvStore().apiUrl + "/api/tx-buy");
         this.beliList = beli.data.data;
-        this.initialBeliList = beli.data.data;
+        this.dataToExport = beli.data.data.map((item) => ({
+          "Nomor Nota": item.nota_id,
+          Tanggal: useUseFormat().dateFormat(item.created_date),
+          "Total Harga": useUseFormat().currencyFormat(item.final_price),
+        }));
         this.loading = false;
       } catch (err) {
         console.log(err);
@@ -174,6 +205,11 @@ export default {
           }
         );
         this.beliList = report.data.data;
+        this.dataToExport = report.data.data.map((item) => ({
+          "Nomor Nota": item.nota_id,
+          Tanggal: useUseFormat().dateFormat(item.created_date),
+          "Total Harga": useUseFormat().currencyFormat(item.final_price),
+        }));
         this.filterLoading = false;
       } catch (err) {
         console.log(err);
