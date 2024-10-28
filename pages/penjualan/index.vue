@@ -7,48 +7,56 @@
     <div class="h-[2px] w-full bg-primary/20 rounded-xl my-4"></div>
     <!-- content -->
     <div class="flex gap-4 mb-4 justify-end">
-      <div class="w-1/5 mr-auto">
-        <Popover>
-          <PopoverTrigger>
-            <Button variant="outline" class="text-primary font-semibold"
-              >Filter Tanggal</Button
-            >
-          </PopoverTrigger>
-          <PopoverContent class="flex flex-col w-full border-primary gap-2">
-            <div class="flex gap-2">
-              <div class="flex flex-col w-36">
-                <div class="text-xs">Tanggal Awal</div>
-                <VueDatePicker
-                  v-model="startDate"
-                  auto-apply
-                  :format="dpFormat"
-                  model-type="yyyy-MM-dd"></VueDatePicker>
+      <div class="flex mr-auto justify-between">
+        <div class="w-1/5">
+          <Popover>
+            <PopoverTrigger>
+              <Button variant="outline" class="text-primary font-semibold"
+                >Filter Tanggal</Button
+              >
+            </PopoverTrigger>
+            <PopoverContent class="flex flex-col w-full border-primary gap-2">
+              <div class="flex gap-2">
+                <div class="flex flex-col w-36">
+                  <div class="text-xs">Tanggal Awal</div>
+                  <VueDatePicker
+                    v-model="startDate"
+                    auto-apply
+                    :format="dpFormat"
+                    model-type="yyyy-MM-dd"></VueDatePicker>
+                </div>
+                <div class="flex flex-col w-36">
+                  <div class="text-xs">Tanggal Akhir</div>
+                  <VueDatePicker
+                    v-model="endDate"
+                    auto-apply
+                    :format="dpFormat"
+                    model-type="yyyy-MM-dd"></VueDatePicker>
+                </div>
               </div>
-              <div class="flex flex-col w-36">
-                <div class="text-xs">Tanggal Akhir</div>
-                <VueDatePicker
-                  v-model="endDate"
-                  auto-apply
-                  :format="dpFormat"
-                  model-type="yyyy-MM-dd"></VueDatePicker>
-              </div>
-            </div>
-            <Button class="bg-primary text-white" @click="getByDate()">
-              <div v-if="filterLoading">
-                <PulseLoader
-                  :color="filterLoadingColor"
-                  :size="filterLoadingSize">
-                </PulseLoader>
-              </div>
-              <div v-else>Submit</div>
-            </Button>
-            <Button
-              class="bg-secondary text-white"
-              @click="jualList = initialJualList">
-              Reset
-            </Button>
-          </PopoverContent>
-        </Popover>
+              <Button class="bg-primary text-white" @click="getByDate()">
+                <div v-if="filterLoading">
+                  <PulseLoader
+                    :color="filterLoadingColor"
+                    :size="filterLoadingSize">
+                  </PulseLoader>
+                </div>
+                <div v-else>Submit</div>
+              </Button>
+              <Button
+                class="bg-secondary text-white"
+                @click="jualList = initialJualList">
+                Reset
+              </Button>
+            </PopoverContent>
+          </Popover>
+        </div>
+        <div class="w-1/5">
+          <Button class="flex bg-primary text-white items-center gap-2">
+            <FolderArrowDownIcon class="size-6"></FolderArrowDownIcon>
+            Export
+          </Button>
+        </div>
       </div>
       <Input
         v-model="searchValue"
@@ -91,7 +99,10 @@ import { Button } from "@/components/ui/button";
 import { PlusIcon } from "@heroicons/vue/24/outline";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import { ArrowTopRightOnSquareIcon } from "@heroicons/vue/24/solid";
+import {
+  ArrowTopRightOnSquareIcon,
+  FolderArrowDownIcon,
+} from "@heroicons/vue/24/solid";
 import PulseLoader from "vue-spinner/src/PulseLoader.vue";
 import { useEnvStore } from "@/stores/envStore";
 import { useUseFormat } from "@/stores/useFormat";
@@ -115,6 +126,7 @@ export default {
     PulseLoader,
     PlusIcon,
     ArrowTopRightOnSquareIcon,
+    FolderArrowDownIcon,
   },
   data() {
     return {

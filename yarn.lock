@@ -6967,6 +6967,11 @@ vue-spinner@^1.0.4:
   resolved "https://registry.yarnpkg.com/vue-spinner/-/vue-spinner-1.0.4.tgz#0e794d9d93acb23b5b6564042157a531e7ce413b"
   integrity sha512-GNG2F+8BLX201JT/jUX+84Gsi3ZteVQwt9K7mues3ts9FcQ95dGn7uu6a5ndSxdYYUEzfh1KngZiOE0u+l4itA==
 
+vue-xlsx@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/vue-xlsx/-/vue-xlsx-0.2.1.tgz#336858c573e4c487aece3474cedc6f791114596d"
+  integrity sha512-j7uVNl1E1ZUpOaEYhQFw2NiXIP1ktlq25XPEdAOdUUnXhz8HjNsLnmgcqWs48aehnoDRGj6cmcOsJZ9L4NS3Dw==
+
 vue3-easy-data-table@^1.5.47:
   version "1.5.47"
   resolved "https://registry.yarnpkg.com/vue3-easy-data-table/-/vue3-easy-data-table-1.5.47.tgz#44d27129ac5e938988f0f4aef42b7b90b9c62137"

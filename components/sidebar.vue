@@ -27,8 +27,8 @@
                 <SheetClose class="w-full">
                   <slot>
                     <div class="flex gap-2 items-center">
-                      <component :is="item.icon" class="w-6"></component
-                      >{{ item.title }}
+                      <component :is="item.icon" class="w-6"></component>
+                      <div class="text-start">{{ item.title }}</div>
                     </div>
                   </slot>
                 </SheetClose>
