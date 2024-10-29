@@ -24,6 +24,17 @@
       <Button class="bg-primary text-white" @click="showWithCustomDate()"
         >Lihat</Button
       >
+      <xlsx-workbook>
+        <xlsx-sheet :collection="dataToExport" :sheet-name="sheetName" />
+        <xlsx-download :filename="fileName">
+          <Button
+            class="flex bg-primary text-white items-center gap-2"
+            @click="setExportData()">
+            <FolderArrowDownIcon class="size-6"></FolderArrowDownIcon>
+            Export
+          </Button>
+        </xlsx-download>
+      </xlsx-workbook>
     </div>
     <div v-if="default">
       <EasyDataTable
@@ -61,6 +72,12 @@ import { useUseFormat } from "@/stores/useFormat";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { Button } from "@/components/ui/button";
+import { FolderArrowDownIcon } from "@heroicons/vue/24/solid";
+import {
+  XlsxWorkbook,
+  XlsxSheet,
+  XlsxDownload,
+} from "vue3-xlsx/dist/vue3-xlsx.cjs.prod";
 export default {
   setup() {
     useSeoMeta({
@@ -72,6 +89,10 @@ export default {
   components: {
     VueDatePicker,
     Button,
+    FolderArrowDownIcon,
+    XlsxWorkbook,
+    XlsxSheet,
+    XlsxDownload,
   },
   data() {
     return {
@@ -94,6 +115,9 @@ export default {
 
         return day + "-" + month + "-" + year;
       },
+      dataToExport: null,
+      sheetName: "Data LabaRugi",
+      fileName: "Data LabaRugi_" + moment().format("D-M-YYYY") + ".xlsx",
     };
   },
   methods: {
@@ -201,12 +225,26 @@ export default {
         );
         console.log(totalsellWeek);
 
+        // get total kas week
+        const kasWeek = await axios.post(
+          useEnvStore().apiUrl + "/api/report/kas-tx/date",
+          {
+            startDate: moment().startOf("week").format("YYYY-MM-D"),
+            endDate: moment().format("YYYY-MM-D"),
+          }
+        );
+        console.log(kasWeek);
+        const totalkasWeek = kasWeek.data.data.reduce(
+          (sum, transaction) => sum + transaction.amount,
+          0
+        );
+
         // add to data
         const weekData = {
           name: "Laba/Rugi Minggu Ini",
-          totalBuy: totalbuyWeek,
+          totalBuy: totalbuyWeek + totalkasWeek,
           totalSell: totalsellWeek - adminCut,
-          diff: totalsellWeek - totalbuyWeek - adminCut,
+          diff: totalsellWeek - totalbuyWeek - adminCut - totalkasWeek,
         };
         this.dataForDefault.push(weekData);
         console.log(this.dataForDefault);
@@ -252,12 +290,26 @@ export default {
         );
         console.log(totalsellDay);
 
+        // get total kas day
+        const kasDay = await axios.post(
+          useEnvStore().apiUrl + "/api/report/kas-tx/date",
+          {
+            startDate: moment().format("YYYY-MM-D"),
+            endDate: moment().format("YYYY-MM-D"),
+          }
+        );
+        console.log(kasDay);
+        const totalkasDay = kasDay.data.data.reduce(
+          (sum, transaction) => sum + transaction.amount,
+          0
+        );
+
         // add to data
         const dayData = {
           name: "Laba/Rugi Hari Ini",
-          totalBuy: totalbuyDay,
+          totalBuy: totalbuyDay + totalkasDay,
           totalSell: totalsellDay - adminCut,
-          diff: totalsellDay - totalbuyDay - adminCut,
+          diff: totalsellDay - totalbuyDay - adminCut - totalkasDay,
         };
         this.dataForDefault.push(dayData);
         console.log(this.dataForDefault);
@@ -303,17 +355,33 @@ export default {
           0
         );
         console.log(totalsellCustom);
-        const dayData = {
+
+        // get total kas custom
+        const kasCustom = await axios.post(
+          useEnvStore().apiUrl + "/api/report/kas-tx/date",
+          {
+            startDate: this.startDate,
+            endDate: this.endDate,
+          }
+        );
+        console.log(kasCustom);
+        const totalkasCustom = kasCustom.data.data.reduce(
+          (sum, transaction) => sum + transaction.amount,
+          0
+        );
+
+        // add to data
+        const customData = {
           name:
             "Laba/Rugi " +
             moment(this.startDate).format("D/MM/YYYY") +
             "-" +
             moment(this.endDate).format("D/MM/YYYY"),
-          totalBuy: totalbuyCustom,
+          totalBuy: totalbuyCustom + totalkasCustom,
           totalSell: totalsellCustom - adminCut,
-          diff: totalsellCustom - totalbuyCustom - adminCut,
+          diff: totalsellCustom - totalbuyCustom - adminCut - totalkasCustom,
         };
-        this.dataForDefault.push(dayData);
+        this.dataForDefault.push(customData);
         console.log(this.dataForDefault);
         this.loading = false;
       } catch (err) {
@@ -322,8 +390,14 @@ export default {
           this.loading = false;
         }
       }
-
-      // add to data
+    },
+    setExportData() {
+      this.dataToExport = this.dataForDefault.map((item) => ({
+        Periode: item.name,
+        "Uang Masuk": useUseFormat().currencyFormat(item.totalSell),
+        "Uang Keluar": useUseFormat().currencyFormat(item.totalBuy),
+        "Laba/Rugi": useUseFormat().currencyFormat(item.diff),
+      }));
     },
     setColour(value) {
       var values = value.toString();
