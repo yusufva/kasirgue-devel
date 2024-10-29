@@ -5,6 +5,60 @@
     <div class="h-[2px] w-full bg-primary/20 rounded-xl"></div>
     <!-- content -->
     <div class="flex flex-col md:flex-row gap-4 justify-end">
+      <div class="flex mr-auto justify-between">
+        <div class="w-1/5">
+          <Popover>
+            <PopoverTrigger>
+              <Button variant="outline" class="text-primary font-semibold"
+                >Filter Tanggal</Button
+              >
+            </PopoverTrigger>
+            <PopoverContent class="flex flex-col w-full border-primary gap-2">
+              <div class="flex gap-2">
+                <div class="flex flex-col w-36">
+                  <div class="text-xs">Tanggal Awal</div>
+                  <VueDatePicker
+                    v-model="startDate"
+                    auto-apply
+                    :format="dpFormat"
+                    model-type="yyyy-MM-dd"></VueDatePicker>
+                </div>
+                <div class="flex flex-col w-36">
+                  <div class="text-xs">Tanggal Akhir</div>
+                  <VueDatePicker
+                    v-model="endDate"
+                    auto-apply
+                    :format="dpFormat"
+                    model-type="yyyy-MM-dd"></VueDatePicker>
+                </div>
+              </div>
+              <Button class="bg-primary text-white" @click="getByDate()">
+                <div v-if="filterLoading">
+                  <PulseLoader
+                    :color="filterLoadingColor"
+                    :size="filterLoadingSize">
+                  </PulseLoader>
+                </div>
+                <div v-else>Submit</div>
+              </Button>
+              <Button class="bg-secondary text-white" @click="getKasTx()">
+                Reset
+              </Button>
+            </PopoverContent>
+          </Popover>
+        </div>
+        <div class="w-1/5">
+          <xlsx-workbook>
+            <xlsx-sheet :collection="dataToExport" :sheet-name="sheetName" />
+            <xlsx-download :filename="fileName">
+              <Button class="flex bg-primary text-white items-center gap-2">
+                <FolderArrowDownIcon class="size-6"></FolderArrowDownIcon>
+                Export
+              </Button>
+            </xlsx-download>
+          </xlsx-workbook>
+        </div>
+      </div>
       <!-- <v-select
         class="w-full md:w-1/6"
         :options="typeList"
@@ -93,7 +147,13 @@ import moment from "moment";
 import { useEnvStore } from "@/stores/envStore";
 import { useUseFormat } from "@/stores/useFormat";
 import { useUseToast } from "@/stores/useToast";
-import { PlusIcon } from "@heroicons/vue/24/solid";
+import { FolderArrowDownIcon, PlusIcon } from "@heroicons/vue/24/solid";
+import PulseLoader from "vue-spinner/src/PulseLoader.vue";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Dialog,
   DialogClose,
@@ -106,6 +166,13 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { VisuallyHidden } from "radix-vue";
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
+import {
+  XlsxWorkbook,
+  XlsxSheet,
+  XlsxDownload,
+} from "vue3-xlsx/dist/vue3-xlsx.cjs.prod";
 
 export default {
   setup() {
@@ -125,8 +192,17 @@ export default {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+    PulseLoader,
     VisuallyHidden,
     Textarea,
+    VueDatePicker,
+    FolderArrowDownIcon,
+    XlsxWorkbook,
+    XlsxSheet,
+    XlsxDownload,
   },
   data() {
     return {
@@ -142,6 +218,9 @@ export default {
       limit: null,
       limitShow: true,
       showLimitClass: "",
+      filterLoading: false,
+      filterLoadingColor: "#ffffff",
+      filterLoadingSize: "5px",
       headers: [
         { text: "Tanggal", value: "date", fixed: true },
         { text: "Jumlah", value: "amount" },
@@ -150,6 +229,18 @@ export default {
       kasList: [],
       defaultKasList: [],
       color: "#0b324f",
+      startDate: "",
+      endDate: "",
+      dpFormat: (date) => {
+        const day = date.getDate();
+        const month = date.getMonth() + 1;
+        const year = date.getFullYear();
+
+        return day + "-" + month + "-" + year;
+      },
+      dataToExport: null,
+      sheetName: "Biaya Operasional",
+      fileName: "Biaya Operasional_" + moment().format("D-M-YYYY") + ".xlsx",
     };
   },
   methods: {
@@ -159,8 +250,33 @@ export default {
         this.kasList = tx.data.data.kasData;
         this.defaultKasList = tx.data.data.kasData;
         this.limit = tx.data.data.limit;
-        console.log(tx.data.data);
+        this.dataToExport = tx.data.data.kasData.map((item) => ({
+          Deskripsi: item.description,
+          Tanggal: useUseFormat().dateFormat(item.date),
+          Jumlah: useUseFormat().currencyFormat(item.amount),
+        }));
         this.loading = false;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    async getByDate() {
+      this.filterLoading = true;
+      try {
+        const tx = await axios.post(
+          useEnvStore().apiUrl + "/api/report/kas-tx/date",
+          {
+            startDate: this.startDate,
+            endDate: this.endDate,
+          }
+        );
+        this.kasList = tx.data.data;
+        this.dataToExport = tx.data.data.map((item) => ({
+          Deskripsi: item.description,
+          Tanggal: useUseFormat().dateFormat(item.date),
+          Jumlah: useUseFormat().currencyFormat(item.amount),
+        }));
+        this.filterLoading = false;
       } catch (err) {
         console.log(err);
       }
