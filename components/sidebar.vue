@@ -1,5 +1,5 @@
 <template lang="">
-  <div>
+  <div class="top-0 sticky h-max">
     <!-- sheet sidebar -->
     <Sheet>
       <div class="hidden md:flex p-4 gap-2 items-baseline">
