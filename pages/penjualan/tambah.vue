@@ -342,25 +342,47 @@ export default {
           satuan: this.selected.stock.satuan.kd_satuan,
           total_price: this.selected.selling_price * this.jumlah,
         };
-        console.log(tempStore);
-        this.transStore.push(tempStore);
-        const createIndex = this.transStore.map((obj, index) => ({
-          ...obj,
-          index: index + 1,
-        }));
-        const finalPrice = this.transStore.reduce(
-          (accumulator, currentValue) => {
-            return accumulator + currentValue.total_price;
-          },
-          0
+        const checkExisting = this.transStore.find(
+          (item) => item.product_id === tempStore.product_id
         );
-        this.finalPrice = finalPrice;
-        this.transStore = createIndex;
-        this.showTable = true;
-        this.error = "";
-        this.jumlah = null;
-        this.selected = null;
-        this.isFilled = true;
+        // check apakah barang sudah berada dalam list
+        if (checkExisting) {
+          checkExisting.quantity += tempStore.quantity;
+          checkExisting.total_price =
+            checkExisting.selling_price * checkExisting.quantity;
+          const finalPrice = this.transStore.reduce(
+            (accumulator, currentValue) => {
+              return accumulator + currentValue.total_price;
+            },
+            0
+          );
+          this.finalPrice = finalPrice;
+          this.error = "";
+          this.jumlah = null;
+          this.selected = null;
+          return;
+        } else {
+          // console.log(tempStore);
+          this.transStore.push(tempStore);
+          const createIndex = this.transStore.map((obj, index) => ({
+            ...obj,
+            index: index + 1,
+          }));
+          console.log(this.transStore);
+          const finalPrice = this.transStore.reduce(
+            (accumulator, currentValue) => {
+              return accumulator + currentValue.total_price;
+            },
+            0
+          );
+          this.finalPrice = finalPrice;
+          this.transStore = createIndex;
+          this.showTable = true;
+          this.error = "";
+          this.jumlah = null;
+          this.selected = null;
+          this.isFilled = true;
+        }
       }
     },
     hapusItem(index) {
@@ -423,6 +445,8 @@ export default {
             .post(useEnvStore().apiUrl + "/api/tx-sell", {
               date: moment(),
               nota_id: idNota,
+              header: useAuthStore().name,
+              no_hp: useAuthStore().phone,
               items: itemToPost,
               final_price: this.finalPrice,
               payment: this.payment,
@@ -451,9 +475,12 @@ export default {
         } catch (err) {
           console.log(err);
           this.loading = false;
+          this.isFilled = true;
           if (err.response.status === 400) {
-            this.isFilled = true;
-            if (err.response.data.message === "Data Creation Failed") {
+            if (
+              err.response.data.message ===
+              "Data Creation Failed, Stock is Insufficient"
+            ) {
               useUseToast().emptyStock("Stock tidak mencukupi/ habis.");
             } else {
               const error = err.response.data.error[0].message;

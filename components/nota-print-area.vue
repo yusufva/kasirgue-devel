@@ -7,9 +7,9 @@
       <div
         class="d-flex flex-column align-items-center mb-3 pb-4"
         style="border-bottom: 1px dashed">
-        <div>{{ useAuthStore().org_name }}</div>
+        <div>{{ returnBeli.header }}</div>
         <div>{{ useAuthStore().alamat }}</div>
-        <div>{{ useAuthStore().phone }}</div>
+        <div>{{ returnBeli.no_hp }}</div>
       </div>
       <!--  -->
       <div class="mb-3" style="border-bottom: 1px dashed">
