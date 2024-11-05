@@ -187,7 +187,12 @@ export default {
         this.dataToExport = jual.data.data.map((item) => ({
           "Nomor Nota": item.nota_id,
           Tanggal: useUseFormat().dateFormat(item.created_date),
-          "Total Harga": useUseFormat().currencyFormat(item.final_price),
+          "Keterangan": item.payment_note,
+          Pendapatan: useUseFormat().currencyFormat(item.final_price),
+          "Biaya Admin": useUseFormat().currencyFormat(item.admin_cut),
+          "Pendapatan Bersih": useUseFormat().currencyFormat(
+            item.final_price - item.admin_cut
+          ),
         }));
         console.log(this.dataToExport);
         this.loading = false;

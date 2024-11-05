@@ -23,6 +23,10 @@
               <td>Waktu</td>
               <td>: {{ useFormat.receiptDateFormat(returnBeli.date) }}</td>
             </tr>
+            <tr>
+              <td>Keterangan</td>
+              <td>: {{ returnBeli.payment_note }}</td>
+            </tr>
           </tbody>
         </table>
       </div>

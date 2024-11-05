@@ -95,7 +95,7 @@
             }}</TableCell>
             <TableCell>
               <TrashIcon
-                class="text-red w-6"
+                class="text-red w-6 cursor-pointer"
                 @click="hapusItem(item.index)"></TrashIcon>
             </TableCell>
           </TableRow>

@@ -24,46 +24,38 @@
             :options="listSupplier"
             label="nama"
             :reduce="(supplier) => supplier.id"
+            :dropdown-should-open="barangDropdownOpen"
             v-model="supplier" />
         </div>
       </div>
       <div class="flex flex-col md:flex-row w-full gap-4">
         <!-- select dropdown -->
-        <div class="flex flex-col w-full md:w-1/4 gap-2">
+        <div class="flex flex-col w-full md:w-1/4 gap-2 justify-end">
           <Label class="text-primary">Nama Produk</Label>
-
-          <ComboboxRoot v-model="selected" class="relative">
-            <ComboboxAnchor
-              class="w-full inline-flex items-baseline justify-between rounded-md px-[15px] text-sm leading-none h-[35px] gap-[5px] bg-white border border-1 border-black/30 focus-visible:ring-primary">
-              <ComboboxInput
-                class="!bg-transparent outline-none h-full selection:bg-grass5 placeholder-mauve8 capitalize"
-                placeholder="Ketik nama barang..." />
-              <ComboboxTrigger> </ComboboxTrigger>
-            </ComboboxAnchor>
-
-            <ComboboxContent
-              class="absolute z-10 w-full mt-2 min-w-[160px] bg-white overflow-hidden rounded border border-1 border-primary">
-              <ComboboxViewport class="p-[5px]">
-                <ComboboxEmpty
-                  class="text-mauve8 text-xs font-medium text-center py-2" />
-
-                <ComboboxGroup>
-                  <ComboboxItem
-                    v-for="item in listBarang"
-                    :key="item.index"
-                    class="text-sm leading-none rounded-[3px] flex items-center h-[25px] pr-[35px] pl-[25px] relative select-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-grass9 data-[highlighted]:text-grass1 capitalize"
-                    :value="item.name">
-                    <ComboboxItemIndicator
-                      class="absolute left-0 w-[25px] inline-flex items-center justify-center">
-                    </ComboboxItemIndicator>
-                    <span>
-                      {{ item.name }}
-                    </span>
-                  </ComboboxItem>
-                </ComboboxGroup>
-              </ComboboxViewport>
-            </ComboboxContent>
-          </ComboboxRoot>
+          <v-select
+            class="capitalized"
+            v-model="selected"
+            :options="listBarang"
+            label="name"
+            :dropdown-should-open="barangDropdownOpen">
+            <template #selected-option="{ name, stock }">
+              <div style="text-transform: capitalize">
+                {{ name }} ({{ stock.satuan.kd_satuan }})
+              </div>
+            </template>
+            <template #option="{ name, stock }">
+              <div style="text-transform: capitalize">
+                {{ name }} ({{ stock.satuan.kd_satuan }})
+              </div>
+            </template>
+            <template #no-options="{ searching, search }">
+              <template v-if="searching">
+                <div style="opacity: 0.5">
+                  Barang <em>{{ search }}</em> tidak ditemukan.
+                </div>
+              </template>
+            </template>
+          </v-select>
         </div>
         <div class="flex flex-col w-full md:w-1/4 gap-2">
           <Label class="text-primary">Harga Beli</Label>
@@ -87,6 +79,9 @@
           </Button>
         </div>
       </div>
+      <div class="text-red text-xs -mt-4">
+        {{ error }}
+      </div>
       <!-- table content -->
       <Table v-if="showTable">
         <TableHeader class="border-b border-primary">
@@ -108,6 +103,11 @@
             <TableCell>{{
               useFormat.currencyFormat(item.total_price)
             }}</TableCell>
+            <TableCell>
+              <TrashIcon
+                class="text-red w-6 cursor-pointer"
+                @click="hapusItem(item.index)"></TrashIcon>
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>
@@ -184,21 +184,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  ComboboxAnchor,
-  ComboboxContent,
-  ComboboxEmpty,
-  ComboboxGroup,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxItemIndicator,
-  ComboboxLabel,
-  ComboboxRoot,
-  ComboboxSeparator,
-  ComboboxTrigger,
-  ComboboxViewport,
-} from "radix-vue";
 import { VisuallyHidden } from "radix-vue";
+import { TrashIcon } from "@heroicons/vue/24/solid";
 export default {
   setup() {
     useSeoMeta({
@@ -212,18 +199,6 @@ export default {
     CurrencyInput,
     Label,
     Button,
-    ComboboxAnchor,
-    ComboboxContent,
-    ComboboxEmpty,
-    ComboboxGroup,
-    ComboboxInput,
-    ComboboxItem,
-    ComboboxItemIndicator,
-    ComboboxLabel,
-    ComboboxRoot,
-    ComboboxSeparator,
-    ComboboxTrigger,
-    ComboboxViewport,
     Table,
     TableHead,
     TableHeader,
@@ -240,14 +215,16 @@ export default {
     DialogTrigger,
     VisuallyHidden,
     PulseLoader,
+    TrashIcon,
   },
   data() {
     return {
       loading: false,
+      error: "",
       loadingColor: "#ffffff",
       loadingSize: "5px",
       listBarang: [],
-      selected: "",
+      selected: null,
       transStore: [],
       showTable: false,
       idNota: null,
@@ -260,24 +237,64 @@ export default {
   },
   methods: {
     addToTransStore() {
-      const filteredBarang = this.listBarang.filter(
-        (item) => item.name === this.selected
+      if (this.selected === null) {
+        this.error = "Tidak ada barang yang dipilih";
+        return;
+      }
+      if (this.jumlah === null || this.jumlah === 0) {
+        this.error = "Jumlah barang belum diisi";
+        return;
+      } else {
+        this.selectedId = this.selected.id;
+        let tempStore = {
+          name: this.selected.name,
+          product_id: this.selected.id,
+          buying_price: this.harga_beli,
+          quantity: this.jumlah,
+          total_price: this.harga_beli * this.jumlah,
+        };
+        const checkExisting = this.transStore.find(
+          (item) => item.product_id === tempStore.product_id
+        );
+        // check apakah barang sudah berada dalam list
+        if (checkExisting) {
+          checkExisting.quantity += tempStore.quantity;
+          checkExisting.total_price =
+            checkExisting.buying_price * checkExisting.quantity;
+          const finalPrice = this.transStore.reduce(
+            (accumulator, currentValue) => {
+              return accumulator + currentValue.total_price;
+            },
+            0
+          );
+          this.finalPrice = finalPrice;
+          this.error = "";
+          this.jumlah = null;
+          this.selected = null;
+          return;
+        } else {
+          this.transStore.push(tempStore);
+          const createIndex = this.transStore.map((obj, index) => ({
+            ...obj,
+            index: index + 1,
+          }));
+          this.transStore = createIndex;
+          this.selected = null;
+          this.harga_beli = null;
+          this.jumlah = null;
+          this.showTable = true;
+          this.isFilled = true;
+          this.isTambah = true;
+          console.log(this.transStore);
+        }
+      }
+    },
+    hapusItem(index) {
+      const indexToRemove = index;
+      const removedIndex = this.transStore.filter(
+        (obj) => obj.index !== indexToRemove
       );
-      console.log(filteredBarang);
-      let tempStore = {
-        name: this.selected,
-        product_id: filteredBarang[0].id,
-        buying_price: this.harga_beli,
-        quantity: this.jumlah,
-        total_price: this.harga_beli * this.jumlah,
-      };
-      this.transStore.push(tempStore);
-      this.selected = "";
-      this.harga_beli = null;
-      this.jumlah = null;
-      this.showTable = true;
-      this.isFilled = true;
-      console.log(this.transStore);
+      this.transStore = removedIndex;
     },
     async getBarangList() {
       try {
@@ -305,12 +322,13 @@ export default {
       const finalPrice = this.transStore.reduce((accumulator, currentValue) => {
         return accumulator + currentValue.total_price;
       }, 0);
+      const itemToPost = this.transStore.map(({ index, ...rest }) => rest);
       try {
         const beli = await axios.post(useEnvStore().apiUrl + "/api/tx-buy", {
           date: moment(),
           nota_id: this.idNota,
           supplier_id: this.supplier,
-          items: this.transStore,
+          items: itemToPost,
           final_price: finalPrice,
         });
         useUseToast().addToast();
@@ -322,6 +340,12 @@ export default {
           this.loading = false;
         }
       }
+    },
+    barangDropdownOpen(VueSelect) {
+      if (this.selected !== null && this.supplier !== null) {
+        return VueSelect.open;
+      }
+      return VueSelect.search.length !== 0 && VueSelect.open;
     },
   },
   mounted() {
