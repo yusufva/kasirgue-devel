@@ -250,6 +250,13 @@ export default {
         this.kasList = tx.data.data.kasData;
         this.defaultKasList = tx.data.data.kasData;
         this.limit = tx.data.data.limit;
+        // if data return zero
+        if (this.kasList.length === 0) {
+          this.dataToExport = [{ "Data Not Found": "" }];
+          this.loading = false;
+          return;
+        }
+        // if data is not zero
         this.dataToExport = tx.data.data.kasData.map((item) => ({
           Deskripsi: item.description,
           Tanggal: useUseFormat().dateFormat(item.date),

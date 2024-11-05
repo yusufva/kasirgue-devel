@@ -184,6 +184,13 @@ export default {
       try {
         const beli = await axios.get(useEnvStore().apiUrl + "/api/tx-buy");
         this.beliList = beli.data.data;
+        // if data return zero
+        if (this.beliList.length === 0) {
+          this.dataToExport = [{ "Data Not Found": "" }];
+          this.loading = false;
+          return;
+        }
+        // if data is not zero
         this.dataToExport = beli.data.data.map((item) => ({
           "Nomor Nota": item.nota_id,
           Tanggal: useUseFormat().dateFormat(item.created_date),

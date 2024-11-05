@@ -84,6 +84,13 @@ export default {
       try {
         const stok = await axios.get(useEnvStore().apiUrl + "/api/stock");
         this.stok = stok.data.data;
+        // if data return zero
+        if (this.stok.length === 0) {
+          this.dataToExport = [{ "Data Not Found": "" }];
+          this.loading = false;
+          return;
+        }
+        // if data is not zero
         this.dataToExport = stok.data.data.map((item) => ({
           Barang: item.product.name.toUpperCase(),
           Stok: item.quantity,
