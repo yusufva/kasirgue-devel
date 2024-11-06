@@ -3,7 +3,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN yarn install
 COPY . .
-RUN npx nuxi@latest module add shadcn-nuxt
+RUN npx nuxi@latest module add shadcn-nuxt@0.10.4
 RUN yarn add pinia
 RUN yarn build
 
