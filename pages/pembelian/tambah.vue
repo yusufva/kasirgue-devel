@@ -331,6 +331,7 @@ export default {
           items: itemToPost,
           final_price: finalPrice,
         });
+        this.isFilled = false;
         useUseToast().addToast();
         this.$router.push("/pembelian");
       } catch (err) {
