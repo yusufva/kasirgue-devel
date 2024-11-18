@@ -194,7 +194,13 @@ export default {
         this.dataToExport = beli.data.data.map((item) => ({
           "Nomor Nota": item.nota_id,
           Tanggal: useUseFormat().dateFormat(item.created_date),
-          "Total Harga": useUseFormat().currencyFormat(item.final_price),
+          "Total Harga": item.final_price,
+          "Detail Barang": item.items
+            .map(
+              (item) =>
+                `Barang: ${item.name}, Jumlah: ${item.quantity}, Harga: ${item.buying_price}, Total Harga: ${item.total_price}`
+            )
+            .join(" ; "),
         }));
         this.loading = false;
       } catch (err) {
@@ -215,7 +221,13 @@ export default {
         this.dataToExport = report.data.data.map((item) => ({
           "Nomor Nota": item.nota_id,
           Tanggal: useUseFormat().dateFormat(item.created_date),
-          "Total Harga": useUseFormat().currencyFormat(item.final_price),
+          "Total Harga": item.final_price,
+          "Detail Barang": item.items
+            .map(
+              (item) =>
+                `Barang: ${item.name}, Jumlah: ${item.quantity}, Harga: ${item.buying_price}, Total Harga: ${item.total_price}`
+            )
+            .join(" ; "),
         }));
         this.filterLoading = false;
       } catch (err) {

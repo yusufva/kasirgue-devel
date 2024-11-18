@@ -260,7 +260,7 @@ export default {
         this.dataToExport = tx.data.data.kasData.map((item) => ({
           Deskripsi: item.description,
           Tanggal: useUseFormat().dateFormat(item.date),
-          Jumlah: useUseFormat().currencyFormat(item.amount),
+          Jumlah: item.amount,
         }));
         this.loading = false;
       } catch (err) {
@@ -281,7 +281,7 @@ export default {
         this.dataToExport = tx.data.data.map((item) => ({
           Deskripsi: item.description,
           Tanggal: useUseFormat().dateFormat(item.date),
-          Jumlah: useUseFormat().currencyFormat(item.amount),
+          Jumlah: item.amount,
         }));
         this.filterLoading = false;
       } catch (err) {

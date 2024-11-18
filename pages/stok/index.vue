@@ -4,7 +4,7 @@
     <div class="text-primary font-semibold text-2xl">Daftar Stok</div>
     <div class="h-[2px] w-full bg-primary/20 rounded-xl"></div>
     <!-- content -->
-    <div class="flex justify-between">
+    <div class="flex flex-col md:flex-row justify-between gap-2">
       <xlsx-workbook>
         <xlsx-sheet :collection="dataToExport" :sheet-name="sheetName" />
         <xlsx-download :filename="fileName">
@@ -14,7 +14,7 @@
           </Button>
         </xlsx-download>
       </xlsx-workbook>
-      <Input class="w-1/5" placeholder="Cari Barang" v-model="searchValue" />
+      <Input class="w-1/2 md:w-1/5" placeholder="Cari Barang" v-model="searchValue" />
     </div>
     <EasyDataTable
       :headers="headers"

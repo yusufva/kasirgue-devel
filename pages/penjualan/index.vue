@@ -6,7 +6,7 @@
     </div>
     <div class="h-[2px] w-full bg-primary/20 rounded-xl my-4"></div>
     <!-- content -->
-    <div class="flex gap-4 mb-4 justify-end">
+    <div class="flex flex-col md:flex-row gap-4 mb-4 justify-end">
       <div class="flex mr-auto justify-between">
         <div class="w-1/5">
           <Popover>
@@ -177,6 +177,7 @@ export default {
       try {
         const jual = await axios.get(useEnvStore().apiUrl + "/api/tx-sell");
         this.jualList = jual.data.data;
+        console.log(this.jualList);
         // if data return zero
         if (this.jualList.length === 0) {
           this.dataToExport = [{ "Data Not Found": "" }];
@@ -188,11 +189,15 @@ export default {
           "Nomor Nota": item.nota_id,
           Tanggal: useUseFormat().dateFormat(item.created_date),
           Keterangan: item.payment_note,
-          Pendapatan: useUseFormat().currencyFormat(item.final_price),
-          "Biaya Admin": useUseFormat().currencyFormat(item.admin_cut),
-          "Pendapatan Bersih": useUseFormat().currencyFormat(
-            item.final_price - item.admin_cut
-          ),
+          Pendapatan: item.final_price,
+          "Biaya Admin": item.admin_cut,
+          "Pendapatan Bersih": item.final_price - item.admin_cut,
+          "Detail Barang": item.items
+            .map(
+              (item) =>
+                `Barang: ${item.name}, Jumlah: ${item.quantity}, Harga: ${item.selling_price}, Total Harga: ${item.total_price}`
+            )
+            .join(" ; "),
         }));
         console.log(this.dataToExport);
         this.loading = false;
@@ -215,11 +220,15 @@ export default {
           "Nomor Nota": item.nota_id,
           Tanggal: useUseFormat().dateFormat(item.created_date),
           Keterangan: item.payment_note,
-          Pendapatan: useUseFormat().currencyFormat(item.final_price),
-          "Biaya Admin": useUseFormat().currencyFormat(item.admin_cut),
-          "Pendapatan Bersih": useUseFormat().currencyFormat(
-            item.final_price - item.admin_cut
-          ),
+          Pendapatan: item.final_price,
+          "Biaya Admin": item.admin_cut,
+          "Pendapatan Bersih": item.final_price - item.admin_cut,
+          "Detail Barang": item.items
+            .map(
+              (item) =>
+                `Barang: ${item.name}, Jumlah: ${item.quantity}, Harga: ${item.selling_price}, Total Harga: ${item.total_price}`
+            )
+            .join(" ; "),
         }));
         this.filterLoading = false;
       } catch (err) {

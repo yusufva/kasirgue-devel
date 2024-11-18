@@ -4,7 +4,8 @@
     <div class="text-primary font-semibold text-2xl">Laba Rugi</div>
     <div class="h-[2px] w-full bg-primary/20 rounded-xl my-4"></div>
     <!-- content -->
-    <div class="flex w-1/2 gap-4 mb-4 items-end">
+    <div
+      class="flex flex-col md:flex-row w-1/2 gap-4 mb-4 items-start md:items-end">
       <div class="flex flex-col w-36">
         <div class="text-xs">Tanggal Awal</div>
         <VueDatePicker
@@ -394,9 +395,9 @@ export default {
     setExportData() {
       this.dataToExport = this.dataForDefault.map((item) => ({
         Periode: item.name,
-        "Uang Masuk": useUseFormat().currencyFormat(item.totalSell),
-        "Uang Keluar": useUseFormat().currencyFormat(item.totalBuy),
-        "Laba/Rugi": useUseFormat().currencyFormat(item.diff),
+        "Uang Masuk": item.totalSell,
+        "Uang Keluar": item.totalBuy,
+        "Laba/Rugi": item.diff,
       }));
     },
     setColour(value) {
