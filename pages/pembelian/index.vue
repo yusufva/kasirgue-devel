@@ -195,11 +195,9 @@ export default {
           "Nomor Nota": item.nota_id,
           Tanggal: useUseFormat().dateFormat(item.created_date),
           "Total Harga": item.final_price,
-          "Detail Barang": item.items
-            .map(
-              (item) =>
-                `Barang: ${item.name}, Jumlah: ${item.quantity}, Harga: ${item.buying_price}, Total Harga: ${item.total_price}`
-            )
+          "Nama Barang": item.items.map((item) => `${item.name}`).join(" ; "),
+          "Jumlah Barang": item.items
+            .map((item) => `${item.quantity}`)
             .join(" ; "),
         }));
         this.loading = false;
@@ -222,11 +220,9 @@ export default {
           "Nomor Nota": item.nota_id,
           Tanggal: useUseFormat().dateFormat(item.created_date),
           "Total Harga": item.final_price,
-          "Detail Barang": item.items
-            .map(
-              (item) =>
-                `Barang: ${item.name}, Jumlah: ${item.quantity}, Harga: ${item.buying_price}, Total Harga: ${item.total_price}`
-            )
+          "Nama Barang": item.items.map((item) => `${item.name}`).join(" ; "),
+          "Jumlah Barang": item.items
+            .map((item) => `${item.quantity}`)
             .join(" ; "),
         }));
         this.filterLoading = false;

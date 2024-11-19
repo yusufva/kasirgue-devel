@@ -178,6 +178,7 @@ export default {
         const jual = await axios.get(useEnvStore().apiUrl + "/api/tx-sell");
         this.jualList = jual.data.data;
         console.log(this.jualList);
+        // input data to export excel
         // if data return zero
         if (this.jualList.length === 0) {
           this.dataToExport = [{ "Data Not Found": "" }];
@@ -192,11 +193,9 @@ export default {
           Pendapatan: item.final_price,
           "Biaya Admin": item.admin_cut,
           "Pendapatan Bersih": item.final_price - item.admin_cut,
-          "Detail Barang": item.items
-            .map(
-              (item) =>
-                `Barang: ${item.name}, Jumlah: ${item.quantity}, Harga: ${item.selling_price}, Total Harga: ${item.total_price}`
-            )
+          "Nama Barang": item.items.map((item) => `${item.name}`).join(" ; "),
+          "Jumlah Barang": item.items
+            .map((item) => `${item.quantity}`)
             .join(" ; "),
         }));
         console.log(this.dataToExport);
@@ -223,11 +222,9 @@ export default {
           Pendapatan: item.final_price,
           "Biaya Admin": item.admin_cut,
           "Pendapatan Bersih": item.final_price - item.admin_cut,
-          "Detail Barang": item.items
-            .map(
-              (item) =>
-                `Barang: ${item.name}, Jumlah: ${item.quantity}, Harga: ${item.selling_price}, Total Harga: ${item.total_price}`
-            )
+          "Nama Barang": item.items.map((item) => `${item.name}`).join(" ; "),
+          "Jumlah Barang": item.items
+            .map((item) => `${item.quantity}`)
             .join(" ; "),
         }));
         this.filterLoading = false;
